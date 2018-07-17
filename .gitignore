@@ -2,5 +2,5 @@
 *.ipynb_checkpoints*
 
 # Ignore cache
-*__pycache__/*
+*/__pycache__/*
 *.cache*
