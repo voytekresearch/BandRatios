@@ -58,13 +58,16 @@ calc_alpha_beta_ratio.__doc__ = calc_band_ratio.__doc__
 
     
 def diff_CF_Power_only(treatment,control,low_band,high_band):
-    """Calculate band ratio by finding
+    """Calculate band ratio by finding the power of high and low peak frequency
     ----------
     treatment : fooof object/ fooof.group object
         fooof'ed power spectrum
     control : fooof object/ fooof.group object
         fooof'ed power spectrum
-    
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.
 
     Outputs
     -------
@@ -112,13 +115,16 @@ def diff_CF_Power_only(treatment,control,low_band,high_band):
     return res
 
 def diff_average_power_set_band(treatment,control,low_band,high_band):
-    """Calculate band ratio by dividing the power of the low and high central frequencies
+    """Calculate band ratio by finding average power within specified bands 
     ----------
     treatment : fooof object/ fooof.group object
         fooof'ed power spectrum
     control : fooof object/ fooof.group object
         fooof'ed power spectrum
-    
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.    
 
     Outputs
     -------
@@ -136,6 +142,22 @@ def diff_average_power_set_band(treatment,control,low_band,high_band):
 
 def diff_sum_div_band(treatment, control,low_band,high_band):
     
+    """Calculate band ratio by summing the power within bands, dividing each by respective bandwidths, then finding low/ high ratio
+    ----------
+    treatment : fooof object/ fooof.group object
+        fooof'ed power spectrum
+    control : fooof object/ fooof.group object
+        fooof'ed power spectrum
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.    
+
+    Outputs
+    -------
+    ratio : float
+        Oscillation power ratio.
+    """
 
     # Extract frequencies within each specified band
     _, low_band_powers = trim_spectrum(treatment.freqs, treatment.power_spectra, low_band)
@@ -153,7 +175,23 @@ def diff_sum_div_band(treatment, control,low_band,high_band):
 #By this point fooof should have fit both treatment and control
 def ratios(treatment,control,low_band=[4,8],high_band=[15,30]):
 
-    res=[]
+    """Runs 3 distinct ratio calculations. See 'diff_CF_Power_only' 'diff_average_power_set_band' 'diff_sum_div_band'
+    ----------
+    treatment : fooof object/ fooof.group object
+        fooof'ed power spectrum
+    control : fooof object/ fooof.group object
+        fooof'ed power spectrum
+    low_band_range (optional): list of [float, float]
+        Band definition for the lower band.
+    high_band_range (optional): list of [float, float]
+        Band definition for the upper band.    
+
+    Outputs
+    -------
+    ratio : float
+        Oscillation power ratio.
+    """
+    res =[]
     # Execute first method:
     # difference in power of central frequency 
     # of high and low frequency peak only
@@ -168,5 +206,5 @@ def ratios(treatment,control,low_band=[4,8],high_band=[15,30]):
     # Execute third method:
     # difference in sum(powers in set band)/bandwidth ratio
     res.append(diff_sum_div_band(treatment,control,low_band,high_band))
-    
+    print("--------------------------------------------------")
     return res
