@@ -143,3 +143,65 @@ def compare_ratio(fm1, fm2, low_band_range, high_band_range, mode):
 
     else:
         print(compare_ratio.__doc__)
+        
+def calc_group_band_ratio(fg,low_band_range, high_band_range):
+    """Calculate average power in band ratio 
+
+    ----------
+    fg : fooof group object used to find ratio
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.
+
+    Outputs
+    -------
+    ratios : list of floats
+        Oscillation power ratios.
+    """
+    size = len(fg.get_results())
+    res = []
+    for i in range(size):
+        res.append(calc_band_ratio(fg.freqs,fg.power_spectra[i], low_band_range, high_band_range))
+    return res
+
+def calc_group_cf_power_ratio(fg, low_band_range, high_band_range):
+    """Calculate band ratio by finding the power of high and low central frequency
+
+    ----------
+    fg : fooof group object used to find ratio
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.
+
+    Outputs
+    -------
+    ratios : floats
+        Oscillation power ratio.
+    """
+    size = len(fg.get_results())
+    res = []
+    for i in range(size):
+        res.append(calc_cf_power_ratio(fg.get_fooof(i), low_band_range, high_band_range))
+    return res
+def calc_group_density_ratio(fg, low_band_range, high_band_range):
+    """Calculate band ratio by summing power power in bands and dividing by bandwidth
+
+    ----------
+    fg : fooof object used to find ratio
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.
+
+    Outputs
+    -------
+    ratios : floats
+        Oscillation power ratio.
+    """
+    size = len(fg.get_results())
+    res = []
+    for i in range(size):
+        res.append(calc_density_ratio(fg.freqs,fg.power_spectra[i], low_band_range, high_band_range))
+    return res
