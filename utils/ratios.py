@@ -57,7 +57,7 @@ calc_theta_alpha_ratio.__doc__ = calc_band_ratio.__doc__
 calc_alpha_beta_ratio.__doc__ = calc_band_ratio.__doc__
 
 def calc_cf_power_ratio(fm, low_band_range, high_band_range):
-    """Calculate band ratio by finding the power of high and low peak frequency
+    """Calculate band ratio by finding the power of high and low central frequency
 
     ----------
     fm : fooof object used to find ratio
@@ -83,7 +83,7 @@ def calc_density_ratio(freqs, psd, low_band_range,high_band_range):
 
     """Calculate band ratio by summing the power within bands, dividing each by respective bandwidths, then finding low/ high ratio
     ----------
-    treatment : [n floats]
+    freqs : [n floats]
         list of frequencies.
     psd : [n floats]
         associated powers to frequencies.
@@ -108,7 +108,7 @@ def calc_density_ratio(freqs, psd, low_band_range,high_band_range):
 
 def compare_ratio(fm1, fm2, low_band_range, high_band_range, mode):
 
-    """Calculate band ratio by finding the power of high and low peak frequency
+    """Finds the difference in power ratio of fm2 - fm1
 
     ----------
     fm1 : fooof object used to find ratio
@@ -124,7 +124,7 @@ def compare_ratio(fm1, fm2, low_band_range, high_band_range, mode):
 
     Outputs
     -------
-    ratio : float
+    difference in ratio : float
         Oscillation power ratio.
     """
 
