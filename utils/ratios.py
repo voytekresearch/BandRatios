@@ -1,7 +1,7 @@
 """Tools and utilities for calculating oscillation band ratios."""
 
 from functools import partial
-
+from fooof.analysis import get_band_peak
 import numpy as np
 
 from fooof.utils import trim_spectrum
@@ -56,14 +56,11 @@ calc_theta_beta_ratio.__doc__ = calc_band_ratio.__doc__
 calc_theta_alpha_ratio.__doc__ = calc_band_ratio.__doc__
 calc_alpha_beta_ratio.__doc__ = calc_band_ratio.__doc__
 
-    
-def diff_CF_Power_only(treatment,control,low_band,high_band):
+def calc_cf_power_ratio(fm, low_band_range, high_band_range):
     """Calculate band ratio by finding the power of high and low peak frequency
+
     ----------
-    treatment : fooof object/ fooof.group object
-        fooof'ed power spectrum
-    control : fooof object/ fooof.group object
-        fooof'ed power spectrum
+    fm : fooof object used to find ratio
     low_band_range : list of [float, float]
         Band definition for the lower band.
     high_band_range : list of [float, float]
@@ -74,80 +71,22 @@ def diff_CF_Power_only(treatment,control,low_band,high_band):
     ratio : float
         Oscillation power ratio.
     """
-    #TODO: Assumes one peak in each band
-    #Gather peak info for both PSDs
-    treatment_peaks = treatment.get_all_data('peak_params')
-    control_peaks = control.get_all_data('peak_params')
-
-    treatmentRatioList = []
-    controlRatioList = []
-
-    low_found = False
-    #curr_id
+    peaks = fm.get_results()
     
-    # adds the power ratio of each peak contained in low_band and high band respectively to a list 
-    for i in range(len(treatment_peaks)):
-        if((low_band[0] <= treatment_peaks[i][0] <=low_band[1]) and low_found == False):
-            low_found = True
-            #curr_id = treatment_peaks[i][3]
-            low_power = treatment_peaks[i][1]
-            continue
+    low_peak = get_band_peak(peaks[1], low_band_range, ret_one=True)
+    high_peak = get_band_peak(peaks[1], high_band_range, ret_one=True)
 
-        elif((low_found == True) and high_band[0]<=treatment_peaks[i][0]<=high_band[1]):
-            high_power = treatment_peaks[i][1]
-            treatmentRatioList.append(low_power/high_power)
-            low_found = False
-            
-    for i in range(len(control_peaks)):
-        if((low_band[0] <= control_peaks[i][0] <=low_band[1]) and low_found == False):
-            low_found = True
-            #curr_id = treatment_peaks[i][3]
-            low_power = control_peaks[i][1]
-            continue
-
-        elif((low_found == True) and high_band[0]<=control_peaks[i][0]<=high_band[1]):
-            high_power = control_peaks[i][1]
-            controlRatioList.append(low_power/high_power)
-            low_found = False
-
-    res = abs(np.mean(treatmentRatioList)-np.mean(controlRatioList))
-    print("Diff CF only:" ,res)
-    return res
-
-def diff_average_power_set_band(treatment,control,low_band,high_band):
-    """Calculate band ratio by finding average power within specified bands 
-    ----------
-    treatment : fooof object/ fooof.group object
-        fooof'ed power spectrum
-    control : fooof object/ fooof.group object
-        fooof'ed power spectrum
-    low_band_range : list of [float, float]
-        Band definition for the lower band.
-    high_band_range : list of [float, float]
-        Band definition for the upper band.    
-
-    Outputs
-    -------
-    ratio : float
-        Oscillation power ratio.
-    """
-
-    treatment_ratio = calc_band_ratio(treatment.freqs,treatment.power_spectra,low_band,high_band)
-    control_ratio = calc_band_ratio(control.freqs, control.power_spectra,low_band,high_band)
-
-    res = abs(treatment_ratio-control_ratio)
-    print("Diff ratio of average power set bands: ", res)
-    return res
-
-
-def diff_sum_div_band(treatment, control,low_band,high_band):
+    return low_peak[1]/high_peak[1]
     
+    
+def calc_density_ratio(freqs, psd, low_band_range,high_band_range):
+
     """Calculate band ratio by summing the power within bands, dividing each by respective bandwidths, then finding low/ high ratio
     ----------
-    treatment : fooof object/ fooof.group object
-        fooof'ed power spectrum
-    control : fooof object/ fooof.group object
-        fooof'ed power spectrum
+    treatment : [n floats]
+        list of frequencies.
+    psd : [n floats]
+        associated powers to frequencies.
     low_band_range : list of [float, float]
         Band definition for the lower band.
     high_band_range : list of [float, float]
@@ -158,53 +97,49 @@ def diff_sum_div_band(treatment, control,low_band,high_band):
     ratio : float
         Oscillation power ratio.
     """
+    _, low_band_powers = trim_spectrum(freqs, psd, low_band_range)
+    _, high_band_powers = trim_spectrum(freqs, psd, high_band_range)
 
-    # Extract frequencies within each specified band
-    _, low_band_powers = trim_spectrum(treatment.freqs, treatment.power_spectra, low_band)
-    _, high_band_powers = trim_spectrum(control.freqs, control.power_spectra,high_band)
-   
-    # Divides each sum of each power spectrum by bandwidth.
-    low_sum = sum(low_band_powers) / len(low_band) 
-    high_sum = sum(high_band_powers) / len(low_band)
-    
-    # Average divided sums and find ratio
-    res = np.mean(low_sum)/np.mean(high_sum)
-    print("Diff sum(power in band)/bandwidth: ",res)
-    return res
+    low_density = sum(low_band_powers) / len(low_band_range) 
+    high_density = sum(high_band_powers) / len(low_band_range)
 
-#By this point fooof should have fit both treatment and control
-def ratios(treatment,control,low_band=[4,8],high_band=[15,30]):
+    return low_density/high_density
 
-    """Runs 3 distinct ratio calculations. See 'diff_CF_Power_only' 'diff_average_power_set_band' 'diff_sum_div_band'
+
+def compare_ratio(fm1, fm2, low_band_range, high_band_range, mode):
+
+    """Calculate band ratio by finding the power of high and low peak frequency
+
     ----------
-    treatment : fooof object/ fooof.group object
-        fooof'ed power spectrum
-    control : fooof object/ fooof.group object
-        fooof'ed power spectrum
-    low_band_range (optional): list of [float, float]
+    fm1 : fooof object used to find ratio
+    fm2 : fooof object used to find ratio
+    low_band_range : list of [float, float]
         Band definition for the lower band.
-    high_band_range (optional): list of [float, float]
-        Band definition for the upper band.    
+    high_band_range : list of [float, float]
+        Band definition for the upper band.
+    mode: string 
+        "d" - calculate density ratio
+        "cf"- calculate ratio of power from high and low central frequency
+        "a" - calculate average power within 2 band 
 
     Outputs
     -------
     ratio : float
         Oscillation power ratio.
     """
-    res =[]
-    # Execute first method:
-    # difference in power of central frequency 
-    # of high and low frequency peak only
-    res.append(diff_CF_Power_only(treatment,control,low_band,high_band))
-    print("\t")
 
-    # Execute second method:
-    # difference in average power in set bands ratio
-    res.append(diff_average_power_set_band(treatment,control,low_band,high_band))
-    print("\t")
+    if(mode == "d"):
+        r1 = calc_density_ratio(fm1.freqs, fm1.power_spectrum, low_band_range, high_band_range)
+        r2 = calc_density_ratio(fm2.freqs, fm2.power_spectrum, low_band_range, high_band_range)
+        return r2-r1
+    elif(mode=="cf"):
+        r1 = calc_cf_power_ratio(fm1, low_band_range, high_band_range)
+        r2 = calc_cf_power_ratio(fm2, low_band_range, high_band_range)
+        return r2-r1
+    elif(mode == "a"):
+        r1 = calc_band_ratio(fm1.freqs, fm1.power_spectrum, low_band_range, high_band_range)
+        r2 = calc_band_ratio(fm2.freqs, fm2.power_spectrum, low_band_range, high_band_range)
+        return r2-r1
 
-    # Execute third method:
-    # difference in sum(powers in set band)/bandwidth ratio
-    res.append(diff_sum_div_band(treatment,control,low_band,high_band))
-    print("--------------------------------------------------")
-    return res
+    else:
+        print(compare_ratio.__doc__)
