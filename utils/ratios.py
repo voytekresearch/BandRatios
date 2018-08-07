@@ -205,3 +205,22 @@ def calc_group_density_ratio(fg, low_band_range, high_band_range):
     for i in range(size):
         res.append(calc_density_ratio(fg.freqs,fg.power_spectra[i], low_band_range, high_band_range))
     return res
+
+def get_group_ratios(fg, low_band_range, high_band_range):
+    res = []
+    res.append( calc_group_band_ratio(fg, low_band_range, high_band_range))
+    res.append( calc_group_cf_power_ratio(fg, low_band_range, high_band_range))
+    res.append( calc_group_density_ratio(fg, low_band_range, high_band_range))
+    return res
+
+def average_of_sims(data):
+    res = []
+    
+    for i in range(len(data)):
+        method = []
+        for j in range(len(data[i])):
+            method.append(np.mean(data[i][j]))
+        res.append(method)
+
+    return res
+    
