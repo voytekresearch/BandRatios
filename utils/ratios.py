@@ -200,7 +200,7 @@ def calc_group_density_ratio(fg, low_band_range, high_band_range):
     """Calculate band ratio by summing power power in bands and dividing by bandwidth
 
     ----------
-    fg : fooof object used to find ratio
+    fg : fooofGroup object used to find ratio
     low_band_range : list of [float, float]
         Band definition for the lower band.
     high_band_range : list of [float, float]
@@ -221,8 +221,26 @@ def calc_group_density_ratio(fg, low_band_range, high_band_range):
 
 
 def get_group_ratios(fg, low_band_range, high_band_range):
+<<<<<<< HEAD
+    """ Calculates group band ratios cannonically, central frequency ratio, and density 
+    
+     ----------
+    fg : fooofGroup object used to find ratios
+    low_band_range : list of [float, float]
+        Band definition for the lower band.
+    high_band_range : list of [float, float]
+        Band definition for the upper band.
+
+    Outputs
+    -------
+    ratios : floats
+        Oscillation power ratio.
+    
+    """
+=======
     """   """
 
+>>>>>>> a9a3b8e91f0b2704a59c5b55f449e20a89cb91a5
     res = []
     res.append( calc_group_band_ratio(fg, low_band_range, high_band_range))
     res.append( calc_group_cf_power_ratio(fg, low_band_range, high_band_range))
@@ -243,3 +261,79 @@ def average_of_sims(data):
         res.append(method)
 
     return res
+<<<<<<< HEAD
+    
+def gen_sample():
+    """
+    generates a sample for generating a fooof PSD with a theta, alpha, and beta oscillation
+    
+    Output
+    -------
+    sample : array
+            [Theta freq, Theta amp, Theta SD,
+             Alpha freq, Alpha amp, Alpha SD,
+             Beta freq,  Beta amp, Beta SD] 
+    """
+    
+    sample = []
+    
+    sample.append(np.random.uniform(4, 7)) #Theta freq
+    sample.append(np.random.uniform(.35,.75)) #Theta Amp
+    sample.append(np.random.uniform(.25,1.05))#Theta SD
+    
+    sample.append(np.random.uniform(8, 12)) #Alpha freq
+    sample.append(np.random.uniform(.25,.55)) #Alpha Amp
+    sample.append(np.random.uniform(.25,1.05))#Alpha SD
+    
+    sample.append(np.random.uniform(18, 25)) #Beta freq
+    sample.append(np.random.uniform(.4,.75)) #Beta Amp
+    sample.append(np.random.uniform(.25,1.05))#Beta SD
+    
+    
+    return sample
+
+def gen_null_sample():
+    """
+    generates a sample for generating a fooof PSD with no oscillations
+    
+    Output
+    ------
+    sample : array
+            [.0000001,.0000001,.0000001]
+    """
+    
+    return [.0000001,.0000001,.0000001]
+
+def sim_slope_data(end_slope, low_band_range, high_band_range, osc=True):
+    """
+    Generates 100 simulated PSDs with slopes ranging from .25 to end_slope with or without oscillation
+    
+    -------
+    end_slope : generates PSDs with slopes ranging from .25 to end_slope in .25 increments
+    low_band_range: numerator used to calculate band ratio
+    high_band_range: denominator used to calculate band ratio
+    osc : if false PSD contains only 1/f, else, theta, alpha, and beta oscillations added
+    
+    Output
+    ------
+    3-D array [slope][ratio method][trial]
+    """
+    res = []
+    i = 1
+    if(osc==True):
+        func = gen_sample
+    else:
+        func = gen_null_sample
+    while(i*.25 < end_slope):
+
+        bg = [0,i*.25]
+        
+        #100 trails for each treatment and control sim
+        freq, power, _ = gen_group_power_spectra(100, [1,50], bg, func(), nlvs=np.random.uniform(.005,.02))
+        fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
+        fg.fit(freq, power)
+        res.append(get_group_ratios(fg,low_band_range,high_band_range))
+        i+=1
+    return res
+=======
+>>>>>>> a9a3b8e91f0b2704a59c5b55f449e20a89cb91a5
