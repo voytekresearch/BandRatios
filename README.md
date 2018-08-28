@@ -10,7 +10,7 @@ This notebook examines how the ratio two PSDs can differ with and without synthe
 ###### 1-Ratio-Calculation-Methods
 This notebook introduces two more ways of calculating band ratios. Functions can be found in /utils/ratios
 
-Central Frequency Ratio: calc_cf_power_ratio finds the ratio of the maximum power within the two bands, which is found by the central frequency within the two bands.
+Central Frequency Ratio: calc_cf_power_ratio finds the ratio of the maximum power within the two bands, which is found by the central frequency within the two bands.  Oscillation specific
 
 Density Ratio: calc_density_ratio sums all the power within a band and divides by the band width. This is similar to the cannonical approach with the distinction that the cannonical approach instead divides by number of samples.
 
