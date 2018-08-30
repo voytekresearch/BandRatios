@@ -6,6 +6,28 @@ from ratios import *
 
 ##########################################
 
+def average_of_sims(data):
+    """ Takes a 3D array in the form of [slope][ratio method][trial] and averages [trials]
+    
+    -----------
+    data : 3D array [slope][ratio method][trial]
+    
+    Output
+    ------
+    2D array [slope][ratio method]
+       
+    """
+
+    res = []
+
+    for i in range(len(data)):
+        method = []
+        for j in range(len(data[i])):
+            method.append(np.mean(data[i][j]))
+        res.append(method)
+
+    return res
+
 def compare_ratio(fm1, fm2, low_band_range, high_band_range, mode):
     """Finds the difference in power ratio of fm2 - fm1
 
