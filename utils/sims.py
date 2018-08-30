@@ -58,9 +58,11 @@ def set_vary_bands(low_band, high_band, stationary):
         stat = low_band
     return (vary, stat)
 
-def sim_slope_data(end_slope, low_band_range, high_band_range, osc=True):
+################~~~~ Slope ~~~~################
+
+def gen_varying_slope(end_slope, low_band, high_band,fname="slope_data"):
     """
-    Generates 100 simulated PSDs with slopes ranging from .25 to end_slope with or without oscillation
+    Generates 100 simulated PSDs with slopes ranging from .25 to end_slope without oscillation
     
     -------
     end_slope : generates PSDs with slopes ranging from .25 to end_slope in .25 increments
@@ -74,25 +76,27 @@ def sim_slope_data(end_slope, low_band_range, high_band_range, osc=True):
     """
     res = []
     i = 1
-    if(osc==True):
-        gauss_params = gen_sample_slope()
-    else:
-        # [] should work instead
-        gauss_params = []
+
     while(i*.25 < end_slope):
 
-        bg = [0,i*.25]
-        
-        #100 trails for each treatment and control sim
-        freq, power, _ = gen_group_power_spectra(100, [1,50], bg, gauss_params, nlvs=np.random.uniform(.005,.02))
-        fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
-        fg.fit(freq, power)
-        res.append(get_group_ratios(fg,low_band_range,high_band_range))
+        fg = gen_slope_iter(i)
+        res.append(get_group_ratios(fg,low_band,high_band))
         i+=1
-    return res
+    np.save('./dat/'+ fname, res)
+
+def gen_slope_iter(i):
+    bg = [0,i*.25]
+        
+    #100 trails for each treatment and control sim
+    freqs, powers, _ = gen_group_power_spectra(100, [1,50], bg, [], nlvs=np.random.uniform(.005,.02))
+    fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
+    fg.fit(freqs, powers)
+    
+    return fg
+    
 
 ################~~~~ CENTER FREQUENCY ~~~~################
-def gen_varying_cf(low_band, high_band, stationary, fname=""):
+def gen_varying_cf(low_band, high_band, stationary, fname="cf_data"):
     """
     This is a convenience function to simulate data about how varying CF influences band ratios.
     One band is set stationary, either 'low' or 'high' centered at its bandwidth while the other band 
@@ -156,7 +160,7 @@ def gen_sample_cf(vary, stat, i):
 
 ################~~~~ Amplitude ~~~~################
 
-def gen_varying_amp(low_band, high_band, stationary, fname=""):
+def gen_varying_amp(low_band, high_band, stationary, fname="amp_data"):
     """
     This is a convenience function to simulate data about how varying Amplitude influences band ratios.
     One band is set stationary, either 'low' or 'high' while the other band will vary in amplitude from .1 to 1.5.
@@ -248,7 +252,7 @@ def gen_varying_bw(low_band, high_band, stationary, fname=""):
     vary, stat = set_vary_bands(low_band, high_band, stationary)
     i = 2
     #iterates amplitudes .2 -> 1.2
-    for i in range(12):
+    for i in range(1,12):
         fg = gen_bw_iter(vary,stat,i,low_band, high_band)
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1

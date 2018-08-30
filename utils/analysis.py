@@ -2,19 +2,19 @@
 
 import numpy as np
 
-from ratios import *
+from utils.ratios import *
 
 ##########################################
 
 def average_of_sims(data):
-    """ Takes a 3D array in the form of [slope][ratio method][trial] and averages [trials]
+    """ Takes a 3D array in the form of [parameter][ratio method][trial] and averages [trials]
     
     -----------
-    data : 3D array [slope][ratio method][trial]
+    data : 3D array [parameter][ratio method][trial]
     
     Output
     ------
-    2D array [slope][ratio method]
+    2D array [parameter][ratio method]
        
     """
 
