@@ -44,56 +44,85 @@ def gen_sample():
     
     return sample
 
-def gen_sample_slope():
-    
-    return [6, .5, 1, 25, .5, 1]
-
 def set_vary_bands(low_band, high_band, stationary):
+    """ Determines which of two bands is the band that will vary and will remain stationary
+    
+    ---------
+    low_band : [float,float] : bandwidth to be assigned 'stationary' or 'vary'
+    high_band : [float,float] : bandwidth to be assigned 'stationary' or 'vary'
+    stationary : string : 'low' or 'high' to determine which bandwidth will remain stationary, other
+                           will be assigned vary
+    
+    OUTPUT
+    ----------
+    tuple : (vary, stationary)
+    
+    """
+    
     if(stationary == 'high'):
         vary = low_band
         stat = high_band
         
+    # 'low' is not checked as it has a usage check before this function is called    
     else: 
         vary = high_band
         stat = low_band
     return (vary, stat)
 
+def gen_trials(n_trials, bg = [0,1], gauss_params = []):
+    """
+    Simulates n_trials of fooof synthesized PSDs in the form of FooofGroup object.
+    
+    ----------
+    
+    n_trials : int : number of PSDs in FooofGroup object
+    bg : [float, float] background params to generate PSD
+    gauss_params [float, float] oscillations to add to aperiodic bg parameters
+    
+    OUTPUT
+    ----------
+    
+    FooofGroup object of simulated PSDs
+    """
+    #100 trails for each treatment and control sim
+    freqs, powers, _ = gen_group_power_spectra(n_trials, [1,50], bg, gauss_params, nlvs=np.random.uniform(.005,.02))
+    fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
+    fg.fit(freqs, powers)
+    
+    return fg
+
 ################~~~~ Slope ~~~~################
 
 def gen_varying_slope(end_slope, low_band, high_band,fname="slope_data"):
     """
-    Generates 100 simulated PSDs with slopes ranging from .25 to end_slope without oscillation
+    Generates 100 simulated PSDs with slopes ranging from .25 up to and including 'end_slope' without
+    oscillations. For each set of 100 trials, 2 ratio measures are calculated. Output will be saved
+    as a 3D array to './dat' in the form of [slope][ratio_measure][trial]
     
     -------
     end_slope : generates PSDs with slopes ranging from .25 to end_slope in .25 increments
     low_band_range: numerator used to calculate band ratio
     high_band_range: denominator used to calculate band ratio
-    osc : if false PSD contains only 1/f, else, theta, alpha, and beta oscillations added
     
     Output
     ------
     3-D array [slope][ratio method][trial]
     """
+    
     res = []
     i = 1
 
     while(i*.25 < end_slope):
-
-        fg = gen_slope_iter(i)
+        
+        bg = [0,i*.25]
+        
+        # creates 100 simulated fooof PSDs
+        fg = gen_trials(100,bg) 
+        
+        # calculates ratios
         res.append(get_group_ratios(fg,low_band,high_band))
         i+=1
     np.save('./dat/'+ fname, res)
-
-def gen_slope_iter(i):
-    bg = [0,i*.25]
-        
-    #100 trails for each treatment and control sim
-    freqs, powers, _ = gen_group_power_spectra(100, [1,50], bg, [], nlvs=np.random.uniform(.005,.02))
-    fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
-    fg.fit(freqs, powers)
-    
-    return fg
-    
 
 ################~~~~ CENTER FREQUENCY ~~~~################
 def gen_varying_cf(low_band, high_band, stationary, fname="cf_data"):
@@ -105,7 +134,7 @@ def gen_varying_cf(low_band, high_band, stationary, fname="cf_data"):
     both bands are set, 3 ratio measures will be calculated. The output will be a 3D array in the
     form of [CF][ratio_method][trial]. The output is saved to /dat
     ASSUMPTIONS:
-    Slope = 1 ; Offset = 0 ; Amplitude = .5 ; BandWidth = 1
+    Slope = 1 ; Offset = 0 ; Amplitude = .5 ; BandWidth = 1 ; Stationary CF centered
     
     ---------------
     low_band : list : numerator when calculating band ratios, also potential stationary band
@@ -126,26 +155,18 @@ def gen_varying_cf(low_band, high_band, stationary, fname="cf_data"):
     
     # iterations is .1 increments
     iters = (vary[1]-vary[0])*10
-                              
+    
     for i in range(iters):
-        fg = gen_cf_iter(vary,stat, i, low_band, high_band)
+        gauss_params = gen_sample_cf(vary, stat, i)
+        
+        # creates 100 simulated fooof PSDs
+        fg = gen_trials(100, gauss_params = gauss_params)
+        
+        # calculates band ratios
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1
-    np.save('./dat/'+ fname, res)
-    
+    np.save('./dat/'+ fname, res)                          
 
-def gen_cf_iter(vary, stat, i, low_band, high_band):
-    """
-    Simulates 100 fooof PSDs of an instances of varying Central Frequencies
-    """
-    gauss_params = gen_sample_cf(vary, stat, i)
-    freqs, powers, _ = gen_group_power_spectra(100, [1, 50], [0,1], gauss_params, nlvs=np.random.uniform(.005,.02))
-    fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
-    fg.fit(freqs, powers)
-    return fg
-                              
-
-# One function can be used regardless if low_band or high_band is stationary
 def gen_sample_cf(vary, stat, i):
     """
     Generates oscillations of varying center frequencies based on current iteration
@@ -156,8 +177,7 @@ def gen_sample_cf(vary, stat, i):
     i : ith iteration
     
     """
-    return [vary[0]+i*.1, .5, 1, np.mean(stat), .5, 1]
-
+    return [vary[0]+i*.1, .5, 1, np.mean(stat), .5, 1]    
 ################~~~~ Amplitude ~~~~################
 
 def gen_varying_amp(low_band, high_band, stationary, fname="amp_data"):
@@ -187,37 +207,20 @@ def gen_varying_amp(low_band, high_band, stationary, fname="amp_data"):
     
     # Set the stationary and varying band 
     vary, stat = set_vary_bands(low_band, high_band, stationary)
-    
+
     #iterates amplitudes .1 -> 1.5
     for i in range(14):
-        fg = gen_amp_iter(vary,stat,i,low_band, high_band)
+        
+        gauss_params = gen_sample_amp(vary,stat, i)
+        
+        # creates 100 simulated fooof PSDs
+        fg = gen_trials(100, gauss_params = gauss_params)
+        
+        # calculates ratios for all 100 trials
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1
     np.save('./dat/'+ fname, res)
-        
-def gen_amp_iter(vary,stat,i,low_band, high_band):
-    """
-    Simulates 100 fooof PSDs for an instance of varying amplitude
     
-    -----------
-    vary : [float, float] : band which will vary in amplitude
-    stat : [float, float  : band which will remain stationaty
-    i : int : ith iteration
-    low_band : [float, float] : lower band of interest
-    high_band : [float, float] : higher band of interest
-    
-    
-    OUTPUT
-    --------
-    FOOOFGroup object of 100 trials of oscillations of a given amplitude
-    """
-    gauss_params = gen_sample_amp(vary, stat, i)
-    freqs, powers, _ = gen_group_power_spectra(100, [1, 50], [0,1], gauss_params, nlvs=np.random.uniform(.005,.02))
-    fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
-    fg.fit(freqs, powers)
-    return fg
-
-
 def gen_sample_amp(vary,stat, i):
     """
     Generates oscillations of varying amplitude based on current iteration
@@ -250,35 +253,19 @@ def gen_varying_bw(low_band, high_band, stationary, fname=""):
     
     # Set the stationary and varying band 
     vary, stat = set_vary_bands(low_band, high_band, stationary)
-    i = 2
+    
     #iterates amplitudes .2 -> 1.2
     for i in range(1,12):
-        fg = gen_bw_iter(vary,stat,i,low_band, high_band)
+        
+        gauss_params = gen_sample_bw(vary, stat, i)
+        
+        # creates 100 simulated fooof PSDs
+        fg = gen_trials(100, gauss_params = gauss_params)
+        
+        #calculates ratios for all 100 trials
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1
     np.save('./dat/'+ fname, res)
-    
-def gen_bw_iter(vary,stat,i,low_band, high_band):
-    """
-    Simulates 100 fooof PSDs for and instance of varying band width
-    
-    -----------
-    vary : [float, float] : band which will vary in band width
-    stat : [float, float  : band which will remain stationaty
-    i : int : ith iteration
-    low_band : [float, float] : lower band of interest
-    high_band : [float, float] : higher band of interest
-    
-    
-    OUTPUT
-    --------
-    FOOOFGroup object of 100 trials of oscillations of a given band width
-    """
-    gauss_params = gen_sample_bw(vary, stat, i)
-    freqs, powers, _ = gen_group_power_spectra(100, [1, 50], [0,1], gauss_params, nlvs=np.random.uniform(.005,.02))
-    fg = FOOOFGroup(peak_width_limits=[1,8], min_peak_amplitude=0.05, max_n_peaks=3)
-    fg.fit(freqs, powers)
-    return fg
 
 def gen_sample_bw(vary, stat, i):
     """
