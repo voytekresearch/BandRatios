@@ -93,7 +93,7 @@ def gen_trials(n_trials, bg = [0,1], gauss_params = []):
 
 ################~~~~ Slope ~~~~################
 
-def gen_varying_slope(low_band, high_band, fname="slope_data", inc = .25, end_slope = 3,n_trials=100):
+def gen_varying_slope(low_band, high_band, fname="./dat/slope_data", inc = .25, end_slope = 3,n_trials=100):
     """
     Generates 100 simulated PSDs with slopes ranging from .25 up to and including 'end_slope' without
     oscillations. For each set of 100 trials, 2 ratio measures are calculated. Output will be saved
@@ -126,15 +126,15 @@ def gen_varying_slope(low_band, high_band, fname="slope_data", inc = .25, end_sl
         bg = [0,i*inc]
         
         # creates 100 simulated fooof PSDs
-        fg = gen_trials(n_trials,bg) 
+        fg = gen_trials(int(n_trials),bg) 
         
         # calculates ratios
         res.append(get_group_ratios(fg,low_band,high_band))
         i+=1
-    np.save('./dat/'+ fname, res)
+    np.save(fname, res)
 
 ################~~~~ CENTER FREQUENCY ~~~~################
-def gen_varying_cf(low_band, high_band, stationary, fname="cf_data", inc = .1, n_trials = 100):
+def gen_varying_cf(low_band, high_band, stationary, fname="./dat/cf_data", inc = .1, n_trials = 100):
     """
     This is a convenience function to simulate data about how varying CF influences band ratios.
     One band is set stationary, either 'low' or 'high' centered at its bandwidth while the other band 
@@ -164,7 +164,6 @@ def gen_varying_cf(low_band, high_band, stationary, fname="cf_data", inc = .1, n
     # Set the stationary and varying band 
     vary, stat = set_vary_bands(low_band, high_band, stationary)
     
-    # calculates number of iterations assuming resolution = .1
     i = 0
     while(vary[0]+ i*inc < vary[1] ):
         gauss_params = gen_sample_cf(vary, stat, i, inc)
@@ -175,7 +174,7 @@ def gen_varying_cf(low_band, high_band, stationary, fname="cf_data", inc = .1, n
         # calculates band ratios
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1
-    np.save('./dat/'+ fname, res)                          
+    np.save(fname, res)                          
 
 def gen_sample_cf(vary, stat, i, inc):
     """
@@ -190,7 +189,7 @@ def gen_sample_cf(vary, stat, i, inc):
     return [vary[0]+i*inc, .5, 1, np.mean(stat), .5, 1]    
 ################~~~~ Amplitude ~~~~################
 
-def gen_varying_amp(low_band, high_band, stationary, fname="amp_data", end_amp = 1.5, inc = .1, n_trials = 100):
+def gen_varying_amp(low_band, high_band, stationary, fname="./dat/amp_data", end_amp = 1.5, inc = .1, n_trials = 100):
     """
     This is a convenience function to simulate data about how varying Amplitude influences band ratios.
     One band is set stationary, either 'low' or 'high' while the other band will vary in amplitude from .1 to end_amp.
@@ -235,7 +234,7 @@ def gen_varying_amp(low_band, high_band, stationary, fname="amp_data", end_amp =
         # calculates ratios for all 100 trials
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1
-    np.save('./dat/'+ fname, res)
+    np.save(fname, res)
     
 def gen_sample_amp(vary,stat, i,inc):
     """
@@ -250,7 +249,7 @@ def gen_sample_amp(vary,stat, i,inc):
 
 ################~~~~ Band Width ~~~~################
 
-def gen_varying_bw(low_band, high_band, stationary, fname="band_width_data", inc = .1, end_width = 2,n_trials = 100):
+def gen_varying_bw(low_band, high_band, stationary, fname="./dat/band_width_data", inc = .1, end_width = 2,n_trials = 100):
     """
     This is a convenience function to simulate data about how varying bandwidth influences band ratios
     One band is set stationary, either 'low' or 'high' while the other band will vary in band width from
@@ -294,7 +293,7 @@ def gen_varying_bw(low_band, high_band, stationary, fname="band_width_data", inc
         #calculates ratios for all 100 trials
         res.append(get_group_ratios(fg, low_band, high_band))
         i+=1
-    np.save('./dat/'+ fname, res)
+    np.save(fname, res)
 
 def gen_sample_bw(vary, stat, i, inc):
     """
