@@ -86,7 +86,7 @@ def gen_trials(n_trials, bg = [0,1], gauss_params = []):
     """
     #100 trails for each treatment and control sim
     freqs, powers, _ = gen_group_power_spectra(n_trials, [1,50], bg, gauss_params, nlvs=np.random.uniform(.005,.02))
-    fg = FOOOFGroup()
+    fg = FOOOFGroup(min_peak_amplitude=0.35,verbose=False)
     fg.fit(freqs, powers)
     
     return fg
