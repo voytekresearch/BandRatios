@@ -56,6 +56,9 @@ calc_theta_beta_ratio.__doc__ = calc_band_ratio.__doc__
 calc_theta_alpha_ratio.__doc__ = calc_band_ratio.__doc__
 calc_alpha_beta_ratio.__doc__ = calc_band_ratio.__doc__
 
+def calc_relative_ratio(rel_pow_low_band, rel_pow_high_band):
+    return rel_pow_low_band / rel_pow_high_band 
+    
 
 def calc_cf_power_ratio(fm, low_band, high_band):
     """Calculate band ratio by finding the power of high and low central frequency
@@ -241,3 +244,16 @@ def get_group_ratios(fg, low_band, high_band):
     res.append( calc_group_density_ratio(fg, low_band, high_band))
 
     return res
+
+
+def calc_group_rel_ratios(rel_pow_low, rel_pow_high):
+    res = []
+    
+    if(len(rel_pow_low) != len(rel_pow_high) ):
+        raise ValueError("Size of lists do not match.")
+    
+    for low,high in zip(rel_pow_low, rel_pow_high):
+        res.append(low/high)
+        
+    return res
+    

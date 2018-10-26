@@ -65,3 +65,38 @@ def compare_ratio(fm1, fm2, low_band_range, high_band_range, mode):
 
     else:
         print(compare_ratio.__doc__)
+        
+def calc_relative_power(freqs, ps, freq_range):
+    total_power = sum(ps) #This will be denominator
+    
+    # Extract frequencies within specified band
+    _, band_ps = trim_spectrum(freqs, ps, freq_range)
+    
+    return np.mean(band_ps)/total_power
+    
+def calc_group_relative_power(freqs, ps, freq_range):
+    total_power = sum(ps) #This will be denominator
+    res = []
+    
+    for powers in ps:
+        res.append(calc_relative_power(freqs,powers,freq_range))
+     
+    return res
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
