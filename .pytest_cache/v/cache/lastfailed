@@ -1,0 +1,4 @@
+{
+  "tests/test_sims.py::test_gen_trials": true,
+  "tests/test_sims.py::test_gen_varying_slope": true
+}
