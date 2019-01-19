@@ -1,5 +1,0 @@
-[
-  "tests/test_paramiter.py::test_param_iter",
-  "tests/test_paramiter.py::test_osc_param_iter",
-  "tests/test_paramiter.py::test_bg_param_iter"
-]
