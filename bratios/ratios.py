@@ -1,10 +1,14 @@
 """Tools and utilities for calculating oscillation band ratios."""
 
 from functools import partial
-from fooof.analysis import get_band_peak
 import numpy as np
+import seaborn as sb
 
+from fooof.analysis import get_band_peak
 from fooof.utils import trim_spectrum
+
+from settings import *
+
 
 ###################################################################################################
 ###################################################################################################
@@ -56,16 +60,29 @@ calc_theta_beta_ratio.__doc__ = calc_band_ratio.__doc__
 calc_theta_alpha_ratio.__doc__ = calc_band_ratio.__doc__
 calc_alpha_beta_ratio.__doc__ = calc_band_ratio.__doc__
 
-def calc_relative_ratio(rel_pow_low_band, rel_pow_high_band):
-    return rel_pow_low_band / rel_pow_high_band 
-    
 
-def calc_cf_power_ratio(fm, low_band, high_band):
-    """Calculate band ratio by finding the power of high and low central frequency
+def calc_relative_ratio(rel_pow_low_band, rel_pow_high_band):
+    """ Calculate ratio of relative power between two bands
 
     Parameters
     ----------
-    fm : fooof object used to find ratio
+    rel_pow_low_band : relative power of lower band.
+    rel_pow_high_band : relative power of higher band.
+
+    Outputs
+    -------
+    ratio : float
+
+    """
+    return rel_pow_low_band / rel_pow_high_band
+
+
+def calc_cf_power_ratio(fm, low_band, high_band):
+    """ Calculate band ratio by finding the power of high and low central frequency
+
+    Parameters
+    ----------
+    fm : fooof object used to find ratio.
     low_band : list of [float, float]
         Band definition for the lower band.
     high_band : list of [float, float]
@@ -74,7 +91,7 @@ def calc_cf_power_ratio(fm, low_band, high_band):
     Outputs
     -------
     ratio : float
-        Oscillation power ratio. - low/high (?)
+        Oscillation power ratio.
     """
 
     peaks = fm.get_results()
@@ -85,8 +102,9 @@ def calc_cf_power_ratio(fm, low_band, high_band):
     return low_peak[1]/high_peak[1]
 
 
-def calc_density_ratio(freqs, psd, low_band,high_band):
-    """Calculate band ratio by summing the power within bands, dividing each by respective bandwidths, then finding low/ high ratio
+def calc_density_ratio(freqs, psd, low_band, high_band):
+    """Calculate band ratio by summing the power within bands,
+    dividing each by respective bandwidths, then finding low/ high ratio.
     ----------
     freqs : [n floats]
         list of frequencies.
@@ -133,15 +151,15 @@ def compare_ratio(fm1, fm2, low_band, high_band, mode):
         Oscillation power ratio.
     """
 
-    if(mode == "d"):
+    if mode == "d":
         r1 = calc_density_ratio(fm1.freqs, fm1.power_spectrum, low_band, high_band)
         r2 = calc_density_ratio(fm2.freqs, fm2.power_spectrum, low_band, high_band)
         return r2-r1
-    elif(mode=="cf"):
+    elif mode == "cf":
         r1 = calc_cf_power_ratio(fm1, low_band, high_band)
         r2 = calc_cf_power_ratio(fm2, low_band, high_band)
         return r2-r1
-    elif(mode == "a"):
+    elif mode == "a":
         r1 = calc_band_ratio(fm1.freqs, fm1.power_spectrum, low_band, high_band)
         r2 = calc_band_ratio(fm2.freqs, fm2.power_spectrum, low_band, high_band)
         return r2-r1
@@ -149,7 +167,8 @@ def compare_ratio(fm1, fm2, low_band, high_band, mode):
     else:
         print(compare_ratio.__doc__)
 
-def calc_group_band_ratio(fg,low_band, high_band):
+
+def calc_group_band_ratio(fg, low_band, high_band):
     """Calculate average power in band ratio
 
     ----------
@@ -168,7 +187,7 @@ def calc_group_band_ratio(fg,low_band, high_band):
     size = len(fg.get_results())
     res = []
     for i in range(size):
-        res.append(calc_band_ratio(fg.freqs,fg.power_spectra[i], low_band, high_band))
+        res.append(calc_band_ratio(fg.freqs, fg.power_spectra[i], low_band, high_band))
 
     return res
 
@@ -203,9 +222,9 @@ def calc_group_density_ratio(fg, low_band, high_band):
 
     ----------
     fg : fooofGroup object used to find ratio
-    low_band : list of [float, float]
+    low_band : list of float, float
         Band definition for the lower band.
-    high_band : list of [float, float]
+    high_band : list of float, float
         Band definition for the upper band.
 
     Outputs
@@ -217,20 +236,19 @@ def calc_group_density_ratio(fg, low_band, high_band):
     size = len(fg.get_results())
     res = []
     for i in range(size):
-        res.append(calc_density_ratio(fg.freqs,fg.power_spectra[i], low_band, high_band))
+        res.append(calc_density_ratio(fg.freqs, fg.power_spectra[i], low_band, high_band))
 
     return res
 
 
 def get_group_ratios(fg, low_band, high_band):
+    """ Calculates group band ratios cannonically, central frequency ratio, and density
 
-    """ Calculates group band ratios cannonically, central frequency ratio, and density 
-    
      ----------
     fg : fooofGroup object used to find ratios
-    low_band : list of [float, float]
+    low_band : list of float, float
         Band definition for the lower band.
-    high_band : list of [float, float]
+    high_band : list of float, float
         Band definition for the upper band.
 
     Outputs
@@ -239,21 +257,115 @@ def get_group_ratios(fg, low_band, high_band):
         Oscillation power ratio.
     """
     res = []
-    res.append( calc_group_band_ratio(fg, low_band, high_band))
-    res.append( calc_group_cf_power_ratio(fg, low_band, high_band))
-    res.append( calc_group_density_ratio(fg, low_band, high_band))
+    res.append(calc_group_band_ratio(fg, low_band, high_band))
+    res.append(calc_group_cf_power_ratio(fg, low_band, high_band))
+    res.append(calc_group_density_ratio(fg, low_band, high_band))
+
+    return res
+
+
+def calc_relative_power(freqs, ps, freq_range):
+    """ Calculates relative power within a frequency band.
+
+     ----------
+    freqs : list of floats
+        Frequency vector.
+    ps : list of floats
+        Powers of frequencies.
+    freq_range : list of [float]
+        Range to calculate relative power from.
+
+    Outputs
+    -------
+    relative power : float
+        Relative power of given frequency range.
+    """
+    total_power = sum(ps) #This will be denominator
+
+    # Extract frequencies within specified band
+    _, band_ps = trim_spectrum(freqs, ps, freq_range)
+
+    return np.mean(band_ps)/total_power
+
+
+def calc_group_relative_power(freqs, ps, freq_range):
+    """ Calculates relative power within a frequency band.
+
+     ----------
+    freqs : list of list of floats
+        List of frequency vectors.
+    ps : list of list of floats
+        List of powers of frequencies.
+    freq_range : list of float
+        Range to calculate relative power from.
+
+    Outputs
+    -------
+    relative power : list of float
+        List of relative power of given frequency range.
+    """
+    res = []
+
+    for powers in ps:
+        res.append(calc_relative_power(freqs, powers, freq_range))
 
     return res
 
 
 def calc_group_rel_ratios(rel_pow_low, rel_pow_high):
+    """ Calculates relative ratio of power within two bands.
+
+    Parameters
+    ----------
+    rel_pow_low : float or list of floats
+        Low band power or list of low band powers
+    rel_pow_high : float or list of floats
+        High band power or list of high band powers
+
+    Outputs
+    -------
+    res : list of float
+        List of relative power ratio of given frequency range.
+    """
+    res = []
+
+    if len(rel_pow_low) != len(rel_pow_high):
+        raise ValueError("Size of lists do not match.")
+
+    for low, high in zip(rel_pow_low, rel_pow_high):
+        res.append(low/high)
+
+    return res
+
+def calc_interacting_param_ratios(data):
+    """Calculates absolute ratios from aperiodic and amplitude varied generated data.
+    
+    Parameters
+    ----------
+    data : custom object ndarray [apc value][frequency vector][psds][syn_params]
+    
+    Outputs
+    -------
+    res : array of ratios
+    
+    """
+    
     res = []
     
-    if(len(rel_pow_low) != len(rel_pow_high) ):
-        raise ValueError("Size of lists do not match.")
-    
-    for low,high in zip(rel_pow_low, rel_pow_high):
-        res.append(low/high)
+    for param in data:
+        freqs = param[1]
         
+        for psd in param[2]:
+            curr_ratio = calc_band_ratio(freqs, psd, THETA_BAND, BETA_BAND)
+            res.append(curr_ratio)
     return res
+    
+
+    
+    
+    
+    
+    
+    
+    
     
