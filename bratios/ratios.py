@@ -338,7 +338,7 @@ def calc_group_rel_ratios(rel_pow_low, rel_pow_high):
     return res
 
 def calc_interacting_param_ratios(data):
-    """Calculates absolute ratios from aperiodic and amplitude varied generated data.
+    """Calculates matrix of absolute ratios from interacting data.
     
     Parameters
     ----------
@@ -346,18 +346,30 @@ def calc_interacting_param_ratios(data):
     
     Outputs
     -------
-    res : array of ratios
+    res : 2D matrix of ratios where each dimension is a varied parameter
+    
+    ------------------------
+    |           |          |    
+    |   r_11    |  r_12    |
+    |           |          |
+    |-----------------------
+    |           |          |
+    |   r_21    |  r_22    |
+    |           |          |
+    ------------------------
     
     """
     
     res = []
     
     for param in data:
+        inner_list = []
         freqs = param[1]
         
         for psd in param[2]:
             curr_ratio = calc_band_ratio(freqs, psd, THETA_BAND, BETA_BAND)
-            res.append(curr_ratio)
+            inner_list.append(curr_ratio)
+        res.append(inner_list)
     return res
     
 

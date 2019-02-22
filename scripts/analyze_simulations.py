@@ -1,4 +1,4 @@
-""" This script calculates ratios and plots from simulated power spectral data where parameter(s) vary."""
+""" This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
