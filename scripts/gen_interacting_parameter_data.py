@@ -39,11 +39,12 @@ def main():
 
 
     ################# Center Frequency and BandWidth ####################
+    
     # This block generates PSDs where center frequency changes for
     # low band | High band is stationary cf and bw move both in the same band
 
     data = []
-    cf_low_step = Stepper(LOW_BAND[0], LOW_BAND[1], CF_INC)
+    cf_low_step = Stepper(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC)
    
     for cf in cf_low_step:
 
@@ -55,7 +56,7 @@ def main():
     np.save(CF_BW_LOW_PATH, data)
 
     data = []
-    cf_high_step = Stepper(HIGH_BAND[0], HIGH_BAND[1], CF_INC)
+    cf_high_step = Stepper(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC)
     for cf in cf_high_step:
 
         bw_step = Stepper(BW_START, BW_END, BW_INC)
@@ -65,5 +66,27 @@ def main():
 
     np.save(CF_BW_HIGH_PATH, data)
 
+    ##################### Rotation frequency and delta_f #################
+    
+    # This block generates PSDS where rotation occurs at varying varying frequencys at varying rotational amounts
+    
+    fs, ps = gen_power_spectrum(FREQ_RANGE, AP_DEF, ROT_OSC)
+    data = []
+    rot_freq_step = Stepper(ROT_FREQS[0], ROT_FREQS[1], ROT_INC)
+
+    for rf in rot_freq_step:
+        deltas = []
+        delta_step = Stepper(DEL_RANGE[0], DEL_RANGE[1], DEL_INC)
+
+        for delta in delta_step:
+            curr_rot_ps = rotate_spectrum(fs, ps, delta, rf)
+            deltas.append(curr_rot_ps)
+            
+        data.append(np.array([rf, fs, deltas], dtype=object))
+
+    np.save(ROT_DEL_PATH, data)
+
+    
+    
 if __name__ == "__main__":
     main()

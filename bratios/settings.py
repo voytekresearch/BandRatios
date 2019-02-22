@@ -5,13 +5,14 @@ import numpy as np
 FREQ_RANGE = [1, 50]
 LOW_BAND = [4, 8]
 HIGH_BAND = [13, 30]
-BG_DEF = [0, 1]
+AP_DEF = [0, 1]
 
 CF_LOW_DEF = np.mean(LOW_BAND)
 CF_HIGH_DEF = np.mean(HIGH_BAND)
-CF_INC = .1
-CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_INC), 1)
-CFS_HIGH = np.round(np.arange(HIGH_BAND[0], HIGH_BAND[1], CF_INC), 1)
+CF_HIGH_INC = 1
+CF_LOW_INC = .25
+CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC), 1)
+CFS_HIGH = np.round(np.arange(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC), 1)
 
 AMP_DEF = .75
 AMP_INC = .1
@@ -35,10 +36,15 @@ OFF_START = 0
 OFF_END = 2.5
 OFF_INC = .25
 
-ROT_START = -1.5
-ROT_END = 1.5
-ROT_INC = .2
+ROT_FREQS = [12,30]
+ROT_INC = 1
+ROT_OSC = [10, .5, .5]
+ROTS = np.round(np.arange(ROT_FREQS[0], ROT_FREQS[1], ROT_INC), 1)
+DEL_RANGE = [-.5, .5]
+DEL_INC = .1
+DELS = np.round(np.arange(DEL_RANGE[0], DEL_RANGE[1], DEL_INC), 1)
 
+# Single varying parameter
 APC_PATH = '../dat/apc_data'
 CF_PATH_LOW = '../dat/cf_data_low'
 CF_PATH_HIGH = '../dat/cf_data_high'
@@ -49,7 +55,9 @@ BW_PATH_HIGH = '../dat/bw_data_high'
 OFF_PATH = '../dat/offset_data'
 ROT_PATH = '../dat/rot_data'
 
+# interacting varying parameters
 APC_AMP_LOW_PATH = '../dat/apc_amp_data_low'
 APC_AMP_HIGH_PATH = '../dat/apc_amp_data_high'
 CF_BW_LOW_PATH = '../dat/cf_bw_data_low'
 CF_BW_HIGH_PATH = '../dat/cf_bw_data_high'
+ROT_DEL_PATH = '../dat/rot_del'
