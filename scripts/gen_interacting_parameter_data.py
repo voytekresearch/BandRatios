@@ -10,81 +10,92 @@ def main():
 
     ############## Amplitude and Slope ###########################
 
+    fs = gen_freqs(FREQ_RANGE, FREQ_RES)
+
     # This block generates PSDs where amplitude and slope change for low band
-    data = []
+    # [Amplitude, Slopes, Powers]
+    output = np.zeros(shape=(len(APCS), len(AMPS), len(fs)))
     slope_step = Stepper(APC_START, APC_END, APC_INC)
-    for sl in slope_step:
+    for sl_ind, sl_val in enumerate(slope_step):
 
         # Low band sweeps through amplitude range
-        amp_low_step = Stepper(0, AMP_END, AMP_INC)
+        amp_low_step = Stepper(AMP_START, AMP_END, AMP_INC)
         amp_iter_low = param_iter([CF_LOW_DEF, amp_low_step, BW_DEF, CF_HIGH_DEF, AMP_DEF, BW_DEF])
-        amp_low_fs, amp_low_ps, amp_low_syns = gen_group_power_spectra(len(amp_low_step), FREQ_RANGE, [0, sl], amp_iter_low)
-        data.append(np.array([sl, amp_low_fs, amp_low_ps, amp_low_syns], dtype=object))
 
-    np.save(APC_AMP_LOW_PATH, data)
+        for amp_ind, amp_val in enumerate(amp_iter_low):        
+            fs, amp_low_ps = gen_power_spectrum(FREQ_RANGE, [0, sl_val], amp_val)
+            output[sl_ind, amp_ind, :] = amp_low_ps
 
+    np.save(APC_AMP_LOW_PATH, output)
 
-    # This block generates PSDs where amplitude and slope change for high band
-    data = []
+    ###############################################################
+    
+    output = np.zeros(shape=(len(APCS), len(AMPS), len(fs)))
     slope_step = Stepper(APC_START, APC_END, APC_INC)
-    for sl in slope_step:
+    for sl_ind, sl_val in enumerate(slope_step):
 
-        # high band sweeps through amplitude range
-        amp_high_step = Stepper(0, AMP_END, AMP_INC)
+        # Low band sweeps through amplitude range
+        amp_high_step = Stepper(AMP_START, AMP_END, AMP_INC)
         amp_iter_high = param_iter([CF_LOW_DEF, AMP_DEF, BW_DEF, CF_HIGH_DEF, amp_high_step, BW_DEF])
-        amp_high_fs, amp_high_ps, amp_high_syns = gen_group_power_spectra(len(amp_high_step), FREQ_RANGE, [0, sl], amp_iter_high)
-        data.append(np.array([sl, amp_high_fs, amp_high_ps, amp_high_syns], dtype=object))
 
-    np.save(APC_AMP_HIGH_PATH, data)
+        for amp_ind, amp_val in enumerate(amp_iter_high):        
+            fs, amp_high_ps = gen_power_spectrum(FREQ_RANGE, [0, sl_val], amp_val)
+            output[sl_ind, amp_ind, :] = amp_high_ps
 
-
+    np.save(APC_AMP_HIGH_PATH, output)
     ################# Center Frequency and BandWidth ####################
     
     # This block generates PSDs where center frequency changes for
     # low band | High band is stationary cf and bw move both in the same band
 
-    data = []
+    output = np.zeros(shape=(len(CFS_LOW), len(BWS), len(fs)))
     cf_low_step = Stepper(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC)
-   
-    for cf in cf_low_step:
+
+    for cf_ind, cf_val in enumerate(cf_low_step):
 
         bw_step = Stepper(BW_START, BW_END, BW_INC)
-        bw_iter = param_iter([cf, AMP_DEF, bw_step, CF_HIGH_DEF, AMP_DEF, BW_DEF])
-        bw_fs, bw_ps, bw_syns = gen_group_power_spectra(len(bw_step), FREQ_RANGE, [0, APC_DEF], bw_iter)
-        data.append(np.array([cf, bw_fs, bw_ps, bw_syns], dtype=object))
+        params = [cf_val, AMP_DEF, bw_step, CF_HIGH_DEF, AMP_DEF, BW_DEF]
+        for bw_ind, bw_val in enumerate(bw_step):
+            curr_osc = params
+            curr_osc[2] = bw_val
+            fs, bw_ps, = gen_power_spectrum(FREQ_RANGE, [0, APC_DEF], curr_osc)
 
-    np.save(CF_BW_LOW_PATH, data)
+            output[cf_ind, bw_ind, :] = bw_ps
 
-    data = []
+    np.save(CF_BW_LOW_PATH, output)
+    
+    
+    output = np.zeros(shape=(len(CFS_HIGH), len(BWS), len(fs)))
     cf_high_step = Stepper(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC)
-    for cf in cf_high_step:
+
+    for cf_ind, cf_val in enumerate(cf_high_step):
 
         bw_step = Stepper(BW_START, BW_END, BW_INC)
-        bw_iter = param_iter([cf, AMP_DEF, bw_step, CF_HIGH_DEF, AMP_DEF, BW_DEF])
-        bw_fs, bw_ps, bw_syns = gen_group_power_spectra(len(bw_step), FREQ_RANGE, [0, APC_DEF], bw_iter)
-        data.append(np.array([cf, bw_fs, bw_ps, bw_syns], dtype=object))
+        params = [CF_LOW_DEF, AMP_DEF, BW_DEF, cf_val, AMP_DEF, bw_step]
+        for bw_ind, bw_val in enumerate(bw_step):
+            curr_osc = params
+            curr_osc[5] = bw_val
+            fs, bw_ps, = gen_power_spectrum(FREQ_RANGE, [0, APC_DEF], curr_osc)
 
-    np.save(CF_BW_HIGH_PATH, data)
+            output[cf_ind, bw_ind, :] = bw_ps
+
+    np.save(CF_BW_HIGH_PATH, output)
 
     ##################### Rotation frequency and delta_f #################
     
     # This block generates PSDS where rotation occurs at varying varying frequencys at varying rotational amounts
-    
+    # [rotation_freqs, deltas, powers]
     fs, ps = gen_power_spectrum(FREQ_RANGE, AP_DEF, ROT_OSC)
-    data = []
+    output = np.zeros(shape=(len(ROTS), len(DELS), len(fs)))
+                      
     rot_freq_step = Stepper(ROT_FREQS[0], ROT_FREQS[1], ROT_INC)
 
-    for rf in rot_freq_step:
-        deltas = []
+    for rot_ind, rot_val in enumerate(rot_freq_step):
         delta_step = Stepper(DEL_RANGE[0], DEL_RANGE[1], DEL_INC)
+        for del_ind, del_val, in enumerate(delta_step):
+            output[rot_ind, del_ind, :] = rotate_spectrum(fs, ps, del_val, rot_val)
 
-        for delta in delta_step:
-            curr_rot_ps = rotate_spectrum(fs, ps, delta, rf)
-            deltas.append(curr_rot_ps)
-            
-        data.append(np.array([rf, fs, deltas], dtype=object))
-
-    np.save(ROT_DEL_PATH, data)
+    np.save(ROT_DEL_PATH, output)
 
     
     

@@ -42,24 +42,27 @@ def main():
     df_cf_high = pd.DataFrame(df_cf_high_cols, columns=["Band_Ratio", "High_Center_Frequency"])
 
     # Subplots - define the figure
-    fig, ax = plt.subplots(2, 1, figsize=[6, 7])
+    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    
+    ax[0].set_title("TBR as Theta center frequency varies")
+    ax[1].set_title("TBR as Beta center frequency varies")
 
-    ax[0].set_xlabel("Low Center Freq")
-    ax[1].set_xlabel("High Center Freq")
-    ax[0].set_ylabel("Band Ratio")
-    ax[1].set_ylabel("Band Ratio")
+    ax[0].set_xlabel("Low Center Frequency")
+    ax[1].set_xlabel("High Center Frequency")
+    ax[0].set_ylabel("Ratio")
+    ax[1].set_ylabel("Ratio")
 
     # Fill in axes
     ax[0].plot(df_cf_low.Low_Center_Frequency, df_cf_low.Band_Ratio, color='r')
     ax[1].plot(df_cf_high.High_Center_Frequency, df_cf_high.Band_Ratio, color='r')
 
-    plt.savefig("../figures/cf_vs_bandratio.pdf")
+    plt.savefig("../figures/cf_vs_bandratio.png", dpi=500)
 
     ###################### Amplitude ######################
 
     # Load data
-    amp_low = np.load("./dat/amp_data_low.npy")
-    amp_high = np.load("./dat/amp_data_high.npy")
+    amp_low = np.load("../dat/amp_data_low.npy")
+    amp_high = np.load("../dat/amp_data_high.npy")
 
     # Gather Amplitude vales
     amp_low_syns = []
@@ -88,23 +91,26 @@ def main():
     df_amp_high = pd.DataFrame(df_amp_high_cols, columns=["Band_Ratio", "High_Amplitude"])
 
     # Subplots - define the figure
-    fig, ax = plt.subplots(2, 1, figsize=[6, 7])
+    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    
+    ax[0].set_title("TBR as Theta amplitude varies")
+    ax[1].set_title("TBR as Beta amplitude varies")
 
-    ax[0].set_xlabel("Low_Amplitude")
-    ax[1].set_xlabel("High_Amplitude")
-    ax[0].set_ylabel("Band_Ratio")
-    ax[1].set_ylabel("Band_Ratio")
+    ax[0].set_xlabel("Low Band Amplitude")
+    ax[1].set_xlabel("High Band Amplitude")
+    ax[0].set_ylabel("Ratio")
+    ax[1].set_ylabel("Ratio")
 
     # Fill in axes
     ax[0].plot(df_amp_low.Low_Amplitude, df_amp_low.Band_Ratio, color='r')
     ax[1].plot(df_amp_high.High_Amplitude, df_amp_high.Band_Ratio, color='r')
 
-    plt.savefig("../figures/amp_vs_bandratio.pdf")
+    plt.savefig("../figures/amp_vs_bandratio.png", dpi=500)
 
     ###################### BAND WIDTH ######################
 
-    bw_low = np.load("./dat/bw_data_low.npy")
-    bw_high = np.load("./dat/bw_data_high.npy")
+    bw_low = np.load("../dat/bw_data_low.npy")
+    bw_high = np.load("../dat/bw_data_high.npy")
 
     bw_low_syns = []
     bw_high_syns = []
@@ -130,26 +136,29 @@ def main():
     df_bw_high = pd.DataFrame(df_bw_high_cols, columns=["Band_Ratio", "High_BandWidth"])
 
     # Subplots - define the figure
-    fig, ax = plt.subplots(2, 1, figsize=[6, 7])
+    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    
+    ax[0].set_title("TBR as Theta bandwidth varies")
+    ax[1].set_title("TBR as Beta bandwidth varies")
 
-    ax[0].set_xlabel("Low_Band_Width")
-    ax[1].set_xlabel("high_Band_Width")
-    ax[0].set_ylabel("Band_Ratio")
-    ax[1].set_ylabel("Band_Ratio")
+    ax[0].set_xlabel("Low bandwidth")
+    ax[1].set_xlabel("High bandwidth")
+    ax[0].set_ylabel("Ratio")
+    ax[1].set_ylabel("Ratio")
 
     ax[0].plot(df_bw_low.Low_BandWidth, df_bw_low.Band_Ratio, color='r')
     ax[1].plot(df_bw_high.High_BandWidth, df_bw_high.Band_Ratio, color='r')
 
-    plt.savefig("../figures/bw_vs_bandratio.pdf")
+    plt.savefig("../figures/bw_vs_bandratio.png", dpi=500)
 
     ###################### Aperiodic Component ######################
 
-    slope = np.load("./dat/slope_data.npy")
+    slope = np.load("../dat/apc_data.npy")
 
     slope_syns = []
 
     for val in slope[2]:
-        slope_syns.append(val.background_params[1])
+        slope_syns.append(val.aperiodic_params[1])
 
     slope_ratios = []
 
@@ -160,12 +169,15 @@ def main():
 
     df_slope = pd.DataFrame(slope_cols, columns=["Band_Ratio", "Slope"])
 
-    fig, ax = plt.subplots(2, 1, figsize=[6, 7])
+    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    
+    ax[0].set_title("TBR as Exponent varies(logged)")
+    ax[1].set_title("TBR as Exponent varies")
 
-    ax[0].set_xlabel("Slope_Value")
-    ax[1].set_xlabel("Slope_Value")
-    ax[0].set_ylabel("Band_Ratio")
-    ax[1].set_ylabel("Band_Ratio")
+    ax[0].set_xlabel("Exponent (logged)")
+    ax[1].set_xlabel("Exponent")
+    ax[0].set_ylabel("Ratio")
+    ax[1].set_ylabel("Ratio")
 
     # LOG SCALING
     ax[0].set_yscale('log')
@@ -174,7 +186,7 @@ def main():
     ax[0].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
     ax[1].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
 
-    plt.savefig("../figures/apc_vs_bandratio.pdf")
+    plt.savefig("../figures/apc_vs_bandratio.png", dpi=500)
 
     ###################### ROTATION ######################
 
@@ -233,7 +245,7 @@ def main():
     ax[0].plot(df_cf_low.Low_Center_Frequency, df_cf_low.Relative_Ratio, color='r')
     ax[1].plot(df_cf_high.High_Center_Frequency, df_cf_high.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_cf_vs_bandratio.pdf")
+    plt.savefig("../figures/rel_cf_vs_bandratio.png", dpi=500)
     ###################### RELATIVE AMPLITUDE ######################
 
     rel_t_ps_amp_low = calc_group_relative_power(amp_low[0], amp_low[1], THETA_BAND)
@@ -264,12 +276,12 @@ def main():
     ax[0].plot(df_amp_low.Low_Amplitude, df_amp_low.Relative_Ratio, color='r')
     ax[1].plot(df_amp_high.High_Amplitude, df_amp_high.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_amp_vs_bandratio.pdf")
+    plt.savefig("../figures/rel_amp_vs_bandratio.png", dpi=500)
 
     ###################### RELATIVE BAND WIDTH ######################
 
-    bw_low = np.load("./dat/bw_data_low.npy")
-    bw_high = np.load("./dat/bw_data_high.npy")
+    bw_low = np.load("../dat/bw_data_low.npy")
+    bw_high = np.load("../dat/bw_data_high.npy")
 
     rel_t_ps_bw_low = calc_group_relative_power(bw_low[0], bw_low[1], THETA_BAND)
     rel_b_ps_bw_low = calc_group_relative_power(bw_low[0], bw_low[1], BETA_BAND)
@@ -297,11 +309,11 @@ def main():
     ax[0].plot(df_bw_low.Low_BandWidth, df_bw_low.Relative_Ratio, color='r')
     ax[1].plot(df_bw_high.High_BandWidth, df_bw_high.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_bw_vs_bandratio.pdf")
+    plt.savefig("../figures/rel_bw_vs_bandratio.png", dpi=500)
 
     ###################### RELATIVE APERIODIC COMPONENT ######################
 
-    slope = np.load("./dat/slope_data.npy")
+    slope = np.load("../dat/apc_data.npy")
 
     rel_t_ps_sl = calc_group_relative_power(slope[0], slope[1], THETA_BAND)
     rel_b_ps_sl = calc_group_relative_power(slope[0], slope[1], BETA_BAND)
@@ -326,7 +338,7 @@ def main():
     ax[0].plot(df_slope.Slope, df_slope.Relative_Ratio, color='r')
     ax[1].plot(df_slope.Slope, df_slope.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_apc_vs_bandratio.pdf")
+    plt.savefig("../figures/rel_apc_vs_bandratio.png", dpi=500)
 
 if __name__ == "__main__":
     main()

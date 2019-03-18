@@ -26,9 +26,9 @@ def main():
     ax = sns.heatmap(apc_amp_low_ratios, xticklabels=AMPS, yticklabels=APCS)
     ax.invert_yaxis()
     plt.xlabel("Amplitude")
-    plt.ylabel("Aperiodic component")
-    plt.title("Low band amplitude and aperiodic component modulation")
-    plt.savefig("../figures/low_apc_amp.pdf")
+    plt.ylabel("Exponent")
+    plt.title("Low band amplitude and exponent modulation")
+    plt.savefig("../figures/low_apc_amp.png",dpi=500)
     
     plt.cla()
     
@@ -37,9 +37,9 @@ def main():
     ax = sns.heatmap(np.log10(apc_amp_low_ratios), xticklabels=AMPS, yticklabels=APCS)
     ax.invert_yaxis()
     plt.xlabel("Amplitude")
-    plt.ylabel("Aperiodic component")
-    plt.title("Low band amplitude and aperiodic component modulation (logged ratios)")
-    plt.savefig("../figures/low_apc_amp_log.pdf")
+    plt.ylabel("Exponent")
+    plt.title("Low band amplitude and exponent modulation")
+    plt.savefig("../figures/low_apc_amp_log.png", dpi=500)
     
     plt.cla()
     
@@ -51,9 +51,9 @@ def main():
     ax = sns.heatmap(apc_amp_high_ratios, xticklabels=AMPS, yticklabels=APCS)
     ax.invert_yaxis()
     plt.xlabel("Amplitude")
-    plt.ylabel("Aperiodic component")
-    plt.title("High band amplitude and aperiodic component modulation")
-    plt.savefig("../figures/high_apc_amp.pdf")
+    plt.ylabel("Exponent")
+    plt.title("High band amplitude and exponent modulation")
+    plt.savefig("../figures/high_apc_amp.png", dpi=500)
     
     plt.cla()
     
@@ -61,9 +61,9 @@ def main():
     ax = sns.heatmap(np.log10(apc_amp_high_ratios), xticklabels=AMPS, yticklabels=APCS)
     ax.invert_yaxis()
     plt.xlabel("Amplitude")
-    plt.ylabel("Aperiodic component")
-    plt.title("High band amplitude and aperiodic component modulation (logged ratios)")
-    plt.savefig("../figures/high_apc_amp_log.pdf")
+    plt.ylabel("Exponent")
+    plt.title("High band amplitude and exponent modulation")
+    plt.savefig("../figures/high_apc_amp_log.png", dpi=500)
     
     plt.cla()
     
@@ -84,7 +84,7 @@ def main():
     plt.xlabel("Bandwidth")
     plt.ylabel("Low band center frequencies")
     plt.title("Low band bandwidth and center frequency modulation")
-    plt.savefig("../figures/low_bw_cf.pdf")
+    plt.savefig("../figures/low_bw_cf.png", dpi=500)
     
     plt.cla()
     
@@ -94,8 +94,8 @@ def main():
     ax.invert_yaxis()
     plt.xlabel("Bandwidth")
     plt.ylabel("Low band center frequencies")
-    plt.title("Low band bandwidth and center frequency modulation (logged ratios)")
-    plt.savefig("../figures/low_bw_cf_log.pdf")
+    plt.title("Low band bandwidth and center frequency modulation")
+    plt.savefig("../figures/low_bw_cf_log.png", dpi=500)
     
     plt.cla()
     
@@ -106,7 +106,7 @@ def main():
     plt.xlabel("Bandwidth")
     plt.ylabel("High band center frequencies")
     plt.title("High band bandwidth and center frequency modulation")
-    plt.savefig("../figures/high_bw_cf.pdf")
+    plt.savefig("../figures/high_bw_cf.png", dpi=500)
     
     plt.cla()
     
@@ -116,8 +116,8 @@ def main():
     ax.invert_yaxis()
     plt.xlabel("Bandwidth")
     plt.ylabel("High band center frequencies")
-    plt.title("High band bandwidth and center frequency modulation (logged ratios)")
-    plt.savefig("../figures/high_bw_cf_log.pdf")
+    plt.title("High band bandwidth and center frequency modulation")
+    plt.savefig("../figures/high_bw_cf_log.png", dpi=500)
     
     plt.cla()  
     
@@ -136,7 +136,7 @@ def main():
     plt.xlabel("Delta power law exponent")
     plt.ylabel("Rotational frequency")
     plt.title("Rotation frequency and rotation amount")
-    plt.savefig("../figures/rotation_delta.pdf")
+    plt.savefig("../figures/rotation_delta.png", dpi=500)
     
     plt.cla()  
     
@@ -145,8 +145,8 @@ def main():
     ax.invert_yaxis()
     plt.xlabel("Delta power law exponent")
     plt.ylabel("Rotational frequency")
-    plt.title("Rotation frequency and rotation amount (logged ratios")
-    plt.savefig("../figures/rotation_delta_log.pdf")
+    plt.title("Rotation frequency and rotation amount")
+    plt.savefig("../figures/rotation_delta_log.png", dpi=500)
 
 if __name__ == "__main__":
     main()
