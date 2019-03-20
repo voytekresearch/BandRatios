@@ -1,5 +1,9 @@
 """ This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
 import matplotlib.pyplot as plt
+
+import seaborn as sns
+sns.set_context('poster')
+
 import pandas as pd
 import numpy as np
 
@@ -44,18 +48,19 @@ def main():
     # Subplots - define the figure
     fig, ax = plt.subplots(1, 2, figsize=[9, 4])
     
-    ax[0].set_title("TBR as Theta center frequency varies")
-    ax[1].set_title("TBR as Beta center frequency varies")
+    ax[0].set_title("Theta center frequency",{"fontsize": 18})
+    ax[1].set_title("Beta center frequency",{"fontsize": 18})
 
-    ax[0].set_xlabel("Low Center Frequency")
-    ax[1].set_xlabel("High Center Frequency")
-    ax[0].set_ylabel("Ratio")
-    ax[1].set_ylabel("Ratio")
+    ax[0].set_xlabel("Low Center Frequency",{"fontsize": 18})
+    ax[1].set_xlabel("High Center Frequency",{"fontsize": 18})
+    ax[0].set_ylabel("Ratio",{"fontsize": 18})
+    ax[1].set_ylabel("Ratio",{"fontsize": 18})
 
     # Fill in axes
     ax[0].plot(df_cf_low.Low_Center_Frequency, df_cf_low.Band_Ratio, color='r')
     ax[1].plot(df_cf_high.High_Center_Frequency, df_cf_high.Band_Ratio, color='r')
 
+    plt.tight_layout()
     plt.savefig("../figures/cf_vs_bandratio.png", dpi=500)
 
     ###################### Amplitude ######################
@@ -93,18 +98,19 @@ def main():
     # Subplots - define the figure
     fig, ax = plt.subplots(1, 2, figsize=[9, 4])
     
-    ax[0].set_title("TBR as Theta amplitude varies")
-    ax[1].set_title("TBR as Beta amplitude varies")
+    ax[0].set_title("Theta amplitude",{"fontsize": 18})
+    ax[1].set_title("Beta amplitude",{"fontsize": 18})
 
-    ax[0].set_xlabel("Low Band Amplitude")
-    ax[1].set_xlabel("High Band Amplitude")
-    ax[0].set_ylabel("Ratio")
-    ax[1].set_ylabel("Ratio")
+    ax[0].set_xlabel("Low Band Amplitude",{"fontsize": 18})
+    ax[1].set_xlabel("High Band Amplitude",{"fontsize": 18})
+    ax[0].set_ylabel("Ratio",{"fontsize": 18})
+    ax[1].set_ylabel("Ratio",{"fontsize": 18})
 
     # Fill in axes
     ax[0].plot(df_amp_low.Low_Amplitude, df_amp_low.Band_Ratio, color='r')
     ax[1].plot(df_amp_high.High_Amplitude, df_amp_high.Band_Ratio, color='r')
 
+    plt.tight_layout()
     plt.savefig("../figures/amp_vs_bandratio.png", dpi=500)
 
     ###################### BAND WIDTH ######################
@@ -138,17 +144,18 @@ def main():
     # Subplots - define the figure
     fig, ax = plt.subplots(1, 2, figsize=[9, 4])
     
-    ax[0].set_title("TBR as Theta bandwidth varies")
-    ax[1].set_title("TBR as Beta bandwidth varies")
+    ax[0].set_title("Theta bandwidth",{"fontsize": 18})
+    ax[1].set_title("Beta bandwidth",{"fontsize": 18})
 
-    ax[0].set_xlabel("Low bandwidth")
-    ax[1].set_xlabel("High bandwidth")
-    ax[0].set_ylabel("Ratio")
-    ax[1].set_ylabel("Ratio")
+    ax[0].set_xlabel("Low bandwidth",{"fontsize": 18})
+    ax[1].set_xlabel("High bandwidth",{"fontsize": 18})
+    ax[0].set_ylabel("Ratio",{"fontsize": 18})
+    ax[1].set_ylabel("Ratio",{"fontsize": 18})
 
     ax[0].plot(df_bw_low.Low_BandWidth, df_bw_low.Band_Ratio, color='r')
     ax[1].plot(df_bw_high.High_BandWidth, df_bw_high.Band_Ratio, color='r')
 
+    plt.tight_layout()
     plt.savefig("../figures/bw_vs_bandratio.png", dpi=500)
 
     ###################### Aperiodic Component ######################
@@ -171,13 +178,13 @@ def main():
 
     fig, ax = plt.subplots(1, 2, figsize=[9, 4])
     
-    ax[0].set_title("TBR as Exponent varies(logged)")
-    ax[1].set_title("TBR as Exponent varies")
+    ax[0].set_title("Aperiodic Exponent",{"fontsize": 18})
+    ax[1].set_title("Aperiodic Exponent",{"fontsize": 18})
 
-    ax[0].set_xlabel("Exponent (logged)")
-    ax[1].set_xlabel("Exponent")
-    ax[0].set_ylabel("Ratio")
-    ax[1].set_ylabel("Ratio")
+    ax[0].set_xlabel("Exponent (logged)",{"fontsize": 18})
+    ax[1].set_xlabel("Exponent",{"fontsize": 18})
+    ax[0].set_ylabel("Ratio",{"fontsize": 18})
+    ax[1].set_ylabel("Ratio",{"fontsize": 18})
 
     # LOG SCALING
     ax[0].set_yscale('log')
@@ -186,7 +193,48 @@ def main():
     ax[0].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
     ax[1].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
 
+    plt.tight_layout()
     plt.savefig("../figures/apc_vs_bandratio.png", dpi=500)
+    
+    
+    
+    ###################### OFFSET ######################
+    
+    offset = np.load("../dat/offset_data.npy")
+
+    offset_syns = []
+
+    for val in offset[2]:
+        offset_syns.append(val.aperiodic_params[0])
+
+    offset_ratios = []
+
+    for os in offset[1]:
+        offset_ratios.append(calc_band_ratio(slope[0], os, THETA_BAND, BETA_BAND))
+
+    offset_cols = np.array([offset_ratios, offset_syns]).T.tolist()
+
+    df_offset = pd.DataFrame(offset_cols, columns=["Ratio", "Offset"])
+
+    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    
+    ax[0].set_title("Aperiodic Offset",{"fontsize": 18})
+    ax[1].set_title("Aperiodic Offset",{"fontsize": 18})
+
+    ax[0].set_xlabel("Offset",{"fontsize": 18})
+    ax[1].set_xlabel("Offset",{"fontsize": 18})
+    ax[0].set_ylabel("Ratio",{"fontsize": 18})
+    ax[1].set_ylabel("Ratio",{"fontsize": 18})
+
+    # LOG SCALING
+    ax[0].set_yscale('log')
+    #ax[0].set_xscale('log')
+
+    ax[0].plot(df_offset.Offset, df_offset.Ratio, color='r')
+    ax[1].plot(df_offset.Offset, df_offset.Ratio, color='r')
+
+    plt.tight_layout()
+    plt.savefig("../figures/offset_vs_bandratio.png", dpi=500)
 
     ###################### ROTATION ######################
 

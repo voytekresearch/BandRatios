@@ -71,8 +71,8 @@ def main():
     #################### Offset ####################
 
     off_step = Stepper(OFF_START, OFF_END, OFF_INC)
-    off_iter = param_iter([0, off_step])
-    off_fs, off_ps, off_syns = gen_group_power_spectra(len(off_step), FREQ_RANGE, off_iter, [])
+    off_iter = param_iter([off_step, 0])
+    off_fs, off_ps, off_syns = gen_group_power_spectra(len(off_step), FREQ_RANGE, off_iter, [], nlvs=0)
     off_save = [off_fs, off_ps, off_syns]
     np.save(OFF_PATH, off_save)
 
