@@ -61,7 +61,7 @@ def main():
     ax[1].plot(df_cf_high.High_Center_Frequency, df_cf_high.Band_Ratio, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/cf_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/cf_vs_bandratio.png", dpi=700)
 
     ###################### Amplitude ######################
 
@@ -111,7 +111,7 @@ def main():
     ax[1].plot(df_amp_high.High_Amplitude, df_amp_high.Band_Ratio, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/amp_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/amp_vs_bandratio.png", dpi=700)
 
     ###################### BAND WIDTH ######################
 
@@ -156,7 +156,7 @@ def main():
     ax[1].plot(df_bw_high.High_BandWidth, df_bw_high.Band_Ratio, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/bw_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/bw_vs_bandratio.png", dpi=700)
 
     ###################### Aperiodic Component ######################
 
@@ -194,7 +194,7 @@ def main():
     ax[1].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/apc_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/apc_vs_bandratio.png", dpi=700)
     
     
     
@@ -234,7 +234,7 @@ def main():
     ax[1].plot(df_offset.Offset, df_offset.Ratio, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/offset_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/offset_vs_bandratio.png", dpi=700)
 
     ###################### ROTATION ######################
 
@@ -293,7 +293,7 @@ def main():
     ax[0].plot(df_cf_low.Low_Center_Frequency, df_cf_low.Relative_Ratio, color='r')
     ax[1].plot(df_cf_high.High_Center_Frequency, df_cf_high.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_cf_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/rel_cf_vs_bandratio.png", dpi=700)
     ###################### RELATIVE AMPLITUDE ######################
 
     rel_t_ps_amp_low = calc_group_relative_power(amp_low[0], amp_low[1], THETA_BAND)
@@ -324,7 +324,7 @@ def main():
     ax[0].plot(df_amp_low.Low_Amplitude, df_amp_low.Relative_Ratio, color='r')
     ax[1].plot(df_amp_high.High_Amplitude, df_amp_high.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_amp_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/rel_amp_vs_bandratio.png", dpi=700)
 
     ###################### RELATIVE BAND WIDTH ######################
 
@@ -357,7 +357,7 @@ def main():
     ax[0].plot(df_bw_low.Low_BandWidth, df_bw_low.Relative_Ratio, color='r')
     ax[1].plot(df_bw_high.High_BandWidth, df_bw_high.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_bw_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/rel_bw_vs_bandratio.png", dpi=700)
 
     ###################### RELATIVE APERIODIC COMPONENT ######################
 
@@ -386,7 +386,7 @@ def main():
     ax[0].plot(df_slope.Slope, df_slope.Relative_Ratio, color='r')
     ax[1].plot(df_slope.Slope, df_slope.Relative_Ratio, color='r')
 
-    plt.savefig("../figures/rel_apc_vs_bandratio.png", dpi=500)
+    plt.savefig("../figures/rel_apc_vs_bandratio.png", dpi=700)
 
 if __name__ == "__main__":
     main()
