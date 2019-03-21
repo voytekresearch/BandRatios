@@ -62,7 +62,7 @@ def main():
     ax.invert_yaxis()
     plt.xlabel("Amplitude", {"fontsize": 18})
     plt.ylabel("Exponent", {"fontsize": 18})
-    plt.title("High band amplitude vs exponent", {"fontsize": 18})
+    #plt.title("High band amplitude vs exponent", {"fontsize": 18})
     plt.tight_layout()
     plt.savefig("../figures/high_apc_amp_log.png", dpi=500)
     
@@ -106,8 +106,8 @@ def main():
     ax = sns.heatmap(cf_bw_high_ratios, xticklabels=BWS, yticklabels=CFS_HIGH)
     ax.invert_yaxis()
     plt.xlabel("Bandwidth")
-    plt.ylabel("High band center frequencies")
-    plt.title("High band bandwidth and center frequency modulation")
+    plt.ylabel("Center Frequencies")
+    #plt.title("High band bandwidth and center frequency modulation")
     plt.savefig("../figures/high_bw_cf.png", dpi=500)
     
     plt.cla()
@@ -117,8 +117,8 @@ def main():
     ax = sns.heatmap(np.log10(cf_bw_high_ratios), xticklabels=BWS, yticklabels=CFS_HIGH)
     ax.invert_yaxis()
     plt.xlabel("Bandwidth",{"fontsize": 18})
-    plt.ylabel("High band center frequencies", {"fontsize": 18})
-    plt.title("High band bandwidth vs center frequency", {"fontsize": 18})
+    plt.ylabel("Center Frequencies", {"fontsize": 18})
+    #plt.title("High band bandwidth vs center frequency", {"fontsize": 18})
     plt.tight_layout()
     plt.savefig("../figures/high_bw_cf_log.png", dpi=500)
     
