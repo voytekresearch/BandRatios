@@ -2,16 +2,20 @@
 
 import numpy as np
 
+from fooof.bands import Bands
+
 FREQ_RANGE = [1, 50]
+FREQ_RES = .5
 LOW_BAND = [4, 8]
 HIGH_BAND = [13, 30]
-AP_DEF = [0, 1]
+AP_DEF = [0, 0]
+BANDS = Bands({'theta' : LOW_BAND, 'beta' : HIGH_BAND})
 
 CF_LOW_DEF = np.mean(LOW_BAND)
 CF_HIGH_DEF = np.mean(HIGH_BAND)
 CF_HIGH_INC = 1
 CF_LOW_INC = .25
-CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC), 1)
+CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC), 2)
 CFS_HIGH = np.round(np.arange(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC), 1)
 
 AMP_DEF = .75
@@ -21,7 +25,7 @@ AMP_END = 1.5
 AMPS = np.round(np.arange(AMP_START, AMP_END, AMP_INC), 1)
 
 BW_DEF = 1
-BW_INC = .1
+BW_INC = .2
 BW_START = .2
 BW_END = 4
 BWS = np.round(np.arange(BW_START, BW_END, BW_INC), 1)
@@ -36,11 +40,11 @@ OFF_START = 0
 OFF_END = 2.5
 OFF_INC = .25
 
-ROT_FREQS = [12,30]
+ROT_FREQS = [1,30]
 ROT_INC = 1
 ROT_OSC = [10, .5, .5]
 ROTS = np.round(np.arange(ROT_FREQS[0], ROT_FREQS[1], ROT_INC), 1)
-DEL_RANGE = [-.5, .5]
+DEL_RANGE = [0, 3]
 DEL_INC = .1
 DELS = np.round(np.arange(DEL_RANGE[0], DEL_RANGE[1], DEL_INC), 1)
 

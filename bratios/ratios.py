@@ -6,19 +6,15 @@ import seaborn as sb
 
 from fooof.analysis import get_band_peak
 from fooof.utils import trim_spectrum
+from fooof.synth import *
 
 from settings import *
 
-
-###################################################################################################
 ###################################################################################################
 
-# Define canonical bands
-THETA_BAND = [4, 8]
-ALPHA_BAND = [8, 12]
-BETA_BAND = [15, 30]
-
-###################################################################################################
+THETA_BAND = [4,8]
+ALPHA_BAND = [8,12]
+BETA_BAND = [15,30]
 ###################################################################################################
 
 def calc_band_ratio(freqs, psd, low_band, high_band):
@@ -168,7 +164,7 @@ def compare_ratio(fm1, fm2, low_band, high_band, mode):
         print(compare_ratio.__doc__)
 
 
-def calc_group_band_ratio(fg, low_band, high_band):
+def calc_group_band_ratio(fg, low_band, high_band, func=calc_band_ratio):
     """Calculate average power in band ratio
 
     ----------
@@ -183,11 +179,10 @@ def calc_group_band_ratio(fg, low_band, high_band):
     ratios : list of floats
         Oscillation power ratios.
     """
-
-    size = len(fg.get_results())
+    
     res = []
-    for i in range(size):
-        res.append(calc_band_ratio(fg.freqs, fg.power_spectra[i], low_band, high_band))
+    for i in range(len(fg)):
+        res.append(func(fg.freqs, np.power(10, fg.power_spectra[i]), low_band, high_band))
 
     return res
 
@@ -217,30 +212,6 @@ def calc_group_cf_power_ratio(fg, low_band, high_band):
     return res
 
 
-def calc_group_density_ratio(fg, low_band, high_band):
-    """Calculate band ratio by summing power power in bands and dividing by bandwidth
-
-    ----------
-    fg : fooofGroup object used to find ratio
-    low_band : list of float, float
-        Band definition for the lower band.
-    high_band : list of float, float
-        Band definition for the upper band.
-
-    Outputs
-    -------
-    ratios : floats
-        Oscillation power ratio.
-    """
-
-    size = len(fg.get_results())
-    res = []
-    for i in range(size):
-        res.append(calc_density_ratio(fg.freqs, fg.power_spectra[i], low_band, high_band))
-
-    return res
-
-
 def get_group_ratios(fg, low_band, high_band):
     """ Calculates group band ratios cannonically, central frequency ratio, and density
 
@@ -259,7 +230,7 @@ def get_group_ratios(fg, low_band, high_band):
     res = []
     res.append(calc_group_band_ratio(fg, low_band, high_band))
     res.append(calc_group_cf_power_ratio(fg, low_band, high_band))
-    res.append(calc_group_density_ratio(fg, low_band, high_band))
+    res.append(calc_group_ratio(fg, low_band, high_band, calc_density_ratio))
 
     return res
 
@@ -359,19 +330,14 @@ def calc_interacting_param_ratios(data):
     ------------------------
     
     """
-    
-    res = []
-    
-    for param in data:
-        inner_list = []
-        freqs = param[1]
-        
-        for psd in param[2]:
-            curr_ratio = calc_band_ratio(freqs, psd, THETA_BAND, BETA_BAND)
-            inner_list.append(curr_ratio)
-        res.append(inner_list)
-    return res
-    
+    fs = gen_freqs(FREQ_RANGE, FREQ_RES)
+    ratios = np.zeros(shape=(len(data), len(data[0])) )
+    for rot_ind, rot_val in enumerate(data):
+
+        for del_ind, del_val in enumerate(data[0]):
+            psd = data[rot_ind, del_ind,:]
+            ratios[rot_ind, del_ind] = calc_band_ratio(fs, psd, THETA_BAND, BETA_BAND)
+    return ratios
 
     
     

@@ -28,7 +28,7 @@ def main():
     plt.xlabel("Amplitude")
     plt.ylabel("Exponent")
     plt.title("Low band amplitude and exponent modulation")
-    plt.savefig("../figures/low_apc_amp.png",dpi=500)
+    plt.savefig("../figures/InteractingSims/low_apc_amp.png",dpi=500)
     
     plt.cla()
     
@@ -39,7 +39,7 @@ def main():
     plt.xlabel("Amplitude")
     plt.ylabel("Exponent")
     plt.title("Low band amplitude and exponent modulation")
-    plt.savefig("../figures/low_apc_amp_log.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/low_apc_amp_log.png", dpi=500)
     
     plt.cla()
     
@@ -53,7 +53,7 @@ def main():
     plt.xlabel("Amplitude")
     plt.ylabel("Exponent")
     plt.title("High band amplitude and exponent modulation")
-    plt.savefig("../figures/high_apc_amp.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/high_apc_amp.png", dpi=500)
     
     plt.cla()
     
@@ -64,7 +64,7 @@ def main():
     plt.ylabel("Exponent", {"fontsize": 18})
     #plt.title("High band amplitude vs exponent", {"fontsize": 18})
     plt.tight_layout()
-    plt.savefig("../figures/high_apc_amp_log.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/high_apc_amp_log.png", dpi=500)
     
     plt.cla()
     
@@ -86,7 +86,7 @@ def main():
     plt.ylabel("Low band center frequencies", {"fontsize": 18})
     plt.title("Low band bandwidth vs center frequency", {"fontsize": 18})
     plt.tight_layout()
-    plt.savefig("../figures/low_bw_cf.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/low_bw_cf.png", dpi=500)
     
     plt.cla()
     
@@ -97,7 +97,7 @@ def main():
     plt.xlabel("Bandwidth")
     plt.ylabel("Low band center frequencies")
     plt.title("Low band bandwidth and center frequency modulation")
-    plt.savefig("../figures/low_bw_cf_log.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/low_bw_cf_log.png", dpi=500)
     
     plt.cla()
     
@@ -105,10 +105,11 @@ def main():
     fig, ax = plt.subplots()
     ax = sns.heatmap(cf_bw_high_ratios, xticklabels=BWS, yticklabels=CFS_HIGH)
     ax.invert_yaxis()
-    plt.xlabel("Bandwidth")
-    plt.ylabel("Center Frequencies")
+    plt.xlabel("Bandwidth",{"fontsize": 18})
+    plt.ylabel("Center Frequencies",{"fontsize": 18})
     #plt.title("High band bandwidth and center frequency modulation")
-    plt.savefig("../figures/high_bw_cf.png", dpi=500)
+    plt.tight_layout()
+    plt.savefig("../figures/InteractingSims/high_bw_cf.png", dpi=500)
     
     plt.cla()
     
@@ -120,7 +121,7 @@ def main():
     plt.ylabel("Center Frequencies", {"fontsize": 18})
     #plt.title("High band bandwidth vs center frequency", {"fontsize": 18})
     plt.tight_layout()
-    plt.savefig("../figures/high_bw_cf_log.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/high_bw_cf_log.png", dpi=500)
     
     plt.cla()  
     
@@ -139,7 +140,7 @@ def main():
     plt.xlabel("Delta power law exponent")
     plt.ylabel("Rotational frequency")
     plt.title("Rotation frequency and rotation amount")
-    plt.savefig("../figures/rotation_delta.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/rotation_delta.png", dpi=500)
     
     plt.cla()  
     
@@ -149,7 +150,7 @@ def main():
     plt.xlabel("Delta power law exponent")
     plt.ylabel("Rotational frequency")
     plt.title("Rotation frequency and rotation amount")
-    plt.savefig("../figures/rotation_delta_log.png", dpi=500)
+    plt.savefig("../figures/InteractingSims/rotation_delta_log.png", dpi=500)
 
 if __name__ == "__main__":
     main()
