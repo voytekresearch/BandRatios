@@ -6,10 +6,12 @@ from fooof.bands import Bands
 
 FREQ_RANGE = [1, 50]
 FREQ_RES = .5
+ALPHA_BAND = [8,12]
 LOW_BAND = [4, 8]
 HIGH_BAND = [13, 30]
-AP_DEF = [0, 0]
-BANDS = Bands({'theta' : LOW_BAND, 'beta' : HIGH_BAND})
+AP_DEF = [0, 1]
+BANDS = Bands({'theta' : LOW_BAND, 'beta' : HIGH_BAND, "alpha":ALPHA_BAND })
+RATIOS = {"TBR": ['theta','beta'], "TAR":['theta', 'alpha'],"ABR": ['alpha','beta']}
 
 CF_LOW_DEF = np.mean(LOW_BAND)
 CF_HIGH_DEF = np.mean(HIGH_BAND)
@@ -36,6 +38,7 @@ APC_END = 3
 APC_INC = .2
 APCS = np.round(np.arange(APC_START, APC_END, APC_INC), 1)
 
+OFF_DEF = 0
 OFF_START = 0
 OFF_END = 2.5
 OFF_INC = .25
@@ -58,6 +61,7 @@ BW_PATH_LOW = '../dat/bw_data_low'
 BW_PATH_HIGH = '../dat/bw_data_high'
 OFF_PATH = '../dat/offset_data'
 ROT_PATH = '../dat/rot_data'
+F_PATH = '../dat/1f_data'
 
 # interacting varying parameters
 APC_AMP_LOW_PATH = '../dat/apc_amp_data_low'

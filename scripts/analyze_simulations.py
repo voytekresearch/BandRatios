@@ -27,39 +27,129 @@ def main():
         cf_high_syns.append(val.gaussian_params[0][0])
 
     # Calculate ratios
-    cf_low_ratios = []
-    cf_high_ratios = []
+    cf_low_tbr = []
+    cf_low_tar = []
+    cf_low_abr = []
+    cf_high_tbr = []
+    cf_high_tar = []
+    cf_high_abr = []
 
     for cf in cf_low[1]:
-        cf_low_ratios.append(calc_band_ratio(cf_low[0], cf, THETA_BAND, BETA_BAND))
+        cf_low_tbr.append(calc_theta_beta_ratio(cf_low[0], cf))
+        cf_low_tar.append(calc_theta_alpha_ratio(cf_low[0], cf))
+        cf_low_abr.append(calc_alpha_beta_ratio(cf_low[0], cf))
 
     for cf in cf_high[1]:
-        cf_high_ratios.append(calc_band_ratio(cf_high[0], cf, THETA_BAND, BETA_BAND))
+        cf_high_tbr.append(calc_theta_beta_ratio(cf_high[0], cf))
+        cf_high_tar.append(calc_theta_alpha_ratio(cf_high[0], cf))
+        cf_high_abr.append(calc_alpha_beta_ratio(cf_high[0], cf))
 
     # Make DataFrame of Center Frequencies and coresponding ratio values
-    df_cf_low_cols = np.array([cf_low_ratios, cf_low_syns]).T.tolist()
-    df_cf_high_cols = np.array([cf_high_ratios, cf_high_syns]).T.tolist()
+    df_cf_low_cols = np.array([cf_low_tbr, cf_low_tar, cf_low_abr, cf_low_syns]).T.tolist()
+    df_cf_high_cols = np.array([cf_high_tbr, cf_high_tar, cf_high_abr, cf_high_syns]).T.tolist()
 
-    df_cf_low = pd.DataFrame(df_cf_low_cols, columns=["Band_Ratio", "Low_Center_Frequency"])
-    df_cf_high = pd.DataFrame(df_cf_high_cols, columns=["Band_Ratio", "High_Center_Frequency"])
+    df_cf_low = pd.DataFrame(df_cf_low_cols, columns=["TBR","TAR","ABR", "CF"])
+    df_cf_high = pd.DataFrame(df_cf_high_cols, columns=["TBR","TAR","ABR", "CF"])
 
     # Subplots - define the figure
-    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    fig = plt.figure(figsize=[8, 4])
     
-    ax[0].set_title("Theta center frequency",{"fontsize": 18})
-    ax[1].set_title("Beta center frequency",{"fontsize": 18})
-
-    ax[0].set_xlabel("Low Center Frequency",{"fontsize": 18})
-    ax[1].set_xlabel("High Center Frequency",{"fontsize": 18})
-    ax[0].set_ylabel("Ratio",{"fontsize": 18})
-    ax[1].set_ylabel("Ratio",{"fontsize": 18})
-
-    # Fill in axes
-    ax[0].plot(df_cf_low.Low_Center_Frequency, df_cf_low.Band_Ratio, color='r')
-    ax[1].plot(df_cf_high.High_Center_Frequency, df_cf_high.Band_Ratio, color='r')
-
+    #TBR by PW
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("CF_low",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_cf_low.CF, df_cf_low.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("CF_low",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_cf_low.CF, df_cf_low.TBR, color='r')
+    
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/cf_vs_bandratio.png", dpi=700)
+    plt.savefig("../figures/SingleParamSims/cf_low_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by PW
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("CF_low",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_cf_low.CF, df_cf_low.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("CF_low",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_cf_low.CF, df_cf_low.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/cf_low_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by BW
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("CF_low",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_cf_low.CF, df_cf_low.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("CF_low",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_cf_low.CF, df_cf_low.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/cf_low_vs_ABR.png", dpi=700)
+    plt.clf() 
+
+    #TBR by BW
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("CF_high",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_cf_high.CF, df_cf_high.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("CF_high",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_cf_high.CF, df_cf_high.TBR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/cf_high_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by BW
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("BW_high",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_cf_high.CF, df_cf_high.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("CF_high",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_cf_high.CF, df_cf_high.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/cf_high_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by BW
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("CF_high",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_cf_high.CF, df_cf_high.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("CF_high",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_cf_high.CF, df_cf_high.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/cf_high_vs_ABR.png", dpi=700)
+    plt.clf() 
+
 
     ###################### Amplitude ######################
 
@@ -77,39 +167,129 @@ def main():
         amp_high_syns.append(val.gaussian_params[0][1])
 
     # Calculate band ratios
-    amp_low_ratios = []
-    amp_high_ratios = []
+    amp_low_tbr = []
+    amp_low_tar = []
+    amp_low_abr = []
+    amp_high_tbr = []
+    amp_high_tar = []
+    amp_high_abr = []
 
     for amp in amp_low[1]:
-        amp_low_ratios.append(calc_band_ratio(amp_low[0], amp, THETA_BAND, BETA_BAND))
+        amp_low_tbr.append(calc_theta_beta_ratio(amp_low[0], amp))
+        amp_low_tar.append(calc_theta_alpha_ratio(amp_low[0], amp))
+        amp_low_abr.append(calc_alpha_beta_ratio(amp_low[0], amp))
 
     for amp in amp_high[1]:
-        amp_high_ratios.append(calc_band_ratio(amp_high[0], amp, THETA_BAND, BETA_BAND))
+        amp_high_tbr.append(calc_theta_beta_ratio(amp_high[0], amp))
+        amp_high_tar.append(calc_theta_alpha_ratio(amp_high[0], amp))
+        amp_high_abr.append(calc_alpha_beta_ratio(amp_high[0], amp))
 
     # Create DataFrame
-    df_amp_low_cols = np.array([amp_low_ratios, amp_low_syns]).T.tolist()
-    df_amp_high_cols = np.array([amp_high_ratios, amp_high_syns]).T.tolist()
+    df_amp_low_cols = np.array([amp_low_tbr, amp_low_tar, amp_low_abr, amp_low_syns]).T.tolist()
+    df_amp_high_cols = np.array([amp_high_tbr, amp_high_tar, amp_high_abr, amp_high_syns]).T.tolist()
 
-    df_amp_low = pd.DataFrame(df_amp_low_cols, columns=["Band_Ratio", "Low_Amplitude"])
-    df_amp_high = pd.DataFrame(df_amp_high_cols, columns=["Band_Ratio", "High_Amplitude"])
+    df_amp_low = pd.DataFrame(df_amp_low_cols, columns=["TBR","TAR","ABR", "Power"])
+    df_amp_high = pd.DataFrame(df_amp_high_cols, columns=["TBR","TAR", "ABR", "Power"])
 
     # Subplots - define the figure
-    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    fig = plt.figure(figsize=[8, 4])
     
-    ax[0].set_title("Theta amplitude",{"fontsize": 18})
-    ax[1].set_title("Beta amplitude",{"fontsize": 18})
-
-    ax[0].set_xlabel("Low Band Amplitude",{"fontsize": 18})
-    ax[1].set_xlabel("High Band Amplitude",{"fontsize": 18})
-    ax[0].set_ylabel("Ratio",{"fontsize": 18})
-    ax[1].set_ylabel("Ratio",{"fontsize": 18})
-
-    # Fill in axes
-    ax[0].plot(df_amp_low.Low_Amplitude, df_amp_low.Band_Ratio, color='r')
-    ax[1].plot(df_amp_high.High_Amplitude, df_amp_high.Band_Ratio, color='r')
-
+    #TBR by PW
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("PW_low",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_amp_low.Power, df_amp_low.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("PW_low",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_amp_low.Power, df_amp_low.TBR, color='r')
+    
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/amp_vs_bandratio.png", dpi=700)
+    plt.savefig("../figures/SingleParamSims/pw_low_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by PW
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("PW_low",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_amp_low.Power, df_amp_low.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("PW_low",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_amp_low.Power, df_amp_low.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/pw_low_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by BW
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("PW_low",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_amp_low.Power, df_amp_low.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("PW_low",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_amp_low.Power, df_amp_low.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/pw_low_vs_ABR.png", dpi=700)
+    plt.clf() 
+
+    #TBR by BW
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("PW_high",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_amp_high.Power, df_amp_high.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("PW_high",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_amp_high.Power, df_amp_high.TBR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/pw_high_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by BW
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("BW_high",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_amp_high.Power, df_amp_high.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("BW_high",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_amp_high.Power, df_amp_high.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/pw_high_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by BW
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("PW_high",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_amp_high.Power, df_amp_high.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("PW_high",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_amp_high.Power, df_amp_high.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/pw_high_vs_ABR.png", dpi=700)
+    plt.clf() 
+    
 
     ###################### BAND WIDTH ######################
 
@@ -124,75 +304,205 @@ def main():
     for val in bw_high[2]:
         bw_high_syns.append(val.gaussian_params[0][2])
 
-    bw_low_ratios = []
-    bw_high_ratios = []
+    bw_low_tbr = []
+    bw_low_tar = []
+    bw_low_abr = []
+    
+    bw_high_tbr = []
+    bw_high_tar = []
+    bw_high_abr = []
 
     for bw in bw_low[1]:
-        bw_low_ratios.append(calc_band_ratio(bw_low[0], bw, THETA_BAND, BETA_BAND))
+        bw_low_tbr.append(calc_theta_beta_ratio(bw_low[0], bw))
+        bw_low_tar.append(calc_theta_alpha_ratio(bw_low[0], bw))
+        bw_low_abr.append(calc_alpha_beta_ratio(bw_low[0], bw))
 
     for bw in bw_high[1]:
-        bw_high_ratios.append(calc_band_ratio(bw_high[0], bw, THETA_BAND, BETA_BAND))
+        bw_high_tbr.append(calc_theta_beta_ratio(bw_high[0], bw))
+        bw_high_tar.append(calc_theta_alpha_ratio(bw_high[0], bw))
+        bw_high_abr.append(calc_alpha_beta_ratio(bw_high[0], bw))
 
-    df_bw_low_cols = np.array([bw_low_ratios, bw_low_syns]).T.tolist()
-    df_bw_high_cols = np.array([bw_high_ratios, bw_high_syns]).T.tolist()
+    df_bw_low_cols = np.array([bw_low_tbr, bw_low_tar, bw_low_abr, bw_low_syns]).T.tolist()
+    df_bw_high_cols = np.array([bw_high_tbr, bw_high_tar, bw_high_abr, bw_high_syns]).T.tolist()
 
-    df_bw_low = pd.DataFrame(df_bw_low_cols, columns=["Band_Ratio", "Low_BandWidth"])
-    df_bw_high = pd.DataFrame(df_bw_high_cols, columns=["Band_Ratio", "High_BandWidth"])
+    df_bw_low = pd.DataFrame(df_bw_low_cols, columns=["TBR","TAR", "ABR", "BandWidth"])
+    df_bw_high = pd.DataFrame(df_bw_high_cols, columns=["TBR","TAR", "ABR","BandWidth"])
 
     # Subplots - define the figure
-    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    fig = plt.figure(figsize=[8, 4])
     
-    ax[0].set_title("Theta bandwidth",{"fontsize": 18})
-    ax[1].set_title("Beta bandwidth",{"fontsize": 18})
-
-    ax[0].set_xlabel("Low bandwidth",{"fontsize": 18})
-    ax[1].set_xlabel("High bandwidth",{"fontsize": 18})
-    ax[0].set_ylabel("Ratio",{"fontsize": 18})
-    ax[1].set_ylabel("Ratio",{"fontsize": 18})
-
-    ax[0].plot(df_bw_low.Low_BandWidth, df_bw_low.Band_Ratio, color='r')
-    ax[1].plot(df_bw_high.High_BandWidth, df_bw_high.Band_Ratio, color='r')
-
+    #TBR by BW
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("BW_low",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_bw_low.BandWidth, df_bw_low.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("BW_low",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_bw_low.BandWidth, df_bw_low.TBR, color='r')
+    
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/bw_vs_bandratio.png", dpi=700)
+    plt.savefig("../figures/SingleParamSims/bw_low_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by BW
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("BW_low",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_bw_low.BandWidth, df_bw_low.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("BW_low",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_bw_low.BandWidth, df_bw_low.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/bw_low_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by BW
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("BW_low",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_bw_low.BandWidth, df_bw_low.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("BW_low",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_bw_low.BandWidth, df_bw_low.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/bw_low_vs_ABR.png", dpi=700)
+    plt.clf() 
+ 
+
+
+
+    #TBR by BW
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("BW_high",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_bw_high.BandWidth, df_bw_high.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("BW_low",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_bw_high.BandWidth, df_bw_high.TBR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/bw_high_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by BW
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("BW_high",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_bw_high.BandWidth, df_bw_high.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("BW_high",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_bw_high.BandWidth, df_bw_high.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/bw_high_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by BW
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("BW_high",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_bw_high.BandWidth, df_bw_high.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("BW_high",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_bw_high.BandWidth, df_bw_high.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/bw_high_vs_ABR.png", dpi=700)
+    plt.clf() 
+    
+    
 
     ###################### Aperiodic Component ######################
 
-    slope = np.load("../dat/apc_data.npy")
+    apc = np.load("../dat/apc_data.npy")
 
-    slope_syns = []
+    apc_syns = []
 
-    for val in slope[2]:
-        slope_syns.append(val.aperiodic_params[1])
+    for val in apc[2]:
+        apc_syns.append(val.aperiodic_params[1])
 
-    slope_ratios = []
+    apc_tbr = []
+    apc_tar = []
+    apc_abr = []
 
-    for sl in slope[1]:
-        slope_ratios.append(calc_band_ratio(slope[0], sl, THETA_BAND, BETA_BAND))
+    for ap in apc[1]:
+        apc_tbr.append(calc_theta_beta_ratio(apc[0], ap))
+        apc_tar.append(calc_theta_alpha_ratio(apc[0], ap))
+        apc_abr.append(calc_alpha_beta_ratio(apc[0], ap))
 
-    slope_cols = np.array([slope_ratios, slope_syns]).T.tolist()
+    apc_cols = np.array([apc_tbr, apc_tar, apc_abr, apc_syns]).T.tolist()
 
-    df_slope = pd.DataFrame(slope_cols, columns=["Band_Ratio", "Slope"])
+    df_apc = pd.DataFrame(apc_cols, columns=["TBR", "TAR", "ABR", "APC"])
 
-    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    fig = plt.figure(figsize=[8, 4])
     
-    ax[0].set_title("Aperiodic Exponent",{"fontsize": 18})
-    ax[1].set_title("Aperiodic Exponent",{"fontsize": 18})
-
-    ax[0].set_xlabel("Exponent (logged)",{"fontsize": 18})
-    ax[1].set_xlabel("Exponent",{"fontsize": 18})
-    ax[0].set_ylabel("Ratio",{"fontsize": 18})
-    ax[1].set_ylabel("Ratio",{"fontsize": 18})
-
-    # LOG SCALING
-    ax[0].set_yscale('log')
-    #ax[0].set_xscale('log')
-
-    ax[0].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
-    ax[1].plot(df_slope.Slope, df_slope.Band_Ratio, color='r')
-
+    #TBR by APC
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("Exponent",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_apc.APC, df_apc.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("Exponent",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_apc.APC, df_apc.TBR, color='r')
+    
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/apc_vs_bandratio.png", dpi=700)
+    plt.savefig("../figures/SingleParamSims/APC_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by APC
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("Exponent",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_apc.APC, df_apc.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("Exponent",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_apc.APC, df_apc.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/APC_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by APC
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("Exponent",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_apc.APC, df_apc.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("Exponent",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_apc.APC, df_apc.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/APC_vs_ABR.png", dpi=700)
+    plt.clf() 
     
     
     
@@ -205,56 +515,147 @@ def main():
     for val in offset[2]:
         offset_syns.append(val.aperiodic_params[0])
 
-    offset_ratios = []
+    off_tbr = []
+    off_tar = []
+    off_abr = []
 
     for os in offset[1]:
-        offset_ratios.append(calc_band_ratio(slope[0], os, THETA_BAND, BETA_BAND))
+        off_tbr.append(calc_theta_beta_ratio(offset[0], os))
+        off_tar.append(calc_theta_alpha_ratio(offset[0], os))
+        off_abr.append(calc_alpha_beta_ratio(offset[0], os))
 
-    offset_cols = np.array([offset_ratios, offset_syns]).T.tolist()
 
-    df_offset = pd.DataFrame(offset_cols, columns=["Ratio", "Offset"])
+    offset_cols = np.array([off_tbr, off_tar, off_abr, offset_syns]).T.tolist()
 
-    fig, ax = plt.subplots(1, 2, figsize=[9, 4])
+    df_off = pd.DataFrame(offset_cols, columns=["TBR","TAR", "ABR", "Offset"])
+
+    fig = plt.figure(figsize=[8, 4])
     
-    ax[0].set_title("Aperiodic Offset",{"fontsize": 18})
-    ax[1].set_title("Aperiodic Offset",{"fontsize": 18})
-
-    ax[0].set_xlabel("Offset",{"fontsize": 18})
-    ax[1].set_xlabel("Offset",{"fontsize": 18})
-    ax[0].set_ylabel("Ratio",{"fontsize": 18})
-    ax[1].set_ylabel("Ratio",{"fontsize": 18})
-
-    # LOG SCALING
-    ax[0].set_yscale('log')
-    #ax[0].set_xscale('log')
-
-    ax[0].plot(df_offset.Offset, df_offset.Ratio, color='r')
-    ax[1].plot(df_offset.Offset, df_offset.Ratio, color='r')
-
+    
+    #TBR by offset
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("Offset",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_off.Offset, df_off.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("Offset",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_off.Offset, df_off.TBR, color='r')
+    
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/offset_vs_bandratio.png", dpi=700)
+    plt.savefig("../figures/SingleParamSims/offset_vs_TBR.png", dpi=700)
+    plt.clf() 
+    
+    #TAR by offset
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("Offset",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_off.Offset, df_off.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("Offset",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_off.Offset, df_off.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/offset_vs_TAR.png", dpi=700)
+    plt.clf() 
+    
+    #ABR by offset
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("Offset",{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df_off.Offset, df_off.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("Offset",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_off.Offset, df_off.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/offset_vs_ABR.png", dpi=700)
+    plt.clf() 
 
-    ###################### ROTATION ######################
 
-    # ALL OF THIS IS BROKEN!!!
+    ###################### No Oscillation - 1/f ######################
+    
+    f_data = np.load("../dat/apc_data.npy")
 
-#     rot = np.load("./dat/rot_data.npy")
-#     rot_freqs = [ rot[0][0][0], rot[0][0][-1]]
+    f_syns = []
 
-#     rot_ratio_diff = []
+    for val in f_data[2]:
+        f_syns.append(val.aperiodic_params[1])
 
-#     freqs, ps = gen_power_spectrum(rot_freqs, [0,1],[])
+    f_tbr = []
+    f_tar = []
+    f_abr = []
 
-#     control_ratio = calc_band_ratio(freqs, ps, THETA_BAND, BETA_BAND)
-#     control_ratio
+    for f in f_data[1]:
+        f_tbr.append(calc_theta_beta_ratio(f_data[0], f))
+        f_tar.append(calc_theta_alpha_ratio(f_data[0], f))
+        f_abr.append(calc_alpha_beta_ratio(f_data[0], f))
+        
 
-#     for rt in rot:
-#         #print(set(rt[1]))
-#         altered_ratio = calc_band_ratio(rt[0], rt[2], THETA_BAND, BETA_BAND)
-#         print(altered_ratio)
-#         rot_ratio_diff.append(control_ratio - altered_ratio)
+    f_cols = np.array([f_tbr, f_tar, f_abr, f_syns]).T.tolist()
 
-#     rot_ratio_diff
+    df_f = pd.DataFrame(f_cols, columns=["TBR","TAR", "ABR", "Slope"])
+
+    fig = plt.figure(figsize=[8, 4])
+    
+    
+    #TBR by 1/f
+    ax1= fig.add_subplot(121)
+    ax1.set_xlabel("Exponent",{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df_f.Slope, df_f.TBR, color='r')
+    
+    ax11= fig.add_subplot(122)
+    ax11.set_xlabel("Exponent",{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df_f.Slope, df_f.TBR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/1f_vs_TBR(no_osc).png", dpi=700)
+    plt.clf() 
+    
+    #TAR by 1/f
+    ax2= fig.add_subplot(121)
+    ax2.set_xlabel("Exponent",{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df_f.Slope, df_f.TAR, color='r')
+    
+    ax21= fig.add_subplot(122)
+    ax21.set_xlabel("Exponent",{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df_f.Slope, df_f.TAR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/1f_vs_TAR(no_osc).png", dpi=700)
+    plt.clf() 
+    
+    #ABR by 1/f
+    ax3= fig.add_subplot(121)
+    ax3.set_xlabel("Exponent",{"fontsize": 18})
+    ax3.set_ylabel("TAR",{"fontsize": 18})
+    ax3.plot(df_f.Slope, df_f.ABR, color='r')
+    
+    ax31= fig.add_subplot(122)
+    ax31.set_xlabel("Exponent",{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df_f.Slope, df_f.ABR, color='r')
+    
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/1f_vs_ABR(no_osc).png", dpi=700)
+    plt.clf() 
+    
+    
 
     ######################################################
     ################### Relative Power ###################
@@ -366,7 +767,7 @@ def main():
 
     slope_r_ratios_low = calc_group_rel_ratios(rel_t_ps_sl, rel_b_ps_sl)
 
-    slope_cols = np.array([slope_r_ratios_low, slope_syns]).T.tolist()
+    slope_cols = np.array([slope_r_ratios_low, apc_syns]).T.tolist()
 
     df_slope = pd.DataFrame(slope_cols, columns=["Relative_Ratio", "Slope"])
 

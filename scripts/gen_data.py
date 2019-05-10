@@ -94,5 +94,14 @@ def main():
     rot_save.append((freqs, vals))
     np.save(ROT_PATH, rot_save)
 
+    
+    #################### No Oscillations - 1/f changes ####################
+    
+    f_step = Stepper(APC_START, APC_END, APC_INC)
+    f_iter = param_iter([OFF_DEF, f_step])
+    f_fs, f_ps, f_syns = gen_group_power_spectra(len(f_step), FREQ_RANGE, f_iter, [], nlvs=0)
+    f_save = [f_fs, f_ps, f_syns]
+    np.save(F_PATH, f_save)
+    
 if __name__ == "__main__":
     main()

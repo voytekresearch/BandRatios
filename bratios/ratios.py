@@ -47,9 +47,9 @@ def calc_band_ratio(freqs, psd, low_band, high_band):
     return ratio
 
 # Create a partial function definitions for proto-typical band analyses
-calc_theta_beta_ratio = partial(calc_band_ratio, low_band=THETA_BAND, high_band=BETA_BAND)
-calc_theta_alpha_ratio = partial(calc_band_ratio, low_band=THETA_BAND, high_band=ALPHA_BAND)
-calc_alpha_beta_ratio = partial(calc_band_ratio, low_band=ALPHA_BAND, high_band=BETA_BAND)
+calc_theta_beta_ratio = partial(calc_band_ratio, low_band=BANDS['theta'], high_band=BANDS['beta'])
+calc_theta_alpha_ratio = partial(calc_band_ratio, low_band=BANDS['theta'], high_band=BANDS['alpha'])
+calc_alpha_beta_ratio = partial(calc_band_ratio, low_band=BANDS['alpha'], high_band=BANDS['beta'])
 
 # Copy over docs for partial functions
 calc_theta_beta_ratio.__doc__ = calc_band_ratio.__doc__
