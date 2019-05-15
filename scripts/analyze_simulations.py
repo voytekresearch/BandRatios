@@ -260,12 +260,12 @@ def main():
     
     #TAR by BW
     ax2= fig.add_subplot(121)
-    ax2.set_xlabel("BW_high",{"fontsize": 18})
+    ax2.set_xlabel("PW_high",{"fontsize": 18})
     ax2.set_ylabel("TAR",{"fontsize": 18})
     ax2.plot(df_amp_high.Power, df_amp_high.TAR, color='r')
     
     ax21= fig.add_subplot(122)
-    ax21.set_xlabel("BW_high",{"fontsize": 18})
+    ax21.set_xlabel("PW_high",{"fontsize": 18})
     ax21.set_ylabel("TAR",{"fontsize": 18})
     ax21.set_yscale('log')
     ax21.plot(df_amp_high.Power, df_amp_high.TAR, color='r')
