@@ -3,6 +3,8 @@ import numpy as np
 from numpy.linalg import LinAlgError
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from fooof import FOOOF, FOOOFGroup
 from fooof.analysis import get_band_peak_fm
@@ -42,36 +44,31 @@ def nan_corr_spearman(vec1, vec2):
     return spearmanr(vec1[mask], vec2[mask])
 
 
-def get_wave_params(ratio_type):
+def get_wave_params(band_label):
+    """Obtain labels of slow and fast wave spectral parameters
     
-    #Deduce bands
-    sw = ""
-    fw = ""
-    if ratio_type[0] == "T":
-        sw = "Theta"
-    elif ratio_type[0] == "A":
-        sw = "Alpha"
-    else:
-        #TODO input error
-        pass
-        
-    # find Fast Wave
-    if ratio_type[1] == "A":
-        fw = "Alpha"
-    elif ratio_type[1] == "B":
-        fw = "Beta"
-    else:
-        #TODO input error
-        pass
-    # Build column strings
-    sw_params = [sw+"_CF", sw+"_PW", sw+"_BW"]
-    fw_params = [fw+"_CF", fw+"_PW", fw+"_BW"]
+    Parameters
+    ----------
+    band_label: character
+        Character corrsponding to frequency band.
     
-    return sw_params, fw_params
+    Return
+    ------
+    list of strings containing spectral labels.
+        ex) [Theta_CF, Theta_PW, Theta_BW]
+    
+    """
+    curr_band = BAND_LABELS[band_label]
+    
+    return [curr_band+"_" + feat for feat in FEATURE_LABELS]
 
 
-def peak_param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
-    """Finds correlation between peak params & ratios.
+def print_aperiodic_correlation(ratio_type, corr):
+    for ind, param in enumerate(["Exp","Off","Age"]):
+        print("The corr of {} to {} is {:1.2f}".format(ratio_type, param,  corr[ind]))
+
+def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
+    """Finds correlation between spectral params & ratios.
 
     Parameters
     ----------
@@ -87,30 +84,62 @@ def peak_param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
         
     Return
     ------
-    2x3 ndarray or correlations
+    2x3 ndarray of periodic param correlations
+    2x1 ndarray of aperiodic param correltations
     """
     
     # Select relevant rows from df
     rel_df = df.loc[df['Chan_ID'].isin(ch_inds)]
     
     # Get columns to correlate with
-    sw, fw = get_wave_params(ratio_type)
+    sw = get_wave_params(ratio_type[0])
+    fw = get_wave_params(ratio_type[1])
     
     sw_corrs = np.zeros(3)
     fw_corrs = np.zeros(3)
+    ap_corrs = np.zeros(3)
     
+    # Ratio vs spectral params correlation
     for ind in range(3):
         sw_corrs[ind] = func(df[sw[ind]],df[ratio_type])[0]
         fw_corrs[ind] = func(df[fw[ind]],df[ratio_type])[0]
         
+    # Ratio vs aperiodic params correlation
+    ap_corrs[0] = func(df["Exp"], df[ratio_type])[0]
+    ap_corrs[1] = func(df["Off"], df[ratio_type])[0]
+    ap_corrs[2] = func(df["Age"], df[ratio_type])[0]
     
-    return np.stack((sw_corrs, fw_corrs))
+    return np.stack((sw_corrs, fw_corrs)), ap_corrs
                            
                        
-def get_data_matrix():
-    pass
-
-
+def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",y_labels=["SW","FW"], save_fig=False, file_path= HEATS_PATH, file_name="Spectral_Features_Ratio_corr"):
+    """Plot correlations between BandRatio measures and spectral features.
+    
+    Parameters
+    ----------
+    data: 2x3 ndarray
+        Correlations of BandRatios to Spectral Features.
+    title: string
+        Title of plot.
+    y_labels: list of strings.
+        Lables of slow and fast wave to use on y-axis.
+    save_fig: boolean
+        If True - save plot
+        
+    """
+    
+    if not np.all(data):
+        raise RuntimeError("No data - cannot proceed.")
+        
+    ax = plt.axes()
+    sns.heatmap(data,cmap="bone", yticklabels=y_labels, xticklabels=FEATURE_LABELS,annot=True, ax=ax)
+    ax.set_title(title)
+    plt.show()
+    
+    if save_fig:
+        plt.savefig(file_path+file_name+".png")
+        
+        
 def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):
     """Adds fooof-obtained parameters to current row which will be added to DataFrame.
     

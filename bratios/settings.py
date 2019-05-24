@@ -12,6 +12,8 @@ HIGH_BAND = [13, 30]
 AP_DEF = [0, 1]
 BANDS = Bands({'theta' : LOW_BAND, 'beta' : HIGH_BAND, "alpha":ALPHA_BAND })
 RATIOS = {"TBR": ['theta','beta'], "TAR":['theta', 'alpha'],"ABR": ['alpha','beta']}
+BAND_LABELS = {'T':'Theta','A':"Alpha", "B":"Beta"}
+FEATURE_LABELS = ['CF', 'PW', 'BW']
 
 CF_LOW_DEF = np.mean(LOW_BAND)
 CF_HIGH_DEF = np.mean(HIGH_BAND)
@@ -69,3 +71,6 @@ APC_AMP_HIGH_PATH = '../dat/interacting_param_sims/apc_amp_data_high'
 CF_BW_LOW_PATH = '../dat/interacting_param_sims/cf_bw_data_low'
 CF_BW_HIGH_PATH = '../dat/interacting_param_sims/cf_bw_data_high'
 ROT_DEL_PATH = '../dat/interacting_param_sims/rot_del'
+
+# Real data path to heatmap figures directory
+HEATS_PATH = '../figures/RealData/Heatmaps/'
