@@ -22,11 +22,11 @@ CF_LOW_INC = .25
 CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC), 2)
 CFS_HIGH = np.round(np.arange(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC), 1)
 
-AMP_DEF = .75
-AMP_INC = .1
-AMP_START = 0
-AMP_END = 1.5
-AMPS = np.round(np.arange(AMP_START, AMP_END, AMP_INC), 1)
+PW_DEF = .5
+PW_INC = .1
+PW_START = 0
+PW_END = 1.5
+PWS = np.round(np.arange(PW_START, PW_END, PW_INC), 1)
 
 BW_DEF = 1
 BW_INC = .2
@@ -57,8 +57,8 @@ DELS = np.round(np.arange(DEL_RANGE[0], DEL_RANGE[1], DEL_INC), 1)
 APC_PATH = '../dat/single_param_sims/apc_data'
 CF_PATH_LOW = '../dat/single_param_sims/cf_data_low'
 CF_PATH_HIGH = '../dat/single_param_sims/cf_data_high'
-AMP_PATH_LOW = '../dat/single_param_sims/amp_data_low'
-AMP_PATH_HIGH = '../dat/single_param_sims/amp_data_high'
+PW_PATH_LOW = '../dat/single_param_sims/amp_data_low'
+PW_PATH_HIGH = '../dat/single_param_sims/amp_data_high'
 BW_PATH_LOW = '../dat/single_param_sims/bw_data_low'
 BW_PATH_HIGH = '../dat/single_param_sims/bw_data_high'
 OFF_PATH = '../dat/single_param_sims/offset_data'
@@ -66,8 +66,8 @@ ROT_PATH = '../dat/single_param_sims/rot_data'
 F_PATH = '../dat/single_param_sims/1f_data'
 
 # interacting varying parameters
-APC_AMP_LOW_PATH = '../dat/interacting_param_sims/apc_amp_data_low'
-APC_AMP_HIGH_PATH = '../dat/interacting_param_sims/apc_amp_data_high'
+APC_PW_LOW_PATH = '../dat/interacting_param_sims/apc_amp_data_low'
+APC_PW_HIGH_PATH = '../dat/interacting_param_sims/apc_amp_data_high'
 CF_BW_LOW_PATH = '../dat/interacting_param_sims/cf_bw_data_low'
 CF_BW_HIGH_PATH = '../dat/interacting_param_sims/cf_bw_data_high'
 ROT_DEL_PATH = '../dat/interacting_param_sims/rot_del'

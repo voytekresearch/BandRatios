@@ -101,14 +101,18 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     
     # Ratio vs spectral params correlation
     for ind in range(3):
-        sw_corrs[ind] = func(df[sw[ind]],df[ratio_type])[0]
-        fw_corrs[ind] = func(df[fw[ind]],df[ratio_type])[0]
+        sw_corrs[ind] = func(rel_df[sw[ind]],rel_df[ratio_type])[0]
+        fw_corrs[ind] = func(rel_df[fw[ind]],rel_df[ratio_type])[0]
+        print(func(rel_df[sw[ind]],rel_df[ratio_type]))
+        print(func(rel_df[fw[ind]],rel_df[ratio_type]))
         
     # Ratio vs aperiodic params correlation
-    ap_corrs[0] = func(df["Exp"], df[ratio_type])[0]
-    ap_corrs[1] = func(df["Off"], df[ratio_type])[0]
-    ap_corrs[2] = func(df["Age"], df[ratio_type])[0]
-    
+    ap_corrs[0] = func(rel_df["Exp"], rel_df[ratio_type])[0]
+    ap_corrs[1] = func(rel_df["Off"], rel_df[ratio_type])[0]
+    ap_corrs[2] = func(rel_df["Age"], rel_df[ratio_type])[0]
+    print(func(rel_df["Exp"], rel_df[ratio_type]))
+    print(func(rel_df["Off"], rel_df[ratio_type]))
+    print(func(rel_df["Age"], rel_df[ratio_type]))
     return np.stack((sw_corrs, fw_corrs)), ap_corrs
                            
                        
@@ -240,10 +244,10 @@ def get_all_data(df, chs ,block=0):
                 res = res.append(curr_row,ignore_index=True)
             
         except FileNotFoundError or ValueError: 
-            continue
+            print("FileNotFound or ValueError: ",filename)
         except LinAlgError:
-            continue
+            print("LinAlgError: ",filename)
         except IndexError:
-            print("problem with index: ",filename)
+            print("IndexError: ",filename)
 
     return res

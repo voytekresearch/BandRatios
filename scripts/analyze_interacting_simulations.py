@@ -14,8 +14,8 @@ def main():
 ###################### APERIODIC COMPONENT & AMPLITUDE ######################
 
     # load data
-    apc_amp_low = np.load("../dat/apc_amp_data_low.npy")
-    apc_amp_high = np.load("../dat/apc_amp_data_high.npy")
+    apc_amp_low = np.load("../dat/interacting_param_sims/apc_amp_data_low.npy")
+    apc_amp_high = np.load("../dat/interacting_param_sims/apc_amp_data_high.npy")
 
     # calculate ratios
     apc_amp_low_ratios = calc_interacting_param_ratios(apc_amp_low)
@@ -36,9 +36,9 @@ def main():
     # Low band amp apc modulation with logged ratios
     ax = sns.heatmap(np.log10(apc_amp_low_ratios), xticklabels=AMPS, yticklabels=APCS)
     ax.invert_yaxis()
-    plt.xlabel("Amplitude")
-    plt.ylabel("Exponent")
-    plt.title("Low band amplitude and exponent modulation")
+    plt.xlabel("PW", {"fontsize": 18})
+    plt.ylabel("EXP", {"fontsize": 18})
+    plt.title("Low band PW and EXP",{"fontsize": 18})
     plt.savefig("../figures/InteractingSims/low_apc_amp_log.png", dpi=500)
     
     plt.cla()
@@ -60,9 +60,9 @@ def main():
     fig, ax = plt.subplots()
     ax = sns.heatmap(np.log10(apc_amp_high_ratios), xticklabels=AMPS, yticklabels=APCS)
     ax.invert_yaxis()
-    plt.xlabel("Amplitude", {"fontsize": 18})
-    plt.ylabel("Exponent", {"fontsize": 18})
-    #plt.title("High band amplitude vs exponent", {"fontsize": 18})
+    plt.xlabel("PW", {"fontsize": 18})
+    plt.ylabel("EXP", {"fontsize": 18})
+    plt.title("High band PW vs EXP", {"fontsize": 18})
     plt.tight_layout()
     plt.savefig("../figures/InteractingSims/high_apc_amp_log.png", dpi=500)
     
@@ -71,8 +71,8 @@ def main():
 ###################### CENTER FREQUENCY & BANDWIDTH ######################    
     
     # Load data
-    cf_bw_low = np.load("../dat/cf_bw_data_low.npy")
-    cf_bw_high = np.load("../dat/cf_bw_data_high.npy")
+    cf_bw_low = np.load("../dat/interacting_param_sims/cf_bw_data_low.npy")
+    cf_bw_high = np.load("../dat/interacting_param_sims/cf_bw_data_high.npy")
     
     # calculate ratios
     cf_bw_low_ratios = calc_interacting_param_ratios(cf_bw_low)
@@ -94,9 +94,10 @@ def main():
     fig, ax = plt.subplots()
     ax = sns.heatmap(np.log10(cf_bw_low_ratios), xticklabels=BWS, yticklabels=CFS_LOW)
     ax.invert_yaxis()
-    plt.xlabel("Bandwidth")
-    plt.ylabel("Low band center frequencies")
-    plt.title("Low band bandwidth and center frequency modulation")
+    plt.xlabel("BW",{"fontsize": 18})
+    plt.ylabel("CF",{"fontsize": 18})
+    plt.title("Low band BW vs Low band CF",{"fontsize": 18})
+    plt.tight_layout()
     plt.savefig("../figures/InteractingSims/low_bw_cf_log.png", dpi=500)
     
     plt.cla()
@@ -117,9 +118,9 @@ def main():
     fig, ax = plt.subplots()
     ax = sns.heatmap(np.log10(cf_bw_high_ratios), xticklabels=BWS, yticklabels=CFS_HIGH)
     ax.invert_yaxis()
-    plt.xlabel("Bandwidth",{"fontsize": 18})
-    plt.ylabel("Center Frequencies", {"fontsize": 18})
-    #plt.title("High band bandwidth vs center frequency", {"fontsize": 18})
+    plt.xlabel("BW",{"fontsize": 18})
+    plt.ylabel("CF", {"fontsize": 18})
+    plt.title("High band BW vs CF", {"fontsize": 18})
     plt.tight_layout()
     plt.savefig("../figures/InteractingSims/high_bw_cf_log.png", dpi=500)
     
@@ -128,7 +129,7 @@ def main():
 ###################### ROTATIONAL FREQUENCY & ROTATIONAL DELTA ######################
 
     #Load data
-    rot_data = np.load("../dat/rot_del.npy")
+    rot_data = np.load("../dat/interacting_param_sims/rot_del.npy")
                        
     # calculate ratios
     rot_ratios = calc_interacting_param_ratios(rot_data)

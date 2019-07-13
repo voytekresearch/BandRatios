@@ -8,15 +8,15 @@ from settings import *
 
 def main():
 
-    ############## Amplitude and Slope ###########################
+    ############## Power and Exponent ###########################
 
     fs = gen_freqs(FREQ_RANGE, FREQ_RES)
 
-    # This block generates PSDs where amplitude and slope change for low band
-    # [Amplitude, Slopes, Powers]
+    # This block generates PSDs where amplitude and apc change for low band
+    # [Amplitude, apcs, Powers]
     output = np.zeros(shape=(len(APCS), len(AMPS), len(fs)))
-    slope_step = Stepper(APC_START, APC_END, APC_INC)
-    for sl_ind, sl_val in enumerate(slope_step):
+    apc_step = Stepper(APC_START, APC_END, APC_INC)
+    for sl_ind, sl_val in enumerate(apc_step):
 
         # Low band sweeps through amplitude range
         amp_low_step = Stepper(AMP_START, AMP_END, AMP_INC)
@@ -31,10 +31,10 @@ def main():
     ###############################################################
     
     output = np.zeros(shape=(len(APCS), len(AMPS), len(fs)))
-    slope_step = Stepper(APC_START, APC_END, APC_INC)
-    for sl_ind, sl_val in enumerate(slope_step):
+    apc_step = Stepper(APC_START, APC_END, APC_INC)
+    for sl_ind, sl_val in enumerate(apc_step):
 
-        # Low band sweeps through amplitude range
+        # High band sweeps through amplitude range
         amp_high_step = Stepper(AMP_START, AMP_END, AMP_INC)
         amp_iter_high = param_iter([CF_LOW_DEF, AMP_DEF, BW_DEF, CF_HIGH_DEF, amp_high_step, BW_DEF])
 
