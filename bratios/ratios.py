@@ -6,7 +6,7 @@ import seaborn as sb
 
 from fooof.analysis import get_band_peak
 from fooof.utils import trim_spectrum
-from fooof.synth import *
+from fooof.sim import *
 
 from settings import *
 

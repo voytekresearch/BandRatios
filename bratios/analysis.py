@@ -251,3 +251,74 @@ def get_all_data(df, chs ,block=0):
             print("IndexError: ",filename)
 
     return res
+
+def prep_single_sims(data, varied_param, spectral_param=1):
+    tbr = []
+    tar = []
+    abr = []
+    
+    freqs = gen_freqs(FREQ_RANGE, FREQ_RES)
+    param_values = []
+    param_array = np.asarray(data[1])
+    
+    for val in param_array:
+        param_values.append(np.array(val[spectral_param])[SINGLE_SIM_PARAM_IND[varied_param]])
+    
+    for param in data[0]:
+        tbr.append(calc_theta_beta_ratio(freqs, param))
+        tar.append(calc_theta_alpha_ratio(freqs, param))
+        abr.append(calc_alpha_beta_ratio(freqs, param))
+        
+    # Make DataFrame of Center Frequencies and coresponding ratio values
+    cols = np.array([tbr, tar, abr,param_values]).T.tolist()
+    
+    df = pd.DataFrame(cols, columns=["TBR","TAR","ABR", varied_param])
+    
+    return df
+
+def plot_single_param_sims(df,filename="param_vs_ratios"):
+
+    # Get param name
+    param_name = df.columns[3]
+    
+    # Subplots - define the figure
+    fig = plt.figure(figsize=[10, 14])
+
+    #TBR by PW
+    ax1= fig.add_subplot(321)
+    ax1.set_xlabel(param_name,{"fontsize": 18})
+    ax1.set_ylabel("TBR",{"fontsize": 18})
+    ax1.plot(df[param_name], df.TBR, color='r')
+
+    ax11= fig.add_subplot(322)
+    ax11.set_xlabel(param_name,{"fontsize": 18})
+    ax11.set_ylabel("TBR",{"fontsize": 18})
+    ax11.set_yscale('log')
+    ax11.plot(df[param_name], df.TBR, color='r')
+
+    #TAR by PW
+    ax2= fig.add_subplot(323)
+    ax2.set_xlabel(param_name,{"fontsize": 18})
+    ax2.set_ylabel("TAR",{"fontsize": 18})
+    ax2.plot(df[param_name], df.TAR, color='r')
+
+    ax21= fig.add_subplot(324)
+    ax21.set_xlabel(param_name,{"fontsize": 18})
+    ax21.set_ylabel("TAR",{"fontsize": 18})
+    ax21.set_yscale('log')
+    ax21.plot(df[param_name], df.TAR, color='r')
+
+    #ABR by BW
+    ax3= fig.add_subplot(325)
+    ax3.set_xlabel(param_name,{"fontsize": 18})
+    ax3.set_ylabel("ABR",{"fontsize": 18})
+    ax3.plot(df[param_name], df.ABR, color='r')
+
+    ax31= fig.add_subplot(326)
+    ax31.set_xlabel(param_name,{"fontsize": 18})
+    ax31.set_ylabel("ABR",{"fontsize": 18})
+    ax31.set_yscale('log')
+    ax31.plot(df[param_name], df.ABR, color='r')
+
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/"+filename, dpi=700)
