@@ -1,8 +1,13 @@
 """ A collection of functions to plot data"""
+import sys
+sys.path.append('../bratios')
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from fooof.core.info import get_data_indices
+from ratios import calc_interacting_param_ratios
+from settings import *
+#from fooof.core.info import get_data_indices
 
 list_of_files = {
     "../dat/cf_data_low.npy" : 'CF',
@@ -67,6 +72,20 @@ def plot_paper_interacting_sims():
     plt.xlabel("BW",{"fontsize": 18})
     plt.ylabel("CF", {"fontsize": 18})
 
+    
+def plot_interacting_sims(data,param1, param2, savepath):
+
+    
+    #calculate ratios
+    ratios = calc_interacting_param_ratios(data)
+
+    fig, ax = plt.subplots()
+    sns.heatmap(ratios, xticklabels=PARAMS[param2], yticklabels=PARAMS[param1])
+    ax.invert_yaxis()
+    plt.xlabel(param1)
+    plt.ylabel(param2)
+    plt.savefig(savepath, dpi=500)
+    plt.close()
     
 def plot_single_param_sims(df,filename="param_vs_ratios"):
 
