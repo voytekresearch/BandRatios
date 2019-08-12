@@ -1,4 +1,5 @@
 """Tools to analyze band ratio data"""
+
 import numpy as np
 from numpy.linalg import LinAlgError
 import pandas as pd
@@ -10,14 +11,25 @@ from fooof import FOOOF, FOOOFGroup
 from fooof.analysis import get_band_peak_fm
 from fooof.funcs import average_fg
 
-
 from settings import *
 from ratios import *
 
 
-
 def nan_corr_pearson(vec1, vec2):
-    """Correlation of two vectors with NaN values.
+    """Pearson correlation of two vectors with NaN values.
+    
+    Parameters
+    ----------
+    vec1 : 1d array floats
+        List of numbers to correlate with vec2.
+    vec2 : 1d array floats
+        List of numbers to correlate with vec1.
+        
+    Outputs
+    -------
+    Correlation : float
+        r-value correlation.
+    
     """
     vec1 = np.asarray(vec1)
     vec2 = np.asarray(vec2)
@@ -30,8 +42,19 @@ def nan_corr_pearson(vec1, vec2):
     return pearsonr(vec1[mask], vec2[mask])
 
 def nan_corr_spearman(vec1, vec2):
-    """Correlation of two vectors with NaN values.
-    Note: assumes the vectors have NaN in the same indices.
+    """Spearman correlation of two vectors with NaN values.
+    
+    Parameters
+    ----------
+    vec1 : 1d array floats
+        List of numbers to correlate with vec2
+    vec2 : 1d array floats
+        List of numbers to correlate with vec1
+        
+    Outputs
+    -------
+    Correlation : float
+        r-value correlation.
     """
     
     vec1 = np.asarray(vec1)
@@ -64,9 +87,25 @@ def get_wave_params(band_label):
 
 
 def print_aperiodic_correlation(ratio_type, corr):
+    """Prints out the correlation between ratio and aperiodic parameters
+    
+    Parameters
+    ----------
+    ratio_type : String
+        Which specific ratio measure to use.
+            ex) TBR
+    corr : list of floats
+        Correlation r-values for aperiodic params.
+        
+    Outputs
+    -------
+    Prints formatted sentences of correlations between ratio and aperiodic parameters.
+    """
+    
     for ind, param in enumerate(["Exp","Off","Age"]):
         print("The corr of {} to {} is {:1.2f}".format(ratio_type, param,  corr[ind]))
 
+        
 def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     """Finds correlation between spectral params & ratios.
 
@@ -136,9 +175,9 @@ def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",y_labels=["S
         raise RuntimeError("No data - cannot proceed.")
         
     ax = plt.axes()
-    sns.heatmap(data,cmap="bone", yticklabels=y_labels, xticklabels=FEATURE_LABELS,annot=True, ax=ax)
-    ax.set_title(title)
-    plt.show()
+    sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,annot=True, ax=ax, vmin=-1, vmax=1)
+    #ax.set_title(title)
+    #plt.show()
     
     if save_fig:
         plt.savefig(file_path+file_name+".png")
@@ -252,6 +291,50 @@ def get_all_data(df, chs ,block=0):
 
     return res
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# May use Later
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def proc_single_param(f_name, attribute):
+    
+    if attribute in ['CF', 'PW', 'BW']:
+        attr = 'gaussian_params'
+    else:
+        attr = 'aperiodic_params'
+    ind = get_data_indices('fixed')[attribute]
+
+    # Load & unpack data
+    dat = np.load(f_name)
+    freqs, spectra, syn_params = dat
+
+    # Get param values
+    params = []
+    for val in syn_params:
+        params.append(np.squeeze(getattr(val, attr))[ind])
+
+    # Calculate ratios
+    ratios = []
+    for spectrum in spectra:
+        ratios.append(calc_band_ratio(freqs, spectrum, THETA_BAND, BETA_BAND))
+
+    # Format dataframe
+    df_cols = np.array([ratios, params]).T.tolist()
+    df = pd.DataFrame(df_cols, columns=["ratio", "param"])
+    
+    return df
+
+def get_len_ratio_subjects():
+    df_tbr = df[np.isnan(df.Theta_CF)==False]
+    df_tbr = df_tbr[np.isnan(df_tbr.Beta_CF)==False]
+
+    df_tar = df[np.isnan(df.Theta_CF)==False]
+    df_tar = df_tar[np.isnan(df_tar.Alpha_CF)==False]
+
+    df_abr = df[np.isnan(df.Alpha_CF)==False]
+    df_abr = df_abr[np.isnan(df_abr.Beta_CF)==False]
+
+    return len(df_abr)
+
+
 def prep_single_sims(data, varied_param, spectral_param=1):
     tbr = []
     tar = []
@@ -275,50 +358,3 @@ def prep_single_sims(data, varied_param, spectral_param=1):
     df = pd.DataFrame(cols, columns=["TBR","TAR","ABR", varied_param])
     
     return df
-
-def plot_single_param_sims(df,filename="param_vs_ratios"):
-
-    # Get param name
-    param_name = df.columns[3]
-    
-    # Subplots - define the figure
-    fig = plt.figure(figsize=[10, 14])
-
-    #TBR by PW
-    ax1= fig.add_subplot(321)
-    ax1.set_xlabel(param_name,{"fontsize": 18})
-    ax1.set_ylabel("TBR",{"fontsize": 18})
-    ax1.plot(df[param_name], df.TBR, color='r')
-
-    ax11= fig.add_subplot(322)
-    ax11.set_xlabel(param_name,{"fontsize": 18})
-    ax11.set_ylabel("TBR",{"fontsize": 18})
-    ax11.set_yscale('log')
-    ax11.plot(df[param_name], df.TBR, color='r')
-
-    #TAR by PW
-    ax2= fig.add_subplot(323)
-    ax2.set_xlabel(param_name,{"fontsize": 18})
-    ax2.set_ylabel("TAR",{"fontsize": 18})
-    ax2.plot(df[param_name], df.TAR, color='r')
-
-    ax21= fig.add_subplot(324)
-    ax21.set_xlabel(param_name,{"fontsize": 18})
-    ax21.set_ylabel("TAR",{"fontsize": 18})
-    ax21.set_yscale('log')
-    ax21.plot(df[param_name], df.TAR, color='r')
-
-    #ABR by BW
-    ax3= fig.add_subplot(325)
-    ax3.set_xlabel(param_name,{"fontsize": 18})
-    ax3.set_ylabel("ABR",{"fontsize": 18})
-    ax3.plot(df[param_name], df.ABR, color='r')
-
-    ax31= fig.add_subplot(326)
-    ax31.set_xlabel(param_name,{"fontsize": 18})
-    ax31.set_ylabel("ABR",{"fontsize": 18})
-    ax31.set_yscale('log')
-    ax31.plot(df[param_name], df.ABR, color='r')
-
-    plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/"+filename, dpi=700)
