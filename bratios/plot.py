@@ -7,19 +7,7 @@ import pandas as pd
 import seaborn as sns
 from ratios import calc_interacting_param_ratios
 from settings import *
-#from fooof.core.info import get_data_indices
 
-list_of_files = {
-    "../dat/cf_data_low.npy" : 'CF',
-    "../dat/amp_data_low.npy" : 'PW',
-    "../dat/bw_data_low.npy" : 'BW',
-    "../dat/offset_data.npy" : 'offset',
-    "../dat/cf_data_high.npy" : 'CF',
-    "../dat/amp_data_high.npy" : 'PW',
-    "../dat/bw_data_high.npy" : 'BW',
-    "../dat/apc_data.npy" : 'exponent',
-   
-}
 titles = {
     'CF' : 'Center Frequency',
     'PW' : 'Power', 
@@ -64,8 +52,6 @@ def plot_paper_interacting_sims():
     plt.xlabel("BW",{"fontsize": 18})
     plt.ylabel("CF",{"fontsize": 18})
 
-
-
     ax = fig.add_subplot(224)
     ax = sns.heatmap(np.log10(cf_bw_high_ratios), xticklabels=BWS, yticklabels=CFS_HIGH)
     ax.invert_yaxis()
@@ -73,8 +59,21 @@ def plot_paper_interacting_sims():
     plt.ylabel("CF", {"fontsize": 18})
 
     
-def plot_interacting_sims(data,param1, param2, savepath):
-
+def plot_interacting_sims(data, param1, param2, savepath):
+    """ Plots heatmaps for interacting parameter simulations.
+    
+    Parameters
+    ----------
+    data : list of lists
+        List of power spectra.
+    param1 : String
+        Param used in simulation.
+    param2 : String
+        Param used in simulation.
+    savepath : string
+        Path to save plots.
+        
+    """
     
     #calculate ratios
     ratios = calc_interacting_param_ratios(data)
@@ -86,6 +85,7 @@ def plot_interacting_sims(data,param1, param2, savepath):
     plt.ylabel(param2)
     plt.savefig(savepath, dpi=500)
     plt.close()
+    
     
 def plot_single_param_sims(df,filename="param_vs_ratios"):
 
@@ -136,6 +136,22 @@ def plot_single_param_sims(df,filename="param_vs_ratios"):
     
     
 def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):    
+    """plots ratios by param value.
+    
+    Parameters
+    ----------
+    df : Dataframe
+        Data structure holding ratios and parameter values
+    title : String
+        Title on plot.
+    xlabel : String
+        Lablel used on x axis.
+    ylabel : String
+        Lablel used on y axis.
+    ax : axes
+        Optional plotting axis.
+    
+    """
     
     if not ax:
         _, ax = plt.subplots(figsize=[4, 4])
@@ -148,6 +164,7 @@ def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
     ax.plot(df.param, df.ratio, color='r', linewidth=2)
 
     plt.tight_layout()
+    
     
 def plot_paper_single_sims():
     fig, ax = plt.subplots(2, 4, figsize=[12, 6])
