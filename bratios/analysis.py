@@ -105,6 +105,15 @@ def print_aperiodic_correlation(ratio_type, corr):
     for ind, param in enumerate(["Exp","Off","Age"]):
         print("The corr of {} to {} is {:1.2f}".format(ratio_type, param,  corr[ind]))
 
+def get_non_ratio_band(ratio_type):
+    if ratio_type == "TBR":
+        nrb = "Alpha"
+    elif ratio_type == "ABR":
+        nrb = "Theta"
+    elif ratio_type == "TAR":
+        nrb = "Beta"
+    return [nrb+"_" + feat for feat in FEATURE_LABELS]
+
         
 def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     """Finds correlation between spectral params & ratios.
@@ -133,29 +142,32 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     # Get columns to correlate with
     sw = get_wave_params(ratio_type[0])
     fw = get_wave_params(ratio_type[1])
+    nrb = get_non_ratio_band(ratio_type)
     
     sw_corrs = np.zeros(3)
     fw_corrs = np.zeros(3)
+    nrb_corrs = np.zeros(3)
     ap_corrs = np.zeros(3)
     
     # Ratio vs spectral params correlation
     for ind in range(3):
         sw_corrs[ind] = func(rel_df[sw[ind]],rel_df[ratio_type])[0]
         fw_corrs[ind] = func(rel_df[fw[ind]],rel_df[ratio_type])[0]
-        print(func(rel_df[sw[ind]],rel_df[ratio_type]))
-        print(func(rel_df[fw[ind]],rel_df[ratio_type]))
+        nrb_corrs[ind] = func(rel_df[nrb[ind]],rel_df[ratio_type])[0]
+        #print(func(rel_df[sw[ind]],rel_df[ratio_type]))
+        #print(func(rel_df[fw[ind]],rel_df[ratio_type]))
         
     # Ratio vs aperiodic params correlation
     ap_corrs[0] = func(rel_df["Exp"], rel_df[ratio_type])[0]
     ap_corrs[1] = func(rel_df["Off"], rel_df[ratio_type])[0]
     ap_corrs[2] = func(rel_df["Age"], rel_df[ratio_type])[0]
-    print(func(rel_df["Exp"], rel_df[ratio_type]))
-    print(func(rel_df["Off"], rel_df[ratio_type]))
-    print(func(rel_df["Age"], rel_df[ratio_type]))
-    return np.stack((sw_corrs, fw_corrs)), ap_corrs
+    #print(func(rel_df["Exp"], rel_df[ratio_type]))
+    #print(func(rel_df["Off"], rel_df[ratio_type]))
+    #print(func(rel_df["Age"], rel_df[ratio_type]))
+    return np.stack((sw_corrs, fw_corrs,nrb_corrs)), ap_corrs
                            
                        
-def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",y_labels=["SW","FW"], save_fig=False, file_path= HEATS_PATH, file_name="Spectral_Features_Ratio_corr"):
+def plot_param_ratio_corr(data,exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"], save_fig=False, file_path= HEATS_PATH, file_name="Spectral_Features_Ratio_corr"):
     """Plot correlations between BandRatio measures and spectral features.
     
     Parameters
@@ -174,8 +186,13 @@ def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",y_labels=["S
     if not np.all(data):
         raise RuntimeError("No data - cannot proceed.")
         
-    ax = plt.axes()
-    sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,annot=True, ax=ax, vmin=-1, vmax=1)
+    fig, (ax1, ax2) = plt.subplots(1,2,sharey=True)
+    
+    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20})
+    plt.cla()
+    ax2 = sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 20})
+    
+    
     #ax.set_title(title)
     #plt.show()
     
@@ -256,7 +273,7 @@ def get_all_data(df, chs ,block=0):
 
                     continue
                 
-                fm = FOOOF(verbose=False)      
+                fm = FOOOF(verbose=False, peak_width_limits=(1,8))      
                 fm.add_data(freqs, ps)
                 fm.fit() 
                 

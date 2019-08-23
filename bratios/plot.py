@@ -87,7 +87,7 @@ def plot_interacting_sims(data, param1, param2, savepath):
     plt.close()
     
     
-def plot_single_param_sims(df,filename="param_vs_ratios"):
+def plot_single_param_sims(df, filename="param_vs_ratios"):
 
     # Get param name
     param_name = df.columns[3]
