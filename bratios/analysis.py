@@ -105,7 +105,20 @@ def print_aperiodic_correlation(ratio_type, corr):
     for ind, param in enumerate(["Exp","Off","Age"]):
         print("The corr of {} to {} is {:1.2f}".format(ratio_type, param,  corr[ind]))
 
+        
 def get_non_ratio_band(ratio_type):
+    """Returns non-ratio band spectral features.
+    
+    Parameters
+    ----------
+    ratio_type : String
+        name of ratio. {"TBR", "TAR", "ABR"}
+    
+    Return
+    ------
+    list of non ratio band spectral features.
+    
+    """
     if ratio_type == "TBR":
         nrb = "Alpha"
     elif ratio_type == "ABR":
@@ -165,39 +178,6 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     #print(func(rel_df["Off"], rel_df[ratio_type]))
     #print(func(rel_df["Age"], rel_df[ratio_type]))
     return np.stack((sw_corrs, fw_corrs,nrb_corrs)), ap_corrs
-                           
-                       
-def plot_param_ratio_corr(data,exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"], save_fig=False, file_path= HEATS_PATH, file_name="Spectral_Features_Ratio_corr"):
-    """Plot correlations between BandRatio measures and spectral features.
-    
-    Parameters
-    ----------
-    data: 2x3 ndarray
-        Correlations of BandRatios to Spectral Features.
-    title: string
-        Title of plot.
-    y_labels: list of strings.
-        Lables of slow and fast wave to use on y-axis.
-    save_fig: boolean
-        If True - save plot
-        
-    """
-    
-    if not np.all(data):
-        raise RuntimeError("No data - cannot proceed.")
-        
-    fig, (ax1, ax2) = plt.subplots(1,2,sharey=True)
-    
-    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20})
-    plt.cla()
-    ax2 = sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 20})
-    
-    
-    #ax.set_title(title)
-    #plt.show()
-    
-    if save_fig:
-        plt.savefig(file_path+file_name+".png")
         
         
 def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):
@@ -292,7 +272,7 @@ def get_all_data(df, chs ,block=0):
                 
                 curr_row["TBR"] = tbr
                 curr_row["TAR"] = tar
-                curr_row["ABR"] = tbr
+                curr_row["ABR"] = abr
                 curr_row["Age"] = ages
                 
                 curr_row = pd.Series(curr_row)
@@ -309,40 +289,14 @@ def get_all_data(df, chs ,block=0):
     return res
 
 
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# May use Later
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def proc_single_param(f_name, attribute):
-    
-    if attribute in ['CF', 'PW', 'BW']:
-        attr = 'gaussian_params'
-    else:
-        attr = 'aperiodic_params'
-    ind = get_data_indices('fixed')[attribute]
-
-    # Load & unpack data
-    dat = np.load(f_name)
-    freqs, spectra, syn_params = dat
-
-    # Get param values
-    params = []
-    for val in syn_params:
-        params.append(np.squeeze(getattr(val, attr))[ind])
-
-    # Calculate ratios
-    ratios = []
-    for spectrum in spectra:
-        ratios.append(calc_band_ratio(freqs, spectrum, THETA_BAND, BETA_BAND))
-
-    # Format dataframe
-    df_cols = np.array([ratios, params]).T.tolist()
-    df = pd.DataFrame(df_cols, columns=["ratio", "param"])
-    
-    return df
-
 def get_len_ratio_subjects():
+    """Calculates number of subjects for tbr, tar, and abr measures.
+    
+    Returns
+    -------
+    tuple : length of tbr, tar, abr
+    
+    """
     df_tbr = df[np.isnan(df.Theta_CF)==False]
     df_tbr = df_tbr[np.isnan(df_tbr.Beta_CF)==False]
 
@@ -352,10 +306,28 @@ def get_len_ratio_subjects():
     df_abr = df[np.isnan(df.Alpha_CF)==False]
     df_abr = df_abr[np.isnan(df_abr.Beta_CF)==False]
 
-    return len(df_abr)
+    print("len_tbr:", len(df_tbr),"len_tar",len(df_tar), len("abr"),len(abr) )
+    return len(df_tbr), len(df_tar), len(abr)
 
 
-def prep_single_sims(data, varied_param, spectral_param=1):
+def prep_single_sims(data, varied_param, periodic_param=1):
+    """Creates dataframe containing all ratio types.
+    
+    Parameters
+    ----------
+    data : array
+        Array of PSDs and varied_param values.
+    varied_param : String
+        Parameter which is varied.
+    periodic_param : int
+        1 if varied_param is periodic, 0 else.
+        
+    Returns
+    -------
+    
+    dataframe containing ratio measures and each value of varied_param.
+    """
+    
     tbr = []
     tar = []
     abr = []
@@ -365,7 +337,7 @@ def prep_single_sims(data, varied_param, spectral_param=1):
     param_array = np.asarray(data[1])
     
     for val in param_array:
-        param_values.append(np.array(val[spectral_param])[SINGLE_SIM_PARAM_IND[varied_param]])
+        param_values.append(np.array(val[periodic_param])[SINGLE_SIM_PARAM_IND[varied_param]])
     
     for param in data[0]:
         tbr.append(calc_theta_beta_ratio(freqs, param))

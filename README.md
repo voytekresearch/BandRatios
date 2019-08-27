@@ -2,34 +2,26 @@
 Project repo for exploring frequency band ratio measures. 
 
 ### Background
-Given a power density spectrum, band ratios find the ratio of power between two bands in order to gain some deeper insight
+Given a power density spectrum, band ratios find the ratio of average power between two bands in order to gain some deeper insight
 about the source of the PSD. For example, ADHD is thought to be characterized by higher Theta/Beta power compared to non ADHD subjects. This repository aims to investigate how valid band ratios are at measuring physiological phenomena and to what extent.
 
 ##### 0-Introduction-to-Band-Ratios
-This notebook introduces the background behind band ratios - where the data comes from, data significance, and our approach to this project.
+This notebook introduces the domain band ratios are used in and walksthrough how to calculate a band ratio.
 
 ###### 1-Ratio-Calculation-Methods
-This notebook introduces three ways of calculating a band ratio - 1 cannonical method and 2 alternative measures.
-
-Average Power Ratio: calc_band_ratio finds the average power within a band and divides by the number of samples which have power. The same is done for another band and a ratio is taken of the two.
-
-Central Frequency Ratio: calc_cf_power_ratio finds the ratio of the maximum power within the two bands, which is found by the central frequency within the two bands.  Oscillation specific.
-
-Density Ratio: calc_density_ratio sums all the power within a band and divides by the band width. This is similar to the cannonical approach with the distinction that the cannonical approach instead divides by number of samples.
+This notebook simulates power spectra to demonstrate how changing spectral features could yield the same ratio measure. This is done both when power spectra include and do not include oscillations.
 
 ##### 2-Simulation-Generation
-This notebook generates synthetic PSDs to examine how slope and oscillatory parameters affect band ratios. 
+This notebook walksthrough how spectra were simulated. There are two types of simulations involved in this project - single parameter variations and interacting parameter variations. This notebook shows how both simulations are run and shows resulting power spectra of the parameter manipulation.
 
-Slope: FooofGroup objects are made with n_trials. Each fooofGroup object has a different slope ranging from 'inc' to 'end_slope' in increments of 'inc'. The 3 discussed ratio measures are taken and saved to the ./dat directory
-[Slope][Ratio_Method][Trial]. The data is saved to /dat using numpy.save()
+##### 3-Simulation-Analysis
+Here we calculate the Theta/Beta ratios for the data we previously generated. We then plot the results using a line graph for single parameter simulations, and a heatmap for interacting parameter simulations.
 
-Center Frequency: Since ratios require 2 bands, one band is selected to be stationary while the other will generate fooofGroup objects of size n_trials to sweep across the non stationary band's bandwidth. Again 3 ratio measures will be taken for each variation in Center Frequency and saved to the ./dat directory.
-[Center_Frequency][Ratio_Method][Trial]
+##### 3a-Rotation-Explore
+In this notebook we explore the effects on band ratios when we rotate a power spectra by an amount about a given frequency. We find that these two variables makes rotation frequency unimpactful.
 
-Amplitude: One band is set stationary while the other is centered at its bandwith and examines the effects of amplitude change by generating FooofGroups object of size n_trials for each variation in amplitude from 0 to 'end_amp'. 3 ratio measures are taken and saved into the ./dat directory
-[Amplitude][Ratio_Method][Trial]
+##### 4-EEG-Dataset-Analysis
+This notebook examines data from the ChildMind Institute to find the relationship between spectral features and various band ratios at different regions of cortex.
 
-Band Width: 
-
-##### 3-Analysis
-This notebook uses the data introduced last notebook to find the average of all trials which transforms the 3D array to a 2D array [Slope][Ratio Method]. Then pandas is used to easily access data such that plotting is easy.
+##### 4a-Topos
+We create topographies for each spectral feature from the theta, alpha, and beta bands, as well as various ratio measures.

@@ -34,9 +34,9 @@ def main():
     pw_high_df = prep_single_sims(pw_high, "PW")
     bw_low_df = prep_single_sims(bw_low, "BW")
     bw_high_df = prep_single_sims(bw_high, "BW")
-    f_df = prep_single_sims(f_data, "EXP", spectral_param=0)
-    offset_df = prep_single_sims(offset, "OFF", spectral_param=0)
-    apc_df = prep_single_sims(apc, "EXP", spectral_param=0)
+    f_df = prep_single_sims(f_data, "EXP", periodic_param=0)
+    offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
+    apc_df = prep_single_sims(apc, "EXP", periodic_param=0)
     a_shift_df = prep_single_sims(a_shift, "Alpha CF")
     
     # Plot
