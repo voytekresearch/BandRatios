@@ -2,9 +2,11 @@
 import sys
 sys.path.append('../bratios')
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import mne
 from ratios import calc_interacting_param_ratios
 from settings import *
 
@@ -17,9 +19,12 @@ titles = {
 }
 
 
-def plot_paper_interacting_sims():
+def plot_paper_interacting_sims(data,plt_log=True,file_path="../figures/InteractingSims/interacting",title="",ax=None ,):
     """Plots interacting simulation figures used in paper."""
     fig = plt.figure(figsize=[20, 20])
+    
+    ax = check_ax(ax)
+    
 
     # load data
     apc_amp_low = np.load("../dat/interacting_param_sims/apc_pw_data_low.npy")
@@ -225,10 +230,11 @@ def plot_paper_single_sims():
     plt.savefig("../figures/SingleParamSims.png", dpi=700)
     
     
-def plot_param_topo(data, filename="topo"):
+def plot_param_topo(data,raw, filename="topo"):
     """Plots the topography of a spectral parameters
     """
     
     fig, ax = plt.subplots();
     mne.viz.plot_topomap(data, raw.info, vmin=min(data), vmax=max(data), cmap=cm.viridis, contours=0, axes=ax);
-    fig.savefig('../figures/theta_bw_Topo.png', dpi=700);
+    ax.set_title(filename)
+    fig.savefig('../figures/Topos/'+filename, dpi=700);
