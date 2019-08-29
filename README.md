@@ -5,6 +5,25 @@ Project repo for exploring frequency band ratio measures.
 Given a power density spectrum, band ratios find the ratio of average power between two bands in order to gain some deeper insight
 about the source of the PSD. For example, ADHD is thought to be characterized by higher Theta/Beta power compared to non ADHD subjects. This repository aims to investigate how valid band ratios are at measuring physiological phenomena and to what extent.
 
+
+### Requirements
+This repository requires Python >= 3.7 to run and uses the following dependancies:
+
+ - Numpy >= 1.16.2
+ - MNE >= 0.18.2
+ - FOOOF >= 1.0.0rc1 https://doi.org/10.1101/299859
+ - Scipy >= 1.2.1
+
+Installing anaconda and running `pip install mne` and `pip install fooof` is an easy express setup to engage in this repository.
+
+### Repository Layout
+
+Inside `notebooks/` is a collection of jupyter notebooks which walk through this band ratios project.
+To rerun all the code used for the project, see `scripts/`.
+`figures/` holds all figures produced from `notebooks/` and `scripts/`.
+`bratios` is a custom built module which holds code to analyze and plot data as well as changing settings used.
+
+
 ##### 0-Introduction-to-Band-Ratios
 This notebook introduces the domain band ratios are used in and walksthrough how to calculate a band ratio.
 
