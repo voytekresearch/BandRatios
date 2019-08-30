@@ -19,50 +19,52 @@ titles = {
 }
 
 
-def plot_paper_interacting_sims(data,plt_log=True,file_path="../figures/InteractingSims/interacting",title="",ax=None ,):
-    """Plots interacting simulation figures used in paper."""
+def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None):
+    """Plots interacting simulation figures used in paper. Expects psds
+    """
     fig = plt.figure(figsize=[20, 20])
     
-    ax = check_ax(ax)
+    if not ax:
+        _, ax = plt.subpplots()
     
-
-    # load data
-    apc_amp_low = np.load("../dat/interacting_param_sims/apc_pw_data_low.npy")
-    apc_amp_high = np.load("../dat/interacting_param_sims/apc_pw_data_high.npy")
-    cf_bw_low = np.load("../dat/interacting_param_sims/cf_bw_data_low.npy")
-    cf_bw_high = np.load("../dat/interacting_param_sims/cf_bw_data_high.npy")
-
-    # calculate ratios
-    apc_amp_low_ratios = calc_interacting_param_ratios(apc_amp_low)
-    cf_bw_low_ratios = calc_interacting_param_ratios(cf_bw_low)
-    cf_bw_high_ratios = calc_interacting_param_ratios(cf_bw_high)
-    apc_amp_high_ratios = calc_interacting_param_ratios(apc_amp_high)
-
-    ax= fig.add_subplot(221)
-    ax = sns.heatmap(np.log10(apc_amp_low_ratios), xticklabels=PWS, yticklabels=APCS)
+    if plt_log:
+        data = np.log10(data)
+    ax = sns.heatmap(data, xticklabels=xticklabs, yticklabels=yticklabs)
     ax.invert_yaxis()
-    plt.xlabel("PW",{"fontsize": 18})
-    plt.ylabel("EXP",{"fontsize": 18})
-
-    ax= fig.add_subplot(222)
-    ax = sns.heatmap(np.log10(apc_amp_high_ratios), xticklabels=PWS, yticklabels=APCS)
-    ax.invert_yaxis()
-    plt.xlabel("PW",{"fontsize": 18})
-    plt.ylabel("EXP",{"fontsize": 18})
+    
+    return ax
 
 
-    # Low band logged
-    ax = fig.add_subplot(223)
-    ax = sns.heatmap(np.log10(cf_bw_low_ratios), xticklabels=BWS, yticklabels=CFS_LOW)
-    ax.invert_yaxis()
-    plt.xlabel("BW",{"fontsize": 18})
-    plt.ylabel("CF",{"fontsize": 18})
+#     # calculate ratios
+#     apc_amp_low_ratios = calc_interacting_param_ratios(apc_amp_low)
+#     cf_bw_low_ratios = calc_interacting_param_ratios(cf_bw_low)
+#     cf_bw_high_ratios = calc_interacting_param_ratios(cf_bw_high)
+#     apc_amp_high_ratios = calc_interacting_param_ratios(apc_amp_high)
 
-    ax = fig.add_subplot(224)
-    ax = sns.heatmap(np.log10(cf_bw_high_ratios), xticklabels=BWS, yticklabels=CFS_HIGH)
-    ax.invert_yaxis()
-    plt.xlabel("BW",{"fontsize": 18})
-    plt.ylabel("CF", {"fontsize": 18})
+#     ax= fig.add_subplot(221)
+    
+#     plt.xlabel("PW",{"fontsize": 18})
+#     plt.ylabel("EXP",{"fontsize": 18})
+
+#     ax= fig.add_subplot(222)
+#     ax = sns.heatmap(np.log10(apc_amp_high_ratios), xticklabels=PWS, yticklabels=APCS)
+#     ax.invert_yaxis()
+#     plt.xlabel("PW",{"fontsize": 18})
+#     plt.ylabel("EXP",{"fontsize": 18})
+
+
+#     # Low band logged
+#     ax = fig.add_subplot(223)
+#     ax = sns.heatmap(np.log10(cf_bw_low_ratios), xticklabels=BWS, yticklabels=CFS_LOW)
+#     ax.invert_yaxis()
+#     plt.xlabel("BW",{"fontsize": 18})
+#     plt.ylabel("CF",{"fontsize": 18})
+
+#     ax = fig.add_subplot(224)
+#     ax = sns.heatmap(np.log10(cf_bw_high_ratios), xticklabels=BWS, yticklabels=CFS_HIGH)
+#     ax.invert_yaxis()
+#     plt.xlabel("BW",{"fontsize": 18})
+#     plt.ylabel("CF", {"fontsize": 18})
 
     
 def plot_interacting_sims(data, param1, param2, savepath):
@@ -237,4 +239,4 @@ def plot_param_topo(data,raw, filename="topo"):
     fig, ax = plt.subplots();
     mne.viz.plot_topomap(data, raw.info, vmin=min(data), vmax=max(data), cmap=cm.viridis, contours=0, axes=ax);
     ax.set_title(filename)
-    fig.savefig('../figures/Topos/'+filename, dpi=700);
+    fig.savefig('../figures/RealData/'+filename, dpi=700);

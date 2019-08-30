@@ -16,6 +16,7 @@ RATIOS = {"TBR": ['theta','beta'], "TAR":['theta', 'alpha'],"ABR": ['alpha','bet
 SINGLE_SIM_PARAM_IND = {"CF": (0,0), "PW": (0,1), "BW": (0,2), "EXP": (1), "OFF": (0), "Alpha CF": (1,0)}
 BAND_LABELS = {'T':'Theta','A':"Alpha", "B":"Beta"}
 FEATURE_LABELS = ['CF', 'PW', 'BW']
+NUM_CHAN = 111
 
 CF_ALPHA_DEF = 10
 CF_LOW_DEF = np.mean(LOW_BAND)
@@ -56,7 +57,6 @@ ROTS = np.round(np.arange(ROT_FREQS[0], ROT_FREQS[1], ROT_INC), 2)
 DEL_RANGE = [0, 3]
 DEL_INC = .1
 DELS = np.round(np.arange(DEL_RANGE[0], DEL_RANGE[1], DEL_INC), 2)
-
 
 PARAMS = {
     "Low_CF":CFS_LOW,

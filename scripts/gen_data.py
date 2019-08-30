@@ -73,15 +73,15 @@ def main():
     np.save(BW_PATH_HIGH, bw_high_save_final)
 
 
-    #################### Aperiodic component ####################
+    #################### Exponent ####################
 
-    apc_step = Stepper(APC_START, APC_END, APC_INC)
-    apc_iter = param_iter([0, apc_step])
-    apc_fs, apc_ps, apc_syns = gen_group_power_spectra(len(apc_step), FREQ_RANGE, apc_iter, [])
-    apc_save = [apc_ps, apc_syns]
-    apc_save_final = np.empty(len(apc_save),dtype=object)
-    apc_save_final[:] = apc_save
-    np.save(APC_PATH, apc_save_final)
+    exp_step = Stepper(EXP_START, EXP_END, EXP_INC)
+    exp_iter = param_iter([0, exp_step])
+    exp_fs, exp_ps, exp_syns = gen_group_power_spectra(len(exp_step), FREQ_RANGE, exp_iter, [])
+    exp_save = [exp_ps, exp_syns]
+    exp_save_final = np.empty(len(exp_save),dtype=object)
+    exp_save_final[:] = exp_save
+    np.save(EXP_PATH, exp_save_final)
 
 
     #################### Offset ####################
@@ -115,7 +115,7 @@ def main():
     
     #################### No Oscillations - 1/f changes ####################
     
-    f_step = Stepper(APC_START, APC_END, APC_INC)
+    f_step = Stepper(EXP_START, EXP_END, EXP_INC)
     f_iter = param_iter([OFF_DEF, f_step])
     f_fs, f_ps, f_syns = gen_group_power_spectra(len(f_step), FREQ_RANGE, f_iter, [], nlvs=0)
     f_save = [f_ps, f_syns]

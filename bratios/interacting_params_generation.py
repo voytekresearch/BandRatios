@@ -5,6 +5,7 @@ sys.path.append('../bratios')
 import numpy as np
 
 from fooof.sim import *
+from settings import *
 
 def gen_interacting_per_per(param1, param2, save_path):
     """Generates PSDs for interacting param simulation.
@@ -24,8 +25,8 @@ def gen_interacting_per_per(param1, param2, save_path):
     """    
         
     fs = gen_freqs(FREQ_RANGE, FREQ_RES)
-    check_per_params(param1, param2):
-    out = np.zeros(shape=(len(PARAMS[param1]), len(PARAMS[periodic_param2]), len(fs) ))
+    check_per_params(param1, param2)
+    out = np.zeros(shape=(len(PARAMS[param1]), len(PARAMS[param2]), len(fs) ))
     p1_stepper = Stepper(*STEPPERS[param1])
 
     for p1_ind, p1_val in enumerate(p1_stepper):
