@@ -1,37 +1,42 @@
-""" A collection of functions to plot data"""
-import sys
-sys.path.append('../bratios')
-import matplotlib.pyplot as plt
-from matplotlib import cm
+"""A collection of functions to plot data."""
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib import cm
 import mne
+
 from ratios import calc_interacting_param_ratios
 from settings import *
 
+###################################################################################################
+###################################################################################################
+
 titles = {
     'CF' : 'Center Frequency',
-    'PW' : 'Power', 
-    'BW' : 'Bandwidth', 
-    'exponent' : 'Exponent', 
+    'PW' : 'Power',
+    'BW' : 'Bandwidth',
+    'exponent' : 'Exponent',
     'offset' : 'Offset'
 }
 
+###################################################################################################
+###################################################################################################
 
 def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None):
-    """Plots interacting simulation figures used in paper. Expects psds
-    """
+    """Plots interacting simulation figures used in paper. Expects psds."""
+
     fig = plt.figure(figsize=[20, 20])
-    
+
     if not ax:
         _, ax = plt.subpplots()
-    
+
     if plt_log:
         data = np.log10(data)
     ax = sns.heatmap(data, xticklabels=xticklabs, yticklabels=yticklabs)
     ax.invert_yaxis()
-    
+
     return ax
 
 
@@ -42,7 +47,7 @@ def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None)
 #     apc_amp_high_ratios = calc_interacting_param_ratios(apc_amp_high)
 
 #     ax= fig.add_subplot(221)
-    
+
 #     plt.xlabel("PW",{"fontsize": 18})
 #     plt.ylabel("EXP",{"fontsize": 18})
 
@@ -66,10 +71,10 @@ def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None)
 #     plt.xlabel("BW",{"fontsize": 18})
 #     plt.ylabel("CF", {"fontsize": 18})
 
-    
+
 def plot_interacting_sims(data, param1, param2, savepath):
     """ Plots heatmaps for interacting parameter simulations.
-    
+
     Parameters
     ----------
     data : list of lists
@@ -80,9 +85,9 @@ def plot_interacting_sims(data, param1, param2, savepath):
         Param used in simulation.
     savepath : string
         Path to save plots.
-        
+
     """
-    
+
     #calculate ratios
     ratios = calc_interacting_param_ratios(data)
 
@@ -93,27 +98,27 @@ def plot_interacting_sims(data, param1, param2, savepath):
     plt.ylabel(param2)
     plt.savefig(savepath, dpi=500)
     plt.close()
-    
-    
+
+
 def plot_single_param_sims(df, filename="param_vs_ratios"):
     """Plots results of single parameter variation similations.
-    
+
     Parameters
     ----------
     df : dataframe
         ratios and varied_param.
     filename : String
         path to save plot.
-    
+
     Outputs
     -------
     Plot of each ratio by the varied param values.
-    
+
     """
 
     # Get param name
     param_name = df.columns[3]
-    
+
     # Subplots - define the figure
     fig = plt.figure(figsize=[10, 14])
 
@@ -155,11 +160,11 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
 
     plt.tight_layout()
     plt.savefig("../figures/SingleParamSims/"+filename, dpi=700)
-    
-    
-def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):    
+
+
+def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
     """plots ratios by param value.
-    
+
     Parameters
     ----------
     df : Dataframe
@@ -172,9 +177,9 @@ def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
         Lablel used on y axis.
     ax : axes
         Optional plotting axis.
-    
+
     """
-    
+
     if not ax:
         _, ax = plt.subplots(figsize=[4, 4])
 
@@ -186,11 +191,11 @@ def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
     ax.plot(df.param, df.ratio, color='r', linewidth=2)
 
     plt.tight_layout()
-    
+
 
 def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"], save_fig=False, file_path= HEATS_PATH, file_name="Spectral_Features_Ratio_corr"):
     """Plot correlations between BandRatio measures and spectral features.
-    
+
     Parameters
     ----------
     data: 2x3 ndarray
@@ -201,41 +206,39 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
         Lables of slow and fast wave to use on y-axis.
     save_fig: boolean
         If True - save plot
-        
     """
-    
+
     if not np.all(data):
         raise RuntimeError("No data - cannot proceed.")
-    
+
     fig, ax1 = plt.subplots()
-    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 20})    
+    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 20})
     if save_fig:
         plt.savefig(file_path+file_name+"_exp.png")
-    
+
     plt.clf()
-    
+
     fig, ax2 = plt.subplots()
     ax2 = sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,\
                       annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20})
     if save_fig:
         plt.savefig(file_path+file_name+".png")
-        
-    
+
+
 def plot_paper_single_sims():
-    """Plots results of single param varation simulations used in paper.
-    """
+    """Plots results of single param varation simulations used in paper."""
+
     fig, ax = plt.subplots(2, 4, figsize=[12, 6])
     for (f_name, field), axis in zip(list_of_files.items(), ax.flatten()):
         df = proc_single_param(f_name, field)
         plot_single_param(df, title=titles[field], ylabel='Ratio', ax=axis)
 
     plt.savefig("../figures/SingleParamSims.png", dpi=700)
-    
-    
+
+
 def plot_param_topo(data,raw, filename="topo"):
-    """Plots the topography of a spectral parameters
-    """
-    
+    """Plots the topography of a spectral parameters."""
+
     fig, ax = plt.subplots();
     mne.viz.plot_topomap(data, raw.info, vmin=min(data), vmax=max(data), cmap=cm.viridis, contours=0, axes=ax);
     ax.set_title(filename)

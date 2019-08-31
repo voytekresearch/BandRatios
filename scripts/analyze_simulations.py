@@ -1,17 +1,21 @@
-""" This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
-import sys
-sys.path.append('../bratios')
-import matplotlib.pyplot as plt
+"""This script calculates ratios and plots from simulated power spectra, with 1 varying parameter."""
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import matplotlib.pyplot as plt
 sns.set_context('poster')
 
 from fooof import FOOOF, FOOOFGroup
 
+import sys
+sys.path.append('../bratios')
 from ratios import *
 from analysis import *
 from settings import *
+
+###################################################################################################
+###################################################################################################
 
 def main():
 
@@ -26,7 +30,7 @@ def main():
     offset = np.load("../dat/single_param_sims/offset_data.npy")
     apc = np.load("../dat/single_param_sims/apc_data.npy")
     a_shift = np.load('../dat/single_param_sims/shifting_alpha.npy')
-    
+
     # acquire dfs
     cf_low_df = prep_single_sims(cf_low, "CF")
     cf_high_df = prep_single_sims(cf_high, "CF")
@@ -38,7 +42,7 @@ def main():
     offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
     apc_df = prep_single_sims(apc, "EXP", periodic_param=0)
     a_shift_df = prep_single_sims(a_shift, "Alpha CF")
-    
+
     # Plot
     plot_single_param_sims(cf_low_df, filename="cf_low")
     plot_single_param_sims(cf_high_df, filename="cf_high")
@@ -50,7 +54,7 @@ def main():
     plot_single_param_sims(offset_df, filename="offset")
     plot_single_param_sims(f_df, filename="1f")
     plot_single_param_sims(a_shift_df, filename="shifting_alpha")
-    
+
+
 if __name__ == "__main__":
     main()
-    
