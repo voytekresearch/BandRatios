@@ -27,13 +27,12 @@ titles = {
 def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None):
     """Plots interacting simulation figures used in paper. Expects psds."""
 
-    fig = plt.figure(figsize=[20, 20])
-
     if not ax:
         _, ax = plt.subpplots()
 
     if plt_log:
         data = np.log10(data)
+        
     ax = sns.heatmap(data, xticklabels=xticklabs, yticklabels=yticklabs)
     ax.invert_yaxis()
 

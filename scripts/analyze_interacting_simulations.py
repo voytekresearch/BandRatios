@@ -1,11 +1,6 @@
 """This script calculates ratios and plots from simulated power spectra, with 2 varying parameters."""
 
-import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-from fooof import FOOOF, FOOOFGroup
 
 import sys
 sys.path.append('../bratios')
