@@ -111,23 +111,19 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
     
     """
 
+    for ratio in ["TBR", "TAR", "ABR"]
+    
     # Get param name
     param_name = df.columns[3]
     
     # Subplots - define the figure
     fig = plt.figure(figsize=[10, 14])
 
-    #TBR by PW
-    ax1= fig.add_subplot(321)
+    #TBR by Theta_CF
+    ax1= fig.add_subplot(241)
     ax1.set_xlabel(param_name,{"fontsize": 18})
     ax1.set_ylabel("TBR",{"fontsize": 18})
     ax1.plot(df[param_name], df.TBR, color='r')
-
-    ax11= fig.add_subplot(322)
-    ax11.set_xlabel(param_name,{"fontsize": 18})
-    ax11.set_ylabel("TBR",{"fontsize": 18})
-    ax11.set_yscale('log')
-    ax11.plot(df[param_name], df.TBR, color='r')
 
     #TAR by PW
     ax2= fig.add_subplot(323)
