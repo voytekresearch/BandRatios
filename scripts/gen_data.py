@@ -1,4 +1,4 @@
-"""This file simulates power spectral data where parameters are varied in isolation"""
+"""This file simulates power spectra which one parameter varying."""
 
 import numpy as np
 
@@ -8,10 +8,13 @@ import sys
 sys.path.append('../bratios')
 from settings import *
 
+###################################################################################################
+###################################################################################################
+
 def main():
 
     #################### Center Frequency ####################
-    
+
     # Low Band
     cf_low_step = Stepper(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC)
     cf_iter_low = param_iter([cf_low_step, PW_DEF, BW_DEF])
@@ -30,9 +33,9 @@ def main():
     cf_high_save_final[:] = cf_high_save
     np.save(CF_PATH_HIGH, cf_high_save_final)
 
-    
+
     #################### Power ####################
-    
+
     # Low Band
     pw_low_step = Stepper(0, PW_END, PW_INC)
     pw_iter_low = param_iter([CF_LOW_DEF, pw_low_step, BW_DEF])
@@ -112,9 +115,9 @@ def main():
 #     rot_save.append((freqs, vals))
 #     np.save(ROT_PATH, rot_save)
 
-    
+
     #################### No Oscillations - 1/f changes ####################
-    
+
     f_step = Stepper(EXP_START, EXP_END, EXP_INC)
     f_iter = param_iter([OFF_DEF, f_step])
     f_fs, f_ps, f_syns = gen_group_power_spectra(len(f_step), FREQ_RANGE, f_iter, [], nlvs=0)
@@ -122,8 +125,8 @@ def main():
     f_save_final = np.empty(len(f_save),dtype=object)
     f_save_final[:] = f_save
     np.save(F_PATH, f_save_final)
-    
-    
+
+
     #################### Shifting Alpha ####################
     a_step = Stepper(ALPHA_BAND[0], ALPHA_BAND[1], CF_LOW_INC)
     a_iter = param_iter([ a_step, PW_DEF, BW_DEF, CF_LOW_DEF, PW_DEF, BW_DEF, CF_HIGH_DEF, PW_DEF, BW_DEF])
@@ -132,6 +135,7 @@ def main():
     a_save_final = np.empty(len(a_save),dtype=object)
     a_save_final[:] = a_save
     np.save(ALPHA_SHIFT_PATH, a_save_final)
-    
+
+
 if __name__ == "__main__":
     main()
