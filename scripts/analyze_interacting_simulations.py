@@ -1,16 +1,18 @@
-""" This script calculates ratios and plots from simulated power spectral data where two parameters vary."""
-import sys
-sys.path.append('../bratios')
-import matplotlib.pyplot as plt
-import pandas as pd
+"""This script calculates ratios and plots from simulated power spectra, with 2 varying parameters."""
+
 import numpy as np
 
+import sys
+sys.path.append('../bratios')
 from ratios import *
 from settings import *
 from plot import plot_interacting_sims
 
+###################################################################################################
+###################################################################################################
+
 def main():
-    
+
     exp_lowcf_data = np.load('../dat/interacting_param_sims/exp_lowcf_data.npy')
     exp_highcf_data = np.load('../dat/interacting_param_sims/exp_highcf_data.npy')
     exp_lowpw_data = np.load('../dat/interacting_param_sims/exp_lowpw_data.npy')
@@ -59,4 +61,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

@@ -1,6 +1,7 @@
 """Tools and utilities for calculating oscillation band ratios."""
 
 from functools import partial
+
 import numpy as np
 import seaborn as sb
 
@@ -11,10 +12,13 @@ from fooof.sim import *
 from settings import *
 
 ###################################################################################################
+###################################################################################################
 
 THETA_BAND = [4,8]
 ALPHA_BAND = [8,12]
 BETA_BAND = [15,30]
+
+###################################################################################################
 ###################################################################################################
 
 def calc_band_ratio(freqs, psd, low_band, high_band):
@@ -68,8 +72,8 @@ def calc_relative_ratio(rel_pow_low_band, rel_pow_high_band):
     Outputs
     -------
     ratio : float
-
     """
+
     return rel_pow_low_band / rel_pow_high_band
 
 
@@ -101,6 +105,8 @@ def calc_cf_power_ratio(fm, low_band, high_band):
 def calc_density_ratio(freqs, psd, low_band, high_band):
     """Calculate band ratio by summing the power within bands,
     dividing each by respective bandwidths, then finding low/ high ratio.
+
+    Parameters
     ----------
     freqs : [n floats]
         list of frequencies.
@@ -167,6 +173,7 @@ def compare_ratio(fm1, fm2, low_band, high_band, mode):
 def calc_group_band_ratio(fg, low_band, high_band, func=calc_band_ratio):
     """Calculate average power in band ratio
 
+    Parameters
     ----------
     fg : fooof group object used to find ratio
     low_band : list of [float, float]
@@ -179,7 +186,7 @@ def calc_group_band_ratio(fg, low_band, high_band, func=calc_band_ratio):
     ratios : list of floats
         Oscillation power ratios.
     """
-    
+
     res = []
     for i in range(len(fg)):
         res.append(func(fg.freqs, np.power(10, fg.power_spectra[i]), low_band, high_band))
@@ -215,7 +222,8 @@ def calc_group_cf_power_ratio(fg, low_band, high_band):
 def get_group_ratios(fg, low_band, high_band):
     """ Calculates group band ratios cannonically, central frequency ratio, and density
 
-     ----------
+    Parameters
+    ----------
     fg : fooofGroup object used to find ratios
     low_band : list of float, float
         Band definition for the lower band.
@@ -238,7 +246,8 @@ def get_group_ratios(fg, low_band, high_band):
 def calc_relative_power(freqs, ps, freq_range):
     """ Calculates relative power within a frequency band.
 
-     ----------
+    Parameters
+    ----------
     freqs : list of floats
         Frequency vector.
     ps : list of floats
@@ -260,9 +269,10 @@ def calc_relative_power(freqs, ps, freq_range):
 
 
 def calc_group_relative_power(freqs, ps, freq_range):
-    """ Calculates relative power within a frequency band.
+    """Calculates relative power within a frequency band.
 
-     ----------
+    Parameters
+    ----------
     freqs : list of list of floats
         List of frequency vectors.
     ps : list of list of floats
@@ -308,19 +318,20 @@ def calc_group_rel_ratios(rel_pow_low, rel_pow_high):
 
     return res
 
+
 def calc_interacting_param_ratios(data):
     """Calculates matrix of absolute ratios from interacting data.
-    
+
     Parameters
     ----------
     data : custom object ndarray [apc value][frequency vector][psds][syn_params]
-    
+
     Outputs
     -------
     res : 2D matrix of ratios where each dimension is a varied parameter
-    
+
     ------------------------
-    |           |          |    
+    |           |          |
     |   r_11    |  r_12    |
     |           |          |
     |-----------------------
@@ -328,8 +339,9 @@ def calc_interacting_param_ratios(data):
     |   r_21    |  r_22    |
     |           |          |
     ------------------------
-    
+
     """
+
     fs = gen_freqs(FREQ_RANGE, FREQ_RES)
     ratios = np.zeros(shape=(len(data), len(data[0])) )
     for rot_ind, rot_val in enumerate(data):
@@ -338,12 +350,3 @@ def calc_interacting_param_ratios(data):
             psd = data[rot_ind, del_ind,:]
             ratios[rot_ind, del_ind] = calc_band_ratio(fs, psd, THETA_BAND, BETA_BAND)
     return ratios
-
-    
-    
-    
-    
-    
-    
-    
-    

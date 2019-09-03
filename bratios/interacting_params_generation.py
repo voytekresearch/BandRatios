@@ -1,15 +1,17 @@
-""" Functions to generate PSDs where two parameters vary simultaneously"""
-import sys
-sys.path.append('../bratios')
+"""Functions to generate PSDs where two parameters vary simultaneously."""
 
 import numpy as np
 
 from fooof.sim import *
+
 from settings import *
+
+###################################################################################################
+###################################################################################################
 
 def gen_interacting_per_per(param1, param2, save_path):
     """Generates PSDs for interacting param simulation.
-    
+
     Parameters
     ----------
     param1 : String
@@ -18,12 +20,12 @@ def gen_interacting_per_per(param1, param2, save_path):
         The parameter from the periodic set.
     save_path : String
         Destination to save data.
-        
-    Outputs
-    -------
-        PSDs save to save_path
-    """    
-        
+
+    Notes
+    -----
+    This function saves out the generated PSDs to save_path.
+    """
+
     fs = gen_freqs(FREQ_RANGE, FREQ_RES)
     check_per_params(param1, param2)
     out = np.zeros(shape=(len(PARAMS[param1]), len(PARAMS[param2]), len(fs) ))
@@ -41,33 +43,34 @@ def gen_interacting_per_per(param1, param2, save_path):
 
         for p2_ind, p2_val in enumerate(paramiter):
 
-            fs, pws = gen_power_spectrum(FREQ_RANGE, AP_DEF, p2_val )            
+            fs, pws = gen_power_spectrum(FREQ_RANGE, AP_DEF, p2_val )
             out[p1_ind, p2_ind,:] = pws
     np.save(save_path, out)
 
 
 def check_per_params(param1, param2):
     """ Function to check if both parameters are in periodic set.
-    
+
     Parameters
     ----------
     param1 : String
         Potential param from periodic or periodic set.
     param2 : String
         Potential param from periodic or periodic set.
-        
-    Outputs
-    -------
-        Potential ValueError.
+
+    Raises
+    ------
+    ValueError
+        If the param inputs are not understood.
     """
-    
+
     if param1 not in PERIODIC or param2 not in PERIODIC:
         raise ValueError("Please provide two periodic parameters")
 
 
 def gen_interacting_aper_per(param1, param2, save_path):
     """Generates PSDs for interacting param simulation.
-    
+
     Parameters
     ----------
     param1 : String
@@ -76,12 +79,12 @@ def gen_interacting_aper_per(param1, param2, save_path):
         The parameter from the other set compared to param1.
     save_path : String
         Destination to save data.
-        
-    Outputs
-    -------
-        PSDs save to save_path
+
+    Notes
+    -----
+    This function saves out the generated PSDs to save_path.
     """
-    
+
     fs = gen_freqs(FREQ_RANGE, FREQ_RES)
 
     # Set Aperiodic to param1
@@ -101,15 +104,15 @@ def gen_interacting_aper_per(param1, param2, save_path):
 
         for p2_ind, p2_val in enumerate(paramiter):
 
-            fs, pws = gen_power_spectrum(FREQ_RANGE, aperiodic_set, p2_val )            
+            fs, pws = gen_power_spectrum(FREQ_RANGE, aperiodic_set, p2_val )
             out[p1_ind, p2_ind,:] = pws
 
     np.save(save_path, out)
 
-    
+
 def check_aper_per_params(param1, param2):
     """Checks if one periodic param and one aperiodic param are provided.
-    
+
     Parameters
     ----------
     param1 : String
@@ -117,7 +120,7 @@ def check_aper_per_params(param1, param2):
     param2 : String
         The parameter from the other set compared to param1.
     """
-    
+
     if param1 in APERIODIC and param2 in PERIODIC:
         return param1, param2
     elif param2 in APERIODIC and param1 in PERIODIC:
@@ -125,26 +128,26 @@ def check_aper_per_params(param1, param2):
     else:
         raise ValueError("Please provide both a periodic and aperiodic parameter")
 
-        
+
 def set_aperiodic(param, val):
     """Sets stepper in correct position of aperiodic set.
-    
+
     Parameters
     ----------
     param : String
         Parameter from {"EXP", "OFF"}
     val :
         Stepper object
-        
-     Outputs
-     -------
-         List : Aperiodic params
-         
+
+    Outputs
+    -------
+    list
+        Aperiodic params
     """
-    
+
     if param == "EXP":
         return [OFF_DEF, val]
     elif param == "OFF":
         return [val, EXP_DEF]
     else:
-        raise ValueError("Please provide either 'OFF' or 'EXP' as aperiodic parameter")    
+        raise ValueError("Please provide either 'OFF' or 'EXP' as aperiodic parameter")
