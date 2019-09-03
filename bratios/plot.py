@@ -19,13 +19,13 @@ titles = {
 }
 
 
-def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None):
+def plot_interacting_sims_paper(data, xticklabs, yticklabs, plt_log=True,ax=None):
     """Plots interacting simulation figures used in paper. Expects psds
     """
-    fig = plt.figure(figsize=[20, 20])
     
+    #Checks if ax exists, if not, create one
     if not ax:
-        _, ax = plt.subpplots()
+        _, ax = plt.subplots()
     
     if plt_log:
         data = np.log10(data)

@@ -4,9 +4,6 @@ sys.path.append('../bratios')
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import seaborn as sns
-
-from fooof import FOOOF, FOOOFGroup
 
 from ratios import *
 from settings import *
