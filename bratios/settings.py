@@ -68,7 +68,7 @@ PARAMS = {
     "EXP": EXPS,
     "OFF": OFFS
     }
-          
+
 STEPPERS = {
     "Low_CF": (LOW_BAND[0], LOW_BAND[1], CF_LOW_INC),
     "High_CF": (HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC),
@@ -108,4 +108,4 @@ F_PATH = '../dat/single_param_sims/1f_data'
 ALPHA_SHIFT_PATH = '../dat/single_param_sims/shifting_alpha'
 
 # Real data path to heatmap figures directory
-HEATS_PATH = '../figures/RealData/Heatmaps/'
+CORRS_PATH = '../figures/RealData/corrs/'

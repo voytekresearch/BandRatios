@@ -32,7 +32,7 @@ def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None)
 
     if plt_log:
         data = np.log10(data)
-        
+
     ax = sns.heatmap(data, xticklabels=xticklabs, yticklabels=yticklabs)
     ax.invert_yaxis()
 
@@ -116,7 +116,7 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
     """
 
     for ratio in ["TBR", "TAR", "ABR"]
-    
+
     # Get param name
     param_name = df.columns[3]
 
@@ -188,7 +188,7 @@ def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
     plt.tight_layout()
 
 
-def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"], save_fig=False, file_path= HEATS_PATH, file_name="Spectral_Features_Ratio_corr"):
+def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"], save_fig=False, file_path=CORRS_PATH, file_name="Spectral_Features_Ratio_corr"):
     """Plot correlations between BandRatio measures and spectral features.
 
     Parameters
