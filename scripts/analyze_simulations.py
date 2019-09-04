@@ -1,22 +1,18 @@
-"""This script calculates ratios and plots from simulated power spectra, with 1 varying parameter."""
-
+""" This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
+import sys
+sys.path.append('../bratios')
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 sns.set_context('poster')
 
 from fooof import FOOOF, FOOOFGroup
 
-import sys
-sys.path.append('../bratios')
 from ratios import *
 from analysis import *
 from settings import *
 from plot import *
-
-###################################################################################################
-###################################################################################################
 
 def main():
 
@@ -31,10 +27,8 @@ def main():
     offset = np.load("../dat/single_param_sims/offset_data.npy")
     exp = np.load("../dat/single_param_sims/exp_data.npy")
     a_shift = np.load('../dat/single_param_sims/shifting_alpha.npy')
-
-    # acquire dfs
+    
     cf_low_df = prep_single_sims(cf_low, "CF")
-    print(cf_low_df)
     cf_high_df = prep_single_sims(cf_high, "CF")
     pw_low_df = prep_single_sims(pw_low, "PW")
     pw_high_df = prep_single_sims(pw_high, "PW")
@@ -44,19 +38,83 @@ def main():
     offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
     exp_df = prep_single_sims(exp, "EXP", periodic_param=0)
     a_shift_df = prep_single_sims(a_shift, "Alpha CF")
+    
+    print(exp_df)
+    print(exp_df.iloc[:,3])
+
+    for ratio in ["TBR", "TAR", "ABR"]:
+
+        fig = plt.figure(figsize=(20,18))
+        #low cf
+        ax = fig.add_subplot(331)
+        ax.set_xlabel("CF")
+        ax.set_ylabel(ratio)
+        ax.plot(cf_low_df.iloc[:,3], cf_low_df[ratio])
+
+        #low pw
+        ax = fig.add_subplot(332)
+        ax.set_xlabel("PW")
+        ax.set_ylabel(ratio)
+        ax.plot(pw_low_df.iloc[:,3], pw_low_df[ratio])
+
+        #low bw
+        ax = fig.add_subplot(333)
+        ax.set_xlabel("BW")
+        ax.set_ylabel(ratio)
+        ax.plot(bw_low_df.iloc[:,3], bw_low_df[ratio])
+
+        #high cf
+        ax = fig.add_subplot(334)
+        ax.set_xlabel("CF")
+        ax.set_ylabel(ratio)
+        ax.plot(cf_high_df.iloc[:,3], cf_high_df[ratio])
+
+        #high pw
+        ax = fig.add_subplot(335)
+        ax.set_xlabel("PW")
+        ax.set_ylabel(ratio)
+        ax.plot(pw_high_df.iloc[:,3], pw_high_df[ratio])
+
+        #high bw
+        ax = fig.add_subplot(336)
+        ax.set_xlabel("BW")
+        ax.set_ylabel(ratio)
+        ax.plot(bw_high_df.iloc[:,3], bw_high_df[ratio])
+
+        
+        plt.tight_layout()
+        plt.savefig("../figures/SingleParamSims/periodic_" + ratio)
+        plt.clf()
+        ################################################
+
+        fig = plt.figure(figsize=(8,12))
+
+        #offset
+        ax = fig.add_subplot(211)
+        ax.set_xlabel("Off")
+        ax.set_ylabel(ratio)
+        ax.plot(offset_df.iloc[:,3], offset_df[ratio])
+
+        #exponent
+        ax = fig.add_subplot(212)
+        ax.set_xlabel("Exp")
+        ax.set_ylabel(ratio)
+        ax.plot(exp_df.iloc[:,3], exp_df[ratio])
+        plt.tight_layout()
+        plt.savefig("../figures/SingleParamSims/aperiodic_" + ratio)
 
     # Plot
-    plot_single_param_sims(cf_low_df, filename="cf_low")
-    plot_single_param_sims(cf_high_df, filename="cf_high")
-    plot_single_param_sims(pw_low_df, filename="pw_low")
-    plot_single_param_sims(pw_high_df, filename="pw_high")
-    plot_single_param_sims(bw_low_df, filename="bw_low")
-    plot_single_param_sims(bw_high_df, filename="bw_high")
-    plot_single_param_sims(exp_df, filename="exp")
-    plot_single_param_sims(offset_df, filename="offset")
-    plot_single_param_sims(f_df, filename="1f")
-    plot_single_param_sims(a_shift_df, filename="shifting_alpha")
-
-
+    # plot_single_param_sims(cf_low_df, filename="cf_low")
+    # plot_single_param_sims(cf_high_df, filename="cf_high")
+    # plot_single_param_sims(pw_low_df, filename="pw_low")
+    # plot_single_param_sims(pw_high_df, filename="pw_high")
+    # plot_single_param_sims(bw_low_df, filename="bw_low")
+    # plot_single_param_sims(bw_high_df, filename="bw_high")
+    # plot_single_param_sims(exp_df, filename="exp")
+    # plot_single_param_sims(offset_df, filename="offset")
+    # plot_single_param_sims(f_df, filename="1f")
+    # plot_single_param_sims(a_shift_df, filename="shifting_alpha")
+    
 if __name__ == "__main__":
     main()
+    

@@ -39,38 +39,6 @@ def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None)
     return ax
 
 
-#     # calculate ratios
-#     apc_amp_low_ratios = calc_interacting_param_ratios(apc_amp_low)
-#     cf_bw_low_ratios = calc_interacting_param_ratios(cf_bw_low)
-#     cf_bw_high_ratios = calc_interacting_param_ratios(cf_bw_high)
-#     apc_amp_high_ratios = calc_interacting_param_ratios(apc_amp_high)
-
-#     ax= fig.add_subplot(221)
-
-#     plt.xlabel("PW",{"fontsize": 18})
-#     plt.ylabel("EXP",{"fontsize": 18})
-
-#     ax= fig.add_subplot(222)
-#     ax = sns.heatmap(np.log10(apc_amp_high_ratios), xticklabels=PWS, yticklabels=APCS)
-#     ax.invert_yaxis()
-#     plt.xlabel("PW",{"fontsize": 18})
-#     plt.ylabel("EXP",{"fontsize": 18})
-
-
-#     # Low band logged
-#     ax = fig.add_subplot(223)
-#     ax = sns.heatmap(np.log10(cf_bw_low_ratios), xticklabels=BWS, yticklabels=CFS_LOW)
-#     ax.invert_yaxis()
-#     plt.xlabel("BW",{"fontsize": 18})
-#     plt.ylabel("CF",{"fontsize": 18})
-
-#     ax = fig.add_subplot(224)
-#     ax = sns.heatmap(np.log10(cf_bw_high_ratios), xticklabels=BWS, yticklabels=CFS_HIGH)
-#     ax.invert_yaxis()
-#     plt.xlabel("BW",{"fontsize": 18})
-#     plt.ylabel("CF", {"fontsize": 18})
-
-
 def plot_interacting_sims(data, param1, param2, savepath):
     """ Plots heatmaps for interacting parameter simulations.
 
@@ -115,7 +83,7 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
 
     """
 
-    for ratio in ["TBR", "TAR", "ABR"]
+    #for ratio in ["TBR", "TAR", "ABR"]
 
     # Get param name
     param_name = df.columns[3]
@@ -216,6 +184,7 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
     fig, ax2 = plt.subplots()
     ax2 = sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,\
                       annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20})
+    plt.yticks(rotation=45, verticalalignment='center')
     if save_fig:
         plt.savefig(file_path+file_name+".png")
 
