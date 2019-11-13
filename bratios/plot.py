@@ -63,7 +63,7 @@ def plot_interacting_sims(data, param1, param2, savepath):
     ax.invert_yaxis()
     plt.xlabel(param1)
     plt.ylabel(param2)
-    plt.savefig(savepath, dpi=500)
+    plt.savefig(savepath+".pdf", dpi=500)
     plt.close()
 
 
@@ -122,7 +122,7 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
     ax31.plot(df[param_name], df.ABR, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/"+filename, dpi=700)
+    plt.savefig("../figures/SingleParamSims/"+filename+".pdf", dpi=700)
 
 
 def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
@@ -170,7 +170,7 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
     save_fig: boolean
         If True - save plot
     """
-
+    plt.gcf().subplots_adjust(left=0.15)
     if not np.all(data):
         raise RuntimeError("No data - cannot proceed.")
 
@@ -181,12 +181,14 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
 
     plt.clf()
 
+
     fig, ax2 = plt.subplots()
+    plt.gcf().subplots_adjust(left=0.15)
     ax2 = sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,\
                       annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20})
     plt.yticks(rotation=45, verticalalignment='center')
     if save_fig:
-        plt.savefig(file_path+file_name+".png")
+        plt.savefig(file_path+file_name+".pdf")
 
 
 def plot_paper_single_sims():
@@ -197,7 +199,7 @@ def plot_paper_single_sims():
         df = proc_single_param(f_name, field)
         plot_single_param(df, title=titles[field], ylabel='Ratio', ax=axis)
 
-    plt.savefig("../figures/SingleParamSims.png", dpi=700)
+    plt.savefig("../figures/SingleParamSims.pdf", dpi=700)
 
 
 def plot_param_topo(data,raw, filename="topo"):
@@ -206,4 +208,4 @@ def plot_param_topo(data,raw, filename="topo"):
     fig, ax = plt.subplots();
     mne.viz.plot_topomap(data, raw.info, vmin=min(data), vmax=max(data), cmap=cm.viridis, contours=0, axes=ax);
     ax.set_title(filename)
-    fig.savefig('../figures/RealData/'+filename, dpi=700);
+    fig.savefig('../figures/RealData/'+filename+".pdf", dpi=700);

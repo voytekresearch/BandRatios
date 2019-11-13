@@ -105,7 +105,7 @@ def print_aperiodic_correlation(ratio_type, corr):
     for ind, param in enumerate(["Exp","Off","Age"]):
         print("The corr of {} to {} is {:1.2f}".format(ratio_type, param,  corr[ind]))
 
-        
+
 def get_non_ratio_band(ratio_type):
     """Returns non-ratio band spectral features.
     
@@ -153,31 +153,27 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     rel_df = df.loc[df['Chan_ID'].isin(ch_inds)]
     
     # Get columns to correlate with
-    sw = get_wave_params(ratio_type[0])
-    fw = get_wave_params(ratio_type[1])
-    nrb = get_non_ratio_band(ratio_type)
+    theta = get_wave_params("T")
+    alpha = get_wave_params("A")
+    beta = get_wave_params("B")
     
-    sw_corrs = np.zeros(3)
-    fw_corrs = np.zeros(3)
-    nrb_corrs = np.zeros(3)
+    theta_corrs = np.zeros(3)
+    alpha_corrs = np.zeros(3)
+    beta_corrs = np.zeros(3)
     ap_corrs = np.zeros(3)
     
     # Ratio vs spectral params correlation
     for ind in range(3):
-        sw_corrs[ind] = func(rel_df[sw[ind]],rel_df[ratio_type])[0]
-        fw_corrs[ind] = func(rel_df[fw[ind]],rel_df[ratio_type])[0]
-        nrb_corrs[ind] = func(rel_df[nrb[ind]],rel_df[ratio_type])[0]
-        #print(func(rel_df[sw[ind]],rel_df[ratio_type]))
-        #print(func(rel_df[fw[ind]],rel_df[ratio_type]))
+        theta_corrs[ind] = func(rel_df[theta[ind]],rel_df[ratio_type])[0]
+        alpha_corrs[ind] = func(rel_df[alpha[ind]],rel_df[ratio_type])[0]
+        beta_corrs[ind] = func(rel_df[beta[ind]],rel_df[ratio_type])[0]
         
     # Ratio vs aperiodic params correlation
     ap_corrs[0] = func(rel_df["Exp"], rel_df[ratio_type])[0]
     ap_corrs[1] = func(rel_df["Off"], rel_df[ratio_type])[0]
     ap_corrs[2] = func(rel_df["Age"], rel_df[ratio_type])[0]
-    #print(func(rel_df["Exp"], rel_df[ratio_type]))
-    #print(func(rel_df["Off"], rel_df[ratio_type]))
-    #print(func(rel_df["Age"], rel_df[ratio_type]))
-    return np.stack((sw_corrs, fw_corrs,nrb_corrs)), ap_corrs
+
+    return np.stack((theta_corrs, alpha_corrs,beta_corrs)), ap_corrs
         
         
 def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):

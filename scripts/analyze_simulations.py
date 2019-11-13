@@ -56,12 +56,21 @@ def main():
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
         ax.plot(pw_low_df.iloc[:,3], pw_low_df[ratio])
+        if max(pw_low_df[ratio]) - min(pw_low_df[ratio]) < .5:
+
+            maxx = np.max(pw_low_df[ratio])
+            ax.set_ylim([maxx-.3, maxx+.1])
 
         #low bw
         ax = fig.add_subplot(333)
         ax.set_xlabel("BW")
         ax.set_ylabel(ratio)
         ax.plot(bw_low_df.iloc[:,3], bw_low_df[ratio])
+
+        if max(bw_low_df[ratio]) - min(bw_low_df[ratio]) < .3:
+
+            maxx = np.max(bw_low_df[ratio])
+            ax.set_ylim([maxx-.3, maxx+.1])
 
         #high cf
         ax = fig.add_subplot(334)
@@ -74,6 +83,10 @@ def main():
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
         ax.plot(pw_high_df.iloc[:,3], pw_high_df[ratio])
+        if max(pw_high_df[ratio]) - min(pw_high_df[ratio]) < .3:
+
+            maxx = np.max(pw_high_df[ratio])
+            ax.set_ylim([maxx-.3, maxx+.1])
 
         #high bw
         ax = fig.add_subplot(336)
@@ -81,9 +94,14 @@ def main():
         ax.set_ylabel(ratio)
         ax.plot(bw_high_df.iloc[:,3], bw_high_df[ratio])
 
+        if max(bw_high_df[ratio]) - min(bw_high_df[ratio]) < .3:
+
+            maxx = np.max(bw_high_df[ratio])
+            ax.set_ylim([maxx-.3, maxx+.1])
+
         
         plt.tight_layout()
-        plt.savefig("../figures/SingleParamSims/periodic_" + ratio)
+        plt.savefig("../figures/SingleParamSims/periodic_" + ratio+".pdf")
         plt.clf()
         ################################################
 
@@ -101,7 +119,7 @@ def main():
         ax.set_ylabel(ratio)
         ax.plot(exp_df.iloc[:,3], exp_df[ratio])
         plt.tight_layout()
-        plt.savefig("../figures/SingleParamSims/aperiodic_" + ratio)
+        plt.savefig("../figures/SingleParamSims/aperiodic_" + ratio+".pdf")
 
     # Plot
     # plot_single_param_sims(cf_low_df, filename="cf_low")
