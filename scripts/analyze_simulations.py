@@ -17,109 +17,143 @@ from plot import *
 def main():
 
     # Load data
-    cf_low = np.load("../dat/single_param_sims/cf_data_low.npy")
-    cf_high = np.load("../dat/single_param_sims/cf_data_high.npy")
-    pw_low = np.load("../dat/single_param_sims/pw_data_low.npy")
-    pw_high = np.load("../dat/single_param_sims/pw_data_high.npy")
-    bw_low = np.load("../dat/single_param_sims/bw_data_low.npy")
-    bw_high = np.load("../dat/single_param_sims/bw_data_high.npy")
+
+    cf_theta = np.load("../dat/single_param_sims/cf_theta.npy")
+    cf_alpha = np.load("../dat/single_param_sims/cf_alpha.npy")
+    cf_beta = np.load("../dat/single_param_sims/cf_beta.npy")
+
+    pw_theta = np.load("../dat/single_param_sims/pw_theta.npy")
+    pw_alpha = np.load("../dat/single_param_sims/pw_alpha.npy")
+    pw_beta = np.load("../dat/single_param_sims/pw_beta.npy")
+
+    bw_theta = np.load("../dat/single_param_sims/bw_theta.npy")
+    bw_alpha = np.load("../dat/single_param_sims/bw_alpha.npy")
+    bw_beta = np.load("../dat/single_param_sims/bw_beta.npy")
+
     f_data = np.load("../dat/single_param_sims/exp_data.npy")
     offset = np.load("../dat/single_param_sims/offset_data.npy")
     exp = np.load("../dat/single_param_sims/exp_data.npy")
     a_shift = np.load('../dat/single_param_sims/shifting_alpha.npy')
     
-    cf_low_df = prep_single_sims(cf_low, "CF")
-    cf_high_df = prep_single_sims(cf_high, "CF")
-    pw_low_df = prep_single_sims(pw_low, "PW")
-    pw_high_df = prep_single_sims(pw_high, "PW")
-    bw_low_df = prep_single_sims(bw_low, "BW")
-    bw_high_df = prep_single_sims(bw_high, "BW")
-    f_df = prep_single_sims(f_data, "EXP", periodic_param=0)
-    offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
-    exp_df = prep_single_sims(exp, "EXP", periodic_param=0)
-    a_shift_df = prep_single_sims(a_shift, "Alpha CF")
-    
-    print(exp_df)
-    print(exp_df.iloc[:,3])
+    cf_theta_df = prep_single_sims(cf_theta, "CF")
+    cf_alpha_df = prep_single_sims(cf_alpha, "CF")
+    cf_beta_df = prep_single_sims(cf_beta, "CF")
 
-    for ratio in ["TBR", "TAR", "ABR"]:
+    pw_theta_df = prep_single_sims(pw_theta, "PW")
+    pw_alpha_df = prep_single_sims(pw_alpha, "PW")
+    pw_beta_df = prep_single_sims(pw_beta, "PW")
 
+    bw_theta_df = prep_single_sims(bw_theta, "BW")
+    bw_alpha_df = prep_single_sims(bw_alpha, "BW")
+    bw_beta_df = prep_single_sims(bw_beta, "BW")
+
+    for ratio in ["TAR", "TBR", "ABR"]:
         fig = plt.figure(figsize=(20,18))
-        #low cf
+        #theta cf
         ax = fig.add_subplot(331)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
-        ax.plot(cf_low_df.iloc[:,3], cf_low_df[ratio])
+        ax.plot(cf_theta_df.iloc[:,3], cf_theta_df[ratio])
 
         #low pw
         ax = fig.add_subplot(332)
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
-        ax.plot(pw_low_df.iloc[:,3], pw_low_df[ratio])
-        if max(pw_low_df[ratio]) - min(pw_low_df[ratio]) < .5:
+        ax.plot(pw_theta_df.iloc[:,3], pw_theta_df[ratio])
+        if max(pw_theta_df[ratio]) - min(pw_theta_df[ratio]) < .5:
 
-            maxx = np.max(pw_low_df[ratio])
+            maxx = np.max(pw_theta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
         #low bw
         ax = fig.add_subplot(333)
         ax.set_xlabel("BW")
         ax.set_ylabel(ratio)
-        ax.plot(bw_low_df.iloc[:,3], bw_low_df[ratio])
+        ax.plot(bw_theta_df.iloc[:,3], bw_theta_df[ratio])
 
-        if max(bw_low_df[ratio]) - min(bw_low_df[ratio]) < .3:
+        if max(bw_theta_df[ratio]) - min(bw_theta_df[ratio]) < .3:
 
-            maxx = np.max(bw_low_df[ratio])
+            maxx = np.max(bw_theta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
         #high cf
         ax = fig.add_subplot(334)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
-        ax.plot(cf_high_df.iloc[:,3], cf_high_df[ratio])
+        ax.plot(cf_alpha_df.iloc[:,3], cf_alpha_df[ratio])
 
         #high pw
         ax = fig.add_subplot(335)
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
-        ax.plot(pw_high_df.iloc[:,3], pw_high_df[ratio])
-        if max(pw_high_df[ratio]) - min(pw_high_df[ratio]) < .3:
+        ax.plot(pw_alpha_df.iloc[:,3], pw_alpha_df[ratio])
+        if max(pw_alpha_df[ratio]) - min(pw_alpha_df[ratio]) < .3:
 
-            maxx = np.max(pw_high_df[ratio])
+            maxx = np.max(pw_alpha_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
         #high bw
         ax = fig.add_subplot(336)
         ax.set_xlabel("BW")
         ax.set_ylabel(ratio)
-        ax.plot(bw_high_df.iloc[:,3], bw_high_df[ratio])
+        ax.plot(bw_alpha_df.iloc[:,3], bw_alpha_df[ratio])
 
-        if max(bw_high_df[ratio]) - min(bw_high_df[ratio]) < .3:
+        if max(bw_alpha_df[ratio]) - min(bw_alpha_df[ratio]) < .3:
 
-            maxx = np.max(bw_high_df[ratio])
+            maxx = np.max(bw_alpha_df[ratio])
+            ax.set_ylim([maxx-.3, maxx+.1])
+        
+        ax = fig.add_subplot(337)
+        ax.set_xlabel("CF")
+        ax.set_ylabel(ratio)
+        ax.plot(cf_beta_df.iloc[:,3], cf_beta_df[ratio])
+
+        ax = fig.add_subplot(338)
+        ax.set_xlabel("PW")
+        ax.set_ylabel(ratio)
+        ax.plot(pw_beta_df.iloc[:,3], pw_beta_df[ratio])
+
+        if max(pw_beta_df[ratio]) - min(pw_beta_df[ratio]) < .3:
+
+            maxx = np.max(pw_beta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
-        
+        ax = fig.add_subplot(339)
+        ax.set_xlabel("BW")
+        ax.set_ylabel(ratio)
+        ax.plot(bw_beta_df.iloc[:,3], bw_beta_df[ratio])
+        if max(bw_beta_df[ratio]) - min(bw_beta_df[ratio]) < .3:
+
+            maxx = np.max(bw_beta_df[ratio])
+            ax.set_ylim([maxx-.3, maxx+.1])
+
+
         plt.tight_layout()
         plt.savefig("../figures/SingleParamSims/periodic_" + ratio+".pdf")
         plt.clf()
-        ################################################
+    ################################################
 
-        fig = plt.figure(figsize=(8,12))
+    f_df = prep_single_sims(f_data, "EXP", periodic_param=0)
+    offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
+    exp_df = prep_single_sims(exp, "EXP", periodic_param=0)
+    a_shift_df = prep_single_sims(a_shift, "Alpha CF")
 
-        #offset
-        ax = fig.add_subplot(211)
-        ax.set_xlabel("Off")
-        ax.set_ylabel(ratio)
-        ax.plot(offset_df.iloc[:,3], offset_df[ratio])
 
-        #exponent
-        ax = fig.add_subplot(212)
-        ax.set_xlabel("Exp")
-        ax.set_ylabel(ratio)
-        ax.plot(exp_df.iloc[:,3], exp_df[ratio])
-        plt.tight_layout()
-        plt.savefig("../figures/SingleParamSims/aperiodic_" + ratio+".pdf")
+    fig = plt.figure(figsize=(8,12))
+
+    #offset
+    ax = fig.add_subplot(211)
+    ax.set_xlabel("Off")
+    ax.set_ylabel(ratio)
+    ax.plot(offset_df.iloc[:,3], offset_df[ratio])
+
+    #exponent
+    ax = fig.add_subplot(212)
+    ax.set_xlabel("Exp")
+    ax.set_ylabel(ratio)
+    ax.plot(exp_df.iloc[:,3], exp_df[ratio])
+    plt.tight_layout()
+    plt.savefig("../figures/SingleParamSims/aperiodic_" + ratio+".pdf")
 
     # Plot
     # plot_single_param_sims(cf_low_df, filename="cf_low")

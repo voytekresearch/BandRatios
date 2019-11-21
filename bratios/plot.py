@@ -175,12 +175,19 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
         raise RuntimeError("No data - cannot proceed.")
 
     fig, ax1 = plt.subplots()
-    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 20})
+    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 35})
+    plt.tick_params(
+        axis='both',          # changes apply to the x-axis
+        which='both',      # both major and minor ticks are affected
+        bottom=False,      # ticks along the bottom edge are off
+        top=False,         # ticks along the top edge are off
+        labelbottom=False,
+        left=False,
+        labelleft=False) # labels along the bottom edge are off
     if save_fig:
-        plt.savefig(file_path+file_name+"_exp.png")
+        plt.savefig(file_path+file_name+"_exp.pdf")
 
     plt.clf()
-
 
     fig, ax2 = plt.subplots()
     plt.gcf().subplots_adjust(left=0.15)
