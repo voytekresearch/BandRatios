@@ -9,6 +9,7 @@ import mne
 
 from ratios import calc_interacting_param_ratios
 from settings import *
+from paths import FIGS_PATHS as fp
 
 ###################################################################################################
 ###################################################################################################
@@ -24,7 +25,7 @@ titles = {
 ###################################################################################################
 ###################################################################################################
 
-def plot_paper_interacting_sims(data,xticklabs, yticklabs, plt_log=True,ax=None):
+def plot_paper_interacting_sims(data, xticklabs, yticklabs, plt_log=True, ax=None):
     """Plots interacting simulation figures used in paper. Expects psds."""
 
     if not ax:
@@ -122,7 +123,8 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
     ax31.plot(df[param_name], df.ABR, color='r')
 
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/"+filename+".pdf", dpi=700)
+
+    plt.savefig(fp.sims_single + filename + ".pdf", dpi=700)
 
 
 def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
@@ -156,7 +158,8 @@ def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
     plt.tight_layout()
 
 
-def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"], save_fig=False, file_path=CORRS_PATH, file_name="Spectral_Features_Ratio_corr"):
+def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_labels=["SW","FW", "NonRatioBand"],
+                          save_fig=False, file_path=fp.eeg_corrs, file_name="Spectral_Features_Ratio_corr"):
     """Plot correlations between BandRatio measures and spectral features.
 
     Parameters
@@ -170,22 +173,25 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
     save_fig: boolean
         If True - save plot
     """
+
     plt.gcf().subplots_adjust(left=0.15)
     if not np.all(data):
         raise RuntimeError("No data - cannot proceed.")
 
     fig, ax1 = plt.subplots()
-    ax1 = sns.heatmap(exp[0].reshape((1,1)),cmap="bwr", annot=True, ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 35})
+    ax1 = sns.heatmap(exp[0].reshape((1,1)), cmap="bwr", annot=True,
+                      ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 35})
     plt.tick_params(
-        axis='both',          # changes apply to the x-axis
+        axis='both',       # changes apply to the x-axis
         which='both',      # both major and minor ticks are affected
         bottom=False,      # ticks along the bottom edge are off
         top=False,         # ticks along the top edge are off
         labelbottom=False,
         left=False,
-        labelleft=False) # labels along the bottom edge are off
+        labelleft=False)   # labels along the bottom edge are off
+
     if save_fig:
-        plt.savefig(file_path+file_name+"_exp.pdf")
+        plt.savefig(file_path + file_name + "_exp.pdf")
 
     plt.clf()
 
@@ -194,11 +200,12 @@ def plot_param_ratio_corr(data, exp, title="Ratio vs. Spectral Features",y_label
     ax2 = sns.heatmap(data,cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,\
                       annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20})
     plt.yticks(rotation=45, verticalalignment='center')
+
     if save_fig:
-        plt.savefig(file_path+file_name+".pdf")
+        plt.savefig(file_path + file_name + ".pdf")
 
 
-def plot_paper_single_sims():
+def plot_paper_single_sims(filename='single_params_sims'):
     """Plots results of single param varation simulations used in paper."""
 
     fig, ax = plt.subplots(2, 4, figsize=[12, 6])
@@ -206,13 +213,14 @@ def plot_paper_single_sims():
         df = proc_single_param(f_name, field)
         plot_single_param(df, title=titles[field], ylabel='Ratio', ax=axis)
 
-    plt.savefig("../figures/SingleParamSims.pdf", dpi=700)
+    plt.savefig(fp.sims_single + filename + '.pdf', dpi=700)
 
 
-def plot_param_topo(data,raw, filename="topo"):
+def plot_param_topo(data, raw, filename="topo"):
     """Plots the topography of a spectral parameters."""
 
     fig, ax = plt.subplots();
     mne.viz.plot_topomap(data, raw.info, vmin=min(data), vmax=max(data), cmap=cm.viridis, contours=0, axes=ax);
     ax.set_title(filename)
-    fig.savefig('../figures/RealData/'+filename+".pdf", dpi=700);
+
+    fig.savefig(fp.eeg_topos + filename + ".pdf", dpi=700);

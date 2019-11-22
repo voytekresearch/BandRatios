@@ -45,6 +45,7 @@ def gen_interacting_per_per(param1, param2, save_path):
 
             fs, pws = gen_power_spectrum(FREQ_RANGE, AP_DEF, p2_val )
             out[p1_ind, p2_ind,:] = pws
+
     np.save(save_path, out)
 
 

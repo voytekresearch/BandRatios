@@ -1,22 +1,29 @@
-"Settings for running simulations"
+""""Settings for running simulations"""
 
 import numpy as np
 
 from fooof.bands import Bands
 from fooof.sim import *
 
+###################################################################################################
+###################################################################################################
+
 FREQ_RANGE = [1, 50]
 FREQ_RES = .5
+
 ALPHA_BAND = [8,13]
 THETA_BAND = [4,8]
 BETA_BAND = [13, 30]
+
 LOW_BAND = [4,8]
 HIGH_BAND = [13, 30]
+
 AP_DEF = [0, 1]
+
 BANDS = Bands({'theta' : THETA_BAND, 'beta' : BETA_BAND, "alpha":ALPHA_BAND })
+BAND_LABELS = {'T':'Theta','A':"Alpha", "B":"Beta"}
 RATIOS = {"TBR": ['theta','beta'], "TAR":['theta', 'alpha'],"ABR": ['alpha','beta']}
 SINGLE_SIM_PARAM_IND = {"CF": (0,0), "PW": (0,1), "BW": (0,2), "EXP": (1), "OFF": (0), "Alpha CF": (1,0)}
-BAND_LABELS = {'T':'Theta','A':"Alpha", "B":"Beta"}
 FEATURE_LABELS = ['CF', 'PW', 'BW']
 NUM_CHAN = 111
 
@@ -94,17 +101,3 @@ PERIODIC_INDICES = {
     "Low_BW": 2,
     "High_BW": 5,
 }
-
-# Single varying parameter
-EXP_PATH = '../dat/single_param_sims/exp_data'
-CF_PATH = '../dat/single_param_sims/cf'
-PW_PATH = '../dat/single_param_sims/pw'
-BW_PATH = '../dat/single_param_sims/bw'
-
-OFF_PATH = '../dat/single_param_sims/offset_data'
-ROT_PATH = '../dat/single_param_sims/rot_data'
-F_PATH = '../dat/single_param_sims/1f_data'
-ALPHA_SHIFT_PATH = '../dat/single_param_sims/shifting_alpha'
-
-# Real data path to heatmap figures directory
-CORRS_PATH = '../figures/RealData/corrs/'
