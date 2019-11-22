@@ -1,6 +1,5 @@
-""" This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
-import sys
-sys.path.append('../bratios')
+"""This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -9,32 +8,39 @@ sns.set_context('poster')
 
 from fooof import FOOOF, FOOOFGroup
 
+import sys
+sys.path.append('../bratios')
 from ratios import *
 from analysis import *
 from settings import *
 from plot import *
+from paths import DATA_PATHS as dp
+from paths import FIGS_PATHS as fp
+
+###################################################################################################
+###################################################################################################
 
 def main():
 
     # Load data
 
-    cf_theta = np.load("../dat/single_param_sims/cf_theta.npy")
-    cf_alpha = np.load("../dat/single_param_sims/cf_alpha.npy")
-    cf_beta = np.load("../dat/single_param_sims/cf_beta.npy")
+    cf_theta = np.load(dp.sims_single + 'cf_theta.npy')
+    cf_alpha = np.load(dp.sims_single + 'cf_alpha.npy')
+    cf_beta = np.load(dp.sims_single + 'cf_beta.npy')
 
-    pw_theta = np.load("../dat/single_param_sims/pw_theta.npy")
-    pw_alpha = np.load("../dat/single_param_sims/pw_alpha.npy")
-    pw_beta = np.load("../dat/single_param_sims/pw_beta.npy")
+    pw_theta = np.load(dp.sims_single + 'pw_theta.npy')
+    pw_alpha = np.load(dp.sims_single + 'pw_alpha.npy')
+    pw_beta = np.load(dp.sims_single + 'pw_beta.npy')
 
-    bw_theta = np.load("../dat/single_param_sims/bw_theta.npy")
-    bw_alpha = np.load("../dat/single_param_sims/bw_alpha.npy")
-    bw_beta = np.load("../dat/single_param_sims/bw_beta.npy")
+    bw_theta = np.load(dp.sims_single + 'bw_theta.npy')
+    bw_alpha = np.load(dp.sims_single + 'bw_alpha.npy')
+    bw_beta = np.load(dp.sims_single + 'bw_beta.npy')
 
-    f_data = np.load("../dat/single_param_sims/exp_data.npy")
-    offset = np.load("../dat/single_param_sims/offset_data.npy")
-    exp = np.load("../dat/single_param_sims/exp_data.npy")
-    a_shift = np.load('../dat/single_param_sims/shifting_alpha.npy')
-    
+    f_data = np.load(dp.sims_single + 'exp_data.npy')
+    offset = np.load(dp.sims_single + 'offset_data.npy')
+    exp = np.load(dp.sims_single + 'exp_data.npy')
+    a_shift = np.load(dp.sims_single + 'shifting_alpha.npy')
+
     cf_theta_df = prep_single_sims(cf_theta, "CF")
     cf_alpha_df = prep_single_sims(cf_alpha, "CF")
     cf_beta_df = prep_single_sims(cf_beta, "CF")
@@ -48,8 +54,10 @@ def main():
     bw_beta_df = prep_single_sims(bw_beta, "BW")
 
     for ratio in ["TAR", "TBR", "ABR"]:
+
         fig = plt.figure(figsize=(20,18))
-        #theta cf
+
+        #low cf
         ax = fig.add_subplot(331)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
@@ -102,7 +110,7 @@ def main():
 
             maxx = np.max(bw_alpha_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
-        
+
         ax = fig.add_subplot(337)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
@@ -129,8 +137,9 @@ def main():
 
 
         plt.tight_layout()
-        plt.savefig("../figures/SingleParamSims/periodic_" + ratio+".pdf")
+        plt.savefig(fp.sims_single + 'periodic_' + ratio + '.pdf')
         plt.clf()
+
     ################################################
 
     f_df = prep_single_sims(f_data, "EXP", periodic_param=0)
@@ -153,7 +162,7 @@ def main():
     ax.set_ylabel(ratio)
     ax.plot(exp_df.iloc[:,3], exp_df[ratio])
     plt.tight_layout()
-    plt.savefig("../figures/SingleParamSims/aperiodic_" + ratio+".pdf")
+    plt.savefig(fp.sims_single + 'aperiodic_' + ratio + '.pdf')
 
     # Plot
     # plot_single_param_sims(cf_low_df, filename="cf_low")
@@ -166,7 +175,6 @@ def main():
     # plot_single_param_sims(offset_df, filename="offset")
     # plot_single_param_sims(f_df, filename="1f")
     # plot_single_param_sims(a_shift_df, filename="shifting_alpha")
-    
+
 if __name__ == "__main__":
     main()
-    
