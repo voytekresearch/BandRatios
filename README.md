@@ -1,6 +1,6 @@
 # BandRatios
 
-Project repository for exploring frequency band ratio measures.
+Project repository for the `BandRatios` project, exploring frequency band ratio measures.
 
 ## Overview
 
@@ -8,24 +8,36 @@ Band ratios are a common measure in neuroscientific investigations, in which the
 
 ## Requirements
 
-This repository requires Python >= 3.7 to run and uses the following dependencies:
+This repository requires Python >= 3.7 to run.
 
- - [numpy](https://github.com/numpy/numpy) >= 1.16.2
- - [scipy](https://github.com/scipy/scipy) >= 1.2.1
+This requires standard scientific python packages:
+- [numpy](https://github.com/numpy/numpy)
+- [pandas](https://github.com/pandas-dev/pandas)
+- [scipy](https://github.com/scipy/scipy)
+- [matplotlib](https://github.com/matplotlib/matplotlib)
+- [seaborn](https://github.com/mwaskom/seaborn)
+
+You can get and manage these dependencies usingthe [Anaconda](https://www.anaconda.com/distribution/) distribution, which we recommend.
+
+In addition, this project requires the following dependencies:
+
  - [MNE](https://github.com/mne-tools/mne-python) >= 0.18.2
- - [FOOOF](https://github.com/fooof-tools/fooof) >= 1.0.0rc1
-
-Optionally, if you want to re-run the literature search, you will need:
-
+ - [FOOOF](https://github.com/fooof-tools/fooof) >= 1.0.0
  - [lisc](https://github.com/lisc-tools/lisc) >= 1.0.0
 
-Installing the [Anaconda](https://www.anaconda.com/distribution/) distribution and then running `pip install mne` and `pip install fooof` will get you set up to re-run the code for this project.
+You can install the extra required dependencies by running:
+
+```
+pip install mne
+pip install fooof
+pip install lisc
+```
 
 ## Repository Layout
 
 This project repository is set up in the following way:
 
-- `notebooks/` is a collection of jupyter notebooks that step through the project, and create all the figures in the paper.
-- `scripts/` is a set of stand alone scripts that runs parts of the project
+- `notebooks/` is a collection of Jupyter notebooks that step through the project and create the figures
+- `scripts/` contains stand alone scripts that run parts of the project
 - `figures/` holds all figures produced from `notebooks/` and `scripts/`
-- `bratios` is a custom module with code to analyze and plot data for this project
+- `bratios/` is a custom module containing the code for analyses and visualizations of this project
