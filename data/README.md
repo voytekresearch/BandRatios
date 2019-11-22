@@ -1,7 +1,7 @@
 Data files available in this project are organized as:
 
 - `literature/`
-- `simulated/`
+- `simulations/`
     - `single_params/`
     - `interacting_params/`
 - `eeg/`
