@@ -13,68 +13,96 @@ from settings import *
 
 def main():
 
+
     #################### Center Frequency ####################
 
-    # Low Band
-    cf_low_step = Stepper(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC)
-    cf_iter_low = param_iter([cf_low_step, PW_DEF, BW_DEF])
-    cf_low_fs, cf_low_ps, cf_low_syns = gen_group_power_spectra(len(cf_low_step), FREQ_RANGE, AP_DEF, cf_iter_low)
-    cf_low_save = [cf_low_ps, cf_low_syns]
-    cf_low_save_final = np.empty(len(cf_low_save),dtype=object)
-    cf_low_save_final[:] = cf_low_save
-    np.save(CF_PATH_LOW, cf_low_save_final)
+    # Theta Band
+    cf_theta_step = Stepper(THETA_BAND[0], THETA_BAND[1], CF_INC)
+    cf_iter_theta = param_iter([cf_theta_step, PW_DEF, BW_DEF])
+    cf_theta_fs, cf_theta_ps, cf_theta_syns = gen_group_power_spectra(len(cf_theta_step), FREQ_RANGE, AP_DEF, cf_iter_theta)
+    cf_theta_save = [cf_theta_ps, cf_theta_syns]
+    cf_theta_save_final = np.empty(len(cf_theta_save),dtype=object)
+    cf_theta_save_final[:] = cf_theta_save
+    np.save(CF_PATH+"_theta", cf_theta_save_final)
 
-    # High Band
-    cf_high_step = Stepper(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC)
-    cf_iter_high = param_iter([cf_high_step, PW_DEF, BW_DEF])
-    cf_high_fs, cf_high_ps, cf_high_syns = gen_group_power_spectra(len(cf_high_step), FREQ_RANGE, AP_DEF, cf_iter_high)
-    cf_high_save = [cf_high_ps, cf_high_syns]
-    cf_high_save_final = np.empty(len(cf_high_save),dtype=object)
-    cf_high_save_final[:] = cf_high_save
-    np.save(CF_PATH_HIGH, cf_high_save_final)
+    # Alpha Band
+    cf_alpha_step = Stepper(ALPHA_BAND[0], ALPHA_BAND[1], CF_INC)
+    cf_iter_alpha = param_iter([cf_alpha_step, PW_DEF, BW_DEF])
+    cf_alpha_fs, cf_alpha_ps, cf_alpha_syns = gen_group_power_spectra(len(cf_alpha_step), FREQ_RANGE, AP_DEF, cf_iter_alpha)
+    cf_alpha_save = [cf_alpha_ps, cf_alpha_syns]
+    cf_alpha_save_final = np.empty(len(cf_alpha_save),dtype=object)
+    cf_alpha_save_final[:] = cf_alpha_save
+    np.save(CF_PATH+"_alpha", cf_alpha_save_final)
+
+    # Beta Band
+    cf_beta_step = Stepper(BETA_BAND[0], BETA_BAND[1], CF_INC)
+    cf_iter_beta = param_iter([cf_beta_step, PW_DEF, BW_DEF])
+    cf_beta_fs, cf_beta_ps, cf_beta_syns = gen_group_power_spectra(len(cf_beta_step), FREQ_RANGE, AP_DEF, cf_iter_beta)
+    cf_beta_save = [cf_beta_ps, cf_beta_syns]
+    cf_beta_save_final = np.empty(len(cf_beta_save),dtype=object)
+    cf_beta_save_final[:] = cf_beta_save
+    np.save(CF_PATH+"_beta", cf_beta_save_final)
+
 
 
     #################### Power ####################
 
-    # Low Band
-    pw_low_step = Stepper(0, PW_END, PW_INC)
-    pw_iter_low = param_iter([CF_LOW_DEF, pw_low_step, BW_DEF])
-    pw_low_fs, pw_low_ps, pw_low_syns = gen_group_power_spectra(len(pw_low_step), FREQ_RANGE, AP_DEF, pw_iter_low)
-    pw_low_save = [pw_low_ps, pw_low_syns]
-    pw_low_save_final = np.empty(len(pw_low_save),dtype=object)
-    pw_low_save_final[:] = pw_low_save
-    np.save(PW_PATH_LOW, pw_low_save_final)
+    # Theta Band
+    pw_theta_step = Stepper(0, PW_END, PW_INC)
+    pw_iter_theta = param_iter([np.mean(THETA_BAND), pw_theta_step, BW_DEF])
+    pw_theta_fs, pw_theta_ps, pw_theta_syns = gen_group_power_spectra(len(pw_theta_step), FREQ_RANGE, AP_DEF, pw_iter_theta)
+    pw_theta_save = [pw_theta_ps, pw_theta_syns]
+    pw_theta_save_final = np.empty(len(pw_theta_save),dtype=object)
+    pw_theta_save_final[:] = pw_theta_save
+    np.save(PW_PATH+"_theta", pw_theta_save_final)
 
-    # High Band
-    pw_high_step = Stepper(0, PW_END, PW_INC)
-    pw_iter_high = param_iter([CF_HIGH_DEF, pw_high_step, BW_DEF])
-    pw_high_fs, pw_high_ps, pw_high_syns = gen_group_power_spectra(len(pw_high_step), FREQ_RANGE, AP_DEF, pw_iter_high)
-    pw_high_save = [pw_high_ps, pw_high_syns]
-    pw_high_save_final = np.empty(len(pw_high_save),dtype=object)
-    pw_high_save_final[:] = pw_high_save
-    np.save(PW_PATH_HIGH, pw_high_save_final)
+    # Alpha Band
+    pw_alpha_step = Stepper(0, PW_END, PW_INC)
+    pw_iter_alpha = param_iter([np.mean(ALPHA_BAND), pw_alpha_step, BW_DEF])
+    pw_alpha_fs, pw_alpha_ps, pw_alpha_syns = gen_group_power_spectra(len(pw_alpha_step), FREQ_RANGE, AP_DEF, pw_iter_alpha)
+    pw_alpha_save = [pw_alpha_ps, pw_alpha_syns]
+    pw_alpha_save_final = np.empty(len(pw_alpha_save),dtype=object)
+    pw_alpha_save_final[:] = pw_alpha_save
+    np.save(PW_PATH+"_alpha", pw_alpha_save_final)
+
+    # Off Band
+    pw_beta_step = Stepper(0, PW_END, PW_INC)
+    pw_iter_beta = param_iter([np.mean(BETA_BAND), pw_beta_step, BW_DEF])
+    pw_beta_fs, pw_beta_ps, pw_beta_syns = gen_group_power_spectra(len(pw_beta_step), FREQ_RANGE, AP_DEF, pw_iter_beta)
+    pw_beta_save = [pw_beta_ps, pw_beta_syns]
+    pw_beta_save_final = np.empty(len(pw_beta_save),dtype=object)
+    pw_beta_save_final[:] = pw_beta_save
+    np.save(PW_PATH+"_beta", pw_beta_save_final)
 
 
     ##################### Band Width ####################
 
-    # Low Band
-    bw_low_step = Stepper(.5, BW_END, BW_INC)
-    bw_iter_low = param_iter([CF_LOW_DEF, PW_DEF, bw_low_step])
-    bw_low_fs, bw_low_ps, bw_low_syns = gen_group_power_spectra(len(bw_low_step), FREQ_RANGE, AP_DEF, bw_iter_low)
-    bw_low_save = [bw_low_ps, bw_low_syns]
-    bw_low_save_final = np.empty(len(bw_low_save),dtype=object)
-    bw_low_save_final[:] = bw_low_save
-    np.save(BW_PATH_LOW, bw_low_save_final)
+    # Theta Band
+    bw_theta_step = Stepper(.5, BW_END, BW_INC)
+    bw_iter_theta = param_iter([np.mean(THETA_BAND), PW_DEF, bw_theta_step])
+    bw_theta_fs, bw_theta_ps, bw_theta_syns = gen_group_power_spectra(len(bw_theta_step), FREQ_RANGE, AP_DEF, bw_iter_theta)
+    bw_theta_save = [bw_theta_ps, bw_theta_syns]
+    bw_theta_save_final = np.empty(len(bw_theta_save),dtype=object)
+    bw_theta_save_final[:] = bw_theta_save
+    np.save(BW_PATH +"_theta", bw_theta_save_final)
 
-    # High Band
-    bw_high_step = Stepper(.5, BW_END, BW_INC)
-    bw_iter_high = param_iter([CF_HIGH_DEF, PW_DEF, bw_high_step])
-    bw_high_fs, bw_high_ps, bw_high_syns = gen_group_power_spectra(len(bw_high_step), FREQ_RANGE, AP_DEF, bw_iter_high)
-    bw_high_save = [bw_high_ps, bw_high_syns]
-    bw_high_save_final = np.empty(len(bw_high_save),dtype=object)
-    bw_high_save_final[:] = bw_high_save
-    np.save(BW_PATH_HIGH, bw_high_save_final)
+    # Alpha Band
+    bw_alpha_step = Stepper(.5, BW_END, BW_INC)
+    bw_iter_alpha = param_iter([np.mean(ALPHA_BAND), PW_DEF, bw_alpha_step])
+    bw_alpha_fs, bw_alpha_ps, bw_alpha_syns = gen_group_power_spectra(len(bw_alpha_step), FREQ_RANGE, AP_DEF, bw_iter_alpha)
+    bw_alpha_save = [bw_alpha_ps, bw_alpha_syns]
+    bw_alpha_save_final = np.empty(len(bw_alpha_save),dtype=object)
+    bw_alpha_save_final[:] = bw_alpha_save
+    np.save(BW_PATH +"_alpha", bw_alpha_save_final)
 
+    # Beta Band
+    bw_beta_step = Stepper(.5, BW_END, BW_INC)
+    bw_iter_beta = param_iter([np.mean(BETA_BAND), PW_DEF, bw_beta_step])
+    bw_beta_fs, bw_beta_ps, bw_beta_syns = gen_group_power_spectra(len(bw_beta_step), FREQ_RANGE, AP_DEF, bw_iter_beta)
+    bw_beta_save = [bw_beta_ps, bw_beta_syns]
+    bw_beta_save_final = np.empty(len(bw_beta_save),dtype=object)
+    bw_beta_save_final[:] = bw_beta_save
+    np.save(BW_PATH+"_beta", bw_beta_save_final)
 
     #################### Exponent ####################
 
@@ -128,7 +156,7 @@ def main():
 
 
     #################### Shifting Alpha ####################
-    a_step = Stepper(ALPHA_BAND[0], ALPHA_BAND[1], CF_LOW_INC)
+    a_step = Stepper(ALPHA_BAND[0], ALPHA_BAND[1], CF_INC)
     a_iter = param_iter([ a_step, PW_DEF, BW_DEF, CF_LOW_DEF, PW_DEF, BW_DEF, CF_HIGH_DEF, PW_DEF, BW_DEF])
     a_fs, a_ps, a_syns = gen_group_power_spectra(len(a_step), FREQ_RANGE, AP_DEF, a_iter, nlvs=0)
     a_save = [a_ps, a_syns]

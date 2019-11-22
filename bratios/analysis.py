@@ -332,6 +332,8 @@ def prep_single_sims(data, varied_param, periodic_param=1):
     param_values = []
     param_array = np.asarray(data[1])
     
+    
+
     for val in param_array:
         param_values.append(np.array(val[periodic_param])[SINGLE_SIM_PARAM_IND[varied_param]])
     
@@ -339,7 +341,9 @@ def prep_single_sims(data, varied_param, periodic_param=1):
         tbr.append(calc_theta_beta_ratio(freqs, param))
         tar.append(calc_theta_alpha_ratio(freqs, param))
         abr.append(calc_alpha_beta_ratio(freqs, param))
-        
+    
+    if varied_param=="PW":
+        print(tar)
     # Make DataFrame of Center Frequencies and coresponding ratio values
     cols = np.array([tbr, tar, abr,param_values]).T.tolist()
     

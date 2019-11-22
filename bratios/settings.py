@@ -8,10 +8,12 @@ from fooof.sim import *
 FREQ_RANGE = [1, 50]
 FREQ_RES = .5
 ALPHA_BAND = [8,13]
-LOW_BAND = [4, 8]
+THETA_BAND = [4,8]
+BETA_BAND = [13, 30]
+LOW_BAND = [4,8]
 HIGH_BAND = [13, 30]
 AP_DEF = [0, 1]
-BANDS = Bands({'theta' : LOW_BAND, 'beta' : HIGH_BAND, "alpha":ALPHA_BAND })
+BANDS = Bands({'theta' : THETA_BAND, 'beta' : BETA_BAND, "alpha":ALPHA_BAND })
 RATIOS = {"TBR": ['theta','beta'], "TAR":['theta', 'alpha'],"ABR": ['alpha','beta']}
 SINGLE_SIM_PARAM_IND = {"CF": (0,0), "PW": (0,1), "BW": (0,2), "EXP": (1), "OFF": (0), "Alpha CF": (1,0)}
 BAND_LABELS = {'T':'Theta','A':"Alpha", "B":"Beta"}
@@ -21,10 +23,9 @@ NUM_CHAN = 111
 CF_ALPHA_DEF = 10
 CF_LOW_DEF = np.mean(LOW_BAND)
 CF_HIGH_DEF = np.mean(HIGH_BAND)
-CF_HIGH_INC = 1
-CF_LOW_INC = .25
-CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_LOW_INC), 3)
-CFS_HIGH = np.round(np.arange(HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC), 3)
+CF_INC = .5
+CFS_LOW = np.round(np.arange(LOW_BAND[0], LOW_BAND[1], CF_INC), 3)
+CFS_HIGH = np.round(np.arange(HIGH_BAND[0], HIGH_BAND[1], CF_INC), 3)
 
 PW_DEF = .5
 PW_INC = .1
@@ -70,8 +71,8 @@ PARAMS = {
     }
 
 STEPPERS = {
-    "Low_CF": (LOW_BAND[0], LOW_BAND[1], CF_LOW_INC),
-    "High_CF": (HIGH_BAND[0], HIGH_BAND[1], CF_HIGH_INC),
+    "Low_CF": (LOW_BAND[0], LOW_BAND[1], CF_INC),
+    "High_CF": (HIGH_BAND[0], HIGH_BAND[1], CF_INC),
     "Low_PW": (PW_START, PW_END, PW_INC),
     "High_PW": (PW_START, PW_END, PW_INC),
     "Low_BW": (BW_START, BW_END, BW_INC),
@@ -96,12 +97,10 @@ PERIODIC_INDICES = {
 
 # Single varying parameter
 EXP_PATH = '../dat/single_param_sims/exp_data'
-CF_PATH_LOW = '../dat/single_param_sims/cf_data_low'
-CF_PATH_HIGH = '../dat/single_param_sims/cf_data_high'
-PW_PATH_LOW = '../dat/single_param_sims/pw_data_low'
-PW_PATH_HIGH = '../dat/single_param_sims/pw_data_high'
-BW_PATH_LOW = '../dat/single_param_sims/bw_data_low'
-BW_PATH_HIGH = '../dat/single_param_sims/bw_data_high'
+CF_PATH = '../dat/single_param_sims/cf'
+PW_PATH = '../dat/single_param_sims/pw'
+BW_PATH = '../dat/single_param_sims/bw'
+
 OFF_PATH = '../dat/single_param_sims/offset_data'
 ROT_PATH = '../dat/single_param_sims/rot_data'
 F_PATH = '../dat/single_param_sims/1f_data'
