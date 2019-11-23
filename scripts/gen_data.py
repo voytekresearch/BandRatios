@@ -24,7 +24,7 @@ def main():
     cf_theta_save = [cf_theta_ps, cf_theta_syns]
     cf_theta_save_final = np.empty(len(cf_theta_save), dtype=object)
     cf_theta_save_final[:] = cf_theta_save
-    np.save(dp.sims_single + "cf_theta", cf_theta_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'cf_theta'), cf_theta_save_final)
 
     # Alpha Band
     cf_alpha_step = Stepper(ALPHA_BAND[0], ALPHA_BAND[1], CF_INC)
@@ -34,7 +34,7 @@ def main():
     cf_alpha_save = [cf_alpha_ps, cf_alpha_syns]
     cf_alpha_save_final = np.empty(len(cf_alpha_save), dtype=object)
     cf_alpha_save_final[:] = cf_alpha_save
-    np.save(dp.sims_single + "cf_alpha", cf_alpha_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'cf_alpha'), cf_alpha_save_final)
 
     # Beta Band
     cf_beta_step = Stepper(BETA_BAND[0], BETA_BAND[1], CF_INC)
@@ -44,7 +44,7 @@ def main():
     cf_beta_save = [cf_beta_ps, cf_beta_syns]
     cf_beta_save_final = np.empty(len(cf_beta_save), dtype=object)
     cf_beta_save_final[:] = cf_beta_save
-    np.save(dp.sims_single + "cf_beta", cf_beta_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'cf_beta'), cf_beta_save_final)
 
 
     #################### Power ####################
@@ -57,7 +57,7 @@ def main():
     pw_theta_save = [pw_theta_ps, pw_theta_syns]
     pw_theta_save_final = np.empty(len(pw_theta_save), dtype=object)
     pw_theta_save_final[:] = pw_theta_save
-    np.save(dp.sims_single + "pw_theta", pw_theta_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'pw_theta'), pw_theta_save_final)
 
     # Alpha Band
     pw_alpha_step = Stepper(0, PW_END, PW_INC)
@@ -67,7 +67,7 @@ def main():
     pw_alpha_save = [pw_alpha_ps, pw_alpha_syns]
     pw_alpha_save_final = np.empty(len(pw_alpha_save), dtype=object)
     pw_alpha_save_final[:] = pw_alpha_save
-    np.save(dp.sims_single + "pw_alpha", pw_alpha_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'pw_alpha'), pw_alpha_save_final)
 
     # Off Band
     pw_beta_step = Stepper(0, PW_END, PW_INC)
@@ -77,7 +77,7 @@ def main():
     pw_beta_save = [pw_beta_ps, pw_beta_syns]
     pw_beta_save_final = np.empty(len(pw_beta_save), dtype=object)
     pw_beta_save_final[:] = pw_beta_save
-    np.save(dp.sims_single + "pw_beta", pw_beta_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'pw_beta'), pw_beta_save_final)
 
 
     ##################### Band Width ####################
@@ -90,7 +90,7 @@ def main():
     bw_theta_save = [bw_theta_ps, bw_theta_syns]
     bw_theta_save_final = np.empty(len(bw_theta_save),dtype=object)
     bw_theta_save_final[:] = bw_theta_save
-    np.save(dp.sims_single + "bw_theta", bw_theta_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'bw_theta'), bw_theta_save_final)
 
     # Alpha Band
     bw_alpha_step = Stepper(.5, BW_END, BW_INC)
@@ -100,7 +100,7 @@ def main():
     bw_alpha_save = [bw_alpha_ps, bw_alpha_syns]
     bw_alpha_save_final = np.empty(len(bw_alpha_save), dtype=object)
     bw_alpha_save_final[:] = bw_alpha_save
-    np.save(dp.sims_single + "bw_alpha", bw_alpha_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'bw_alpha'), bw_alpha_save_final)
 
     # Beta Band
     bw_beta_step = Stepper(.5, BW_END, BW_INC)
@@ -110,7 +110,7 @@ def main():
     bw_beta_save = [bw_beta_ps, bw_beta_syns]
     bw_beta_save_final = np.empty(len(bw_beta_save), dtype=object)
     bw_beta_save_final[:] = bw_beta_save
-    np.save(dp.sims_single + "bw_beta", bw_beta_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'bw_beta'), bw_beta_save_final)
 
     #################### Exponent ####################
 
@@ -121,7 +121,7 @@ def main():
     exp_save = [exp_ps, exp_syns]
     exp_save_final = np.empty(len(exp_save), dtype=object)
     exp_save_final[:] = exp_save
-    np.save(dp.sims_single + 'exp_data', exp_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'exp_data'), exp_save_final)
 
 
     #################### Offset ####################
@@ -133,7 +133,7 @@ def main():
     off_save = [off_ps, off_syns]
     off_save_final = np.empty(len(off_save), dtype=object)
     off_save_final[:] = off_save
-    np.save(dp.sims_single + 'offset_data', off_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'offset_data'), off_save_final)
 
 
     #################### Rotation ####################
@@ -151,7 +151,7 @@ def main():
 #             curr_ps_array.append(r_ps)
 #         vals.append(curr_ps_array)
 #     rot_save.append((freqs, vals))
-#     np.save(dp.sims_single + 'rot_data', rot_save)
+#     np.save(dp.make_file_path(dp.sims_single, 'rot_data'), rot_save)
 
 
     #################### No Oscillations - 1/f changes ####################
@@ -163,7 +163,7 @@ def main():
     f_save = [f_ps, f_syns]
     f_save_final = np.empty(len(f_save), dtype=object)
     f_save_final[:] = f_save
-    np.save(dp.sims_single + '1f_data', f_save_final)
+    np.save(dp.make_file_path(dp.sims_single, '1f_data'), f_save_final)
 
 
     #################### Shifting Alpha ####################
@@ -174,7 +174,7 @@ def main():
     a_save = [a_ps, a_syns]
     a_save_final = np.empty(len(a_save), dtype=object)
     a_save_final[:] = a_save
-    np.save(dp.sims_single + 'shifting_alpha', a_save_final)
+    np.save(dp.make_file_path(dp.sims_single, 'shifting_alpha'), a_save_final)
 
 
 if __name__ == "__main__":

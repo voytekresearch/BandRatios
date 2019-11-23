@@ -124,7 +124,7 @@ def plot_single_param_sims(df, filename="param_vs_ratios"):
 
     plt.tight_layout()
 
-    plt.savefig(fp.sims_single + filename + ".pdf", dpi=700)
+    plt.savefig(fp.make_file_path(fp.sims_single, filename, 'pdf'), dpi=700)
 
 
 def plot_single_param(df, title=None, xlabel=None, ylabel=None, ax=None):
@@ -213,7 +213,7 @@ def plot_paper_single_sims(filename='single_params_sims'):
         df = proc_single_param(f_name, field)
         plot_single_param(df, title=titles[field], ylabel='Ratio', ax=axis)
 
-    plt.savefig(fp.sims_single + filename + '.pdf', dpi=700)
+    plt.savefig(fp.make_file_path(fp.sims_single, filename, 'pdf'), dpi=700)
 
 
 def plot_param_topo(data, raw, filename="topo"):
@@ -223,4 +223,4 @@ def plot_param_topo(data, raw, filename="topo"):
     mne.viz.plot_topomap(data, raw.info, vmin=min(data), vmax=max(data), cmap=cm.viridis, contours=0, axes=ax);
     ax.set_title(filename)
 
-    fig.savefig(fp.eeg_topos + filename + ".pdf", dpi=700);
+    fig.savefig(fp.make_file_path(fp.eeg_topos, filename, 'pdf'), dpi=700);

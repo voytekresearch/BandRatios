@@ -86,7 +86,7 @@ def get_wave_params(band_label):
     """
     curr_band = BAND_LABELS[band_label]
 
-    return [curr_band+"_" + feat for feat in FEATURE_LABELS]
+    return [curr_band + "_" + feat for feat in FEATURE_LABELS]
 
 
 def print_aperiodic_correlation(ratio_type, corr):
@@ -242,7 +242,7 @@ def get_all_data(df, chs ,block=0):
     for filename in df.ID.values:
         try:
 
-            curr_data = np.load(dp.eeg_psds + filename + '_ec_psds.npz')
+            curr_data = np.load(dp.make_file_path(dp.eeg_psds, filename + '_ec_psds', 'npz'))
             freqs = curr_data['arr_0']
             for ch in chs:
                 curr_row = dict()

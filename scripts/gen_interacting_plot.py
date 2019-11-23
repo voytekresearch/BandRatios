@@ -18,10 +18,10 @@ def main():
     sns.set_context("talk")
     plt.figure(figsize=(24,20))
 
-    exp_lowpw_data = np.load(dp.sims_interacting + 'exp_lowpw_data.npy')
-    lowpw_lowbw_data = np.load(dp.sims_interacting + 'lowpw_lowbw_data.npy')
-    lowcf_highbw_data = np.load(dp.sims_interacting + 'lowcf_highbw_data.npy')
-    highcf_highpw_data = np.load(dp.sims_interacting + 'highcf_highpw_data.npy')
+    exp_lowpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_lowpw_data', 'npy'))
+    lowpw_lowbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowpw_lowbw_data', 'npy'))
+    lowcf_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowcf_highbw_data', 'npy'))
+    highcf_highpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highcf_highpw_data', 'npy'))
 
     ax1 = plt.subplot(221)
     ax1 = plot_paper_interacting_sims(calc_interacting_param_ratios(exp_lowcf_data),
@@ -55,7 +55,7 @@ def main():
     plt.xlabel("High_PW")
     plt.ylabel("High_CF")
 
-    plt.savefig(fp.sims_interacting + 'interacting_params_paper_fig.pdf', dpi=700)
+    plt.savefig(fp.make_file_path(sims_interacting, 'interacting_params_paper_fig', 'pdf'), dpi=700)
 
 
 if __name__ == "__main__":

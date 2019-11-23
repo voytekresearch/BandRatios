@@ -24,8 +24,9 @@ class BasePaths():
         self.sims_interacting = pjoin(self.sims, 'interacting_params')
 
     @staticmethod
-    def make_file_path(file_path, file_name):
-        return pjoin(file_path, file_name)
+    def make_file_path(file_path, file_name, file_ext=''):
+
+        return pjoin(file_path, file_name + '.' + file_ext)
 
 
 class DataPaths(BasePaths):

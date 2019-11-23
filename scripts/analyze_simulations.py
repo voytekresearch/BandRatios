@@ -1,4 +1,4 @@
-"""This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
+z"""This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -24,22 +24,22 @@ def main():
 
     # Load data
 
-    cf_theta = np.load(dp.sims_single + 'cf_theta.npy')
-    cf_alpha = np.load(dp.sims_single + 'cf_alpha.npy')
-    cf_beta = np.load(dp.sims_single + 'cf_beta.npy')
+    cf_theta = np.load(dp.make_file_path(dp.sims_single, 'cf_theta', 'npy'))
+    cf_alpha = np.load(dp.make_file_path(dp.sims_single, 'cf_alpha', 'npy'))
+    cf_beta = np.load(dp.make_file_path(dp.sims_single, 'cf_beta', 'npy'))
 
-    pw_theta = np.load(dp.sims_single + 'pw_theta.npy')
-    pw_alpha = np.load(dp.sims_single + 'pw_alpha.npy')
-    pw_beta = np.load(dp.sims_single + 'pw_beta.npy')
+    pw_theta = np.load(dp.make_file_path(dp.sims_single, 'pw_theta', 'npy'))
+    pw_alpha = np.load(dp.make_file_path(dp.sims_single, 'pw_alpha', 'npy'))
+    pw_beta = np.load(dp.make_file_path(dp.sims_single, 'pw_beta', 'npy'))
 
-    bw_theta = np.load(dp.sims_single + 'bw_theta.npy')
-    bw_alpha = np.load(dp.sims_single + 'bw_alpha.npy')
-    bw_beta = np.load(dp.sims_single + 'bw_beta.npy')
+    bw_theta = np.load(dp.make_file_path(dp.sims_single, 'bw_theta', 'npy'))
+    bw_alpha = np.load(dp.make_file_path(dp.sims_single, 'bw_alpha', 'npy'))
+    bw_beta = np.load(dp.make_file_path(dp.sims_single, 'bw_beta', 'npy'))
 
-    f_data = np.load(dp.sims_single + 'exp_data.npy')
-    offset = np.load(dp.sims_single + 'offset_data.npy')
-    exp = np.load(dp.sims_single + 'exp_data.npy')
-    a_shift = np.load(dp.sims_single + 'shifting_alpha.npy')
+    f_data = np.load(dp.make_file_path(dp.sims_single, 'exp_data', 'npy'))
+    offset = np.load(dp.make_file_path(dp.sims_single, 'offset_data', 'npy'))
+    exp = np.load(dp.make_file_path(dp.sims_single, 'exp_data', 'npy'))
+    a_shift = np.load(dp.make_file_path(dp.sims_single, 'shifting_alpha', 'npy'))
 
     cf_theta_df = prep_single_sims(cf_theta, "CF")
     cf_alpha_df = prep_single_sims(cf_alpha, "CF")
@@ -137,7 +137,7 @@ def main():
 
 
         plt.tight_layout()
-        plt.savefig(fp.sims_single + 'periodic_' + ratio + '.pdf')
+        plt.savefig(fp.make_file_path(sims_single, 'periodic_' + ratio, 'pdf'))
         plt.clf()
 
     ################################################
@@ -162,7 +162,7 @@ def main():
     ax.set_ylabel(ratio)
     ax.plot(exp_df.iloc[:,3], exp_df[ratio])
     plt.tight_layout()
-    plt.savefig(fp.sims_single + 'aperiodic_' + ratio + '.pdf')
+    plt.savefig(fp.make_file_path(fp.sims_single, 'aperiodic_' + ratio, 'pdf'))
 
     # Plot
     # plot_single_param_sims(cf_low_df, filename="cf_low")
