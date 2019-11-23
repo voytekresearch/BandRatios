@@ -15,9 +15,10 @@ class BasePaths():
         self.base = pjoin(location, base_name)
 
         # Set first level of paths
+        self.demo = pjoin(self.base, 'demo')
+        self.literature = pjoin(self.base, 'literature')
         self.sims = pjoin(self.base, 'simulations')
         self.eeg = pjoin(self.base, 'eeg')
-        self.literature = pjoin(self.base, 'literature')
 
         # Set second level of paths
         self.sims_single = pjoin(self.sims, 'single_params')
@@ -41,14 +42,11 @@ class DataPaths(BasePaths):
         self.eeg_outputs = pjoin(self.eeg, 'outputs')
 
 
-class FigurePaths():
+class FigurePaths(BasePaths):
 
     def __init__(self, location='../', base_name='figures'):
 
         BasePaths.__init__(self, location, base_name)
-
-        # Set custom first level paths
-        self.overview = pjoin(self.base, 'overview')
 
         # Set custom second level paths
         self.eeg_corrs = pjoin(self.eeg, 'correlations')

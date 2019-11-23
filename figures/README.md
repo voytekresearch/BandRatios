@@ -1,6 +1,6 @@
 Figures available in this project are organized as:
 
-- `overview/`
+- `demo/`
 - `literature/`
 - `simulations/`
     - `single_params/`
