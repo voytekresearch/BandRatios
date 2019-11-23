@@ -23,6 +23,10 @@ class BasePaths():
         self.sims_single = pjoin(self.sims, 'single_params')
         self.sims_interacting = pjoin(self.sims, 'interacting_params')
 
+    @staticmethod
+    def make_file_path(file_path, file_name):
+        return pjoin(file_path, file_name)
+
 
 class DataPaths(BasePaths):
 
