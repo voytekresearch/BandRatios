@@ -12,7 +12,7 @@ class BasePaths():
         self.location = location
         self.base_name = base_name
 
-        self.base = pjoin(location, 'data')
+        self.base = pjoin(location, base_name)
 
         # Set first level of paths
         self.sims = pjoin(self.base, 'simulations')
@@ -43,7 +43,7 @@ class FigurePaths():
         BasePaths.__init__(self, location, base_name)
 
         # Set custom first level paths
-        self.overview = pjoin(self.location, 'overview')
+        self.overview = pjoin(self.base, 'overview')
 
         # Set custom second level paths
         self.eeg_corrs = pjoin(self.eeg, 'correlations')
