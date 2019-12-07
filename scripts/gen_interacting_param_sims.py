@@ -9,7 +9,7 @@ import sys
 sys.path.append('../bratios')
 from settings import *
 from paths import DATA_PATHS as dp
-from interacting_params_generation import *
+from sims import *
 
 ###################################################################################################
 ###################################################################################################

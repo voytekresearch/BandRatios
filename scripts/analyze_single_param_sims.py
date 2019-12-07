@@ -1,12 +1,9 @@
-z"""This script calculates ratios and plots from simulated power spectral data where a parameter vary."""
+"""This script calculates ratios and plots from simulated power spectral with 1 varying parameter."""
 
-import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_context('poster')
-
-from fooof import FOOOF, FOOOFGroup
 
 import sys
 sys.path.append('../bratios')
@@ -20,9 +17,18 @@ from paths import FIGS_PATHS as fp
 ###################################################################################################
 ###################################################################################################
 
+# PLOT SETTINGS
+PE_FIG_SIZE = (20, 18)
+AP_FIG_SIZE = (8, 12)
+SAVE_FORMAT = 'pdf'
+LW = 4
+
+###################################################################################################
+###################################################################################################
+
 def main():
 
-    # Load data
+    ## Load data
 
     cf_theta = np.load(dp.make_file_path(dp.sims_single, 'cf_theta', 'npy'))
     cf_alpha = np.load(dp.make_file_path(dp.sims_single, 'cf_alpha', 'npy'))
@@ -55,81 +61,87 @@ def main():
 
     for ratio in ["TAR", "TBR", "ABR"]:
 
-        fig = plt.figure(figsize=(20,18))
+        fig = plt.figure(figsize=PE_FIG_SIZE)
 
-        #low cf
+        # low cf
         ax = fig.add_subplot(331)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
-        ax.plot(cf_theta_df.iloc[:,3], cf_theta_df[ratio])
+        ax.plot(cf_theta_df.iloc[:, 3], cf_theta_df[ratio], linewidth=LW)
 
-        #low pw
+        # low pw
         ax = fig.add_subplot(332)
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
-        ax.plot(pw_theta_df.iloc[:,3], pw_theta_df[ratio])
+        ax.plot(pw_theta_df.iloc[:, 3], pw_theta_df[ratio], linewidth=LW)
+
         if max(pw_theta_df[ratio]) - min(pw_theta_df[ratio]) < .5:
 
             maxx = np.max(pw_theta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
-        #low bw
+        # low bw
         ax = fig.add_subplot(333)
         ax.set_xlabel("BW")
         ax.set_ylabel(ratio)
-        ax.plot(bw_theta_df.iloc[:,3], bw_theta_df[ratio])
+        ax.plot(bw_theta_df.iloc[:, 3], bw_theta_df[ratio], linewidth=LW)
 
         if max(bw_theta_df[ratio]) - min(bw_theta_df[ratio]) < .3:
 
             maxx = np.max(bw_theta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
-        #high cf
+        # middle cf
         ax = fig.add_subplot(334)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
-        ax.plot(cf_alpha_df.iloc[:,3], cf_alpha_df[ratio])
+        ax.plot(cf_alpha_df.iloc[:, 3], cf_alpha_df[ratio], linewidth=LW)
 
-        #high pw
+        # middle pw
         ax = fig.add_subplot(335)
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
-        ax.plot(pw_alpha_df.iloc[:,3], pw_alpha_df[ratio])
+        ax.plot(pw_alpha_df.iloc[:, 3], pw_alpha_df[ratio], linewidth=LW)
+
         if max(pw_alpha_df[ratio]) - min(pw_alpha_df[ratio]) < .3:
 
             maxx = np.max(pw_alpha_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
-        #high bw
+        # middle bw
         ax = fig.add_subplot(336)
         ax.set_xlabel("BW")
         ax.set_ylabel(ratio)
-        ax.plot(bw_alpha_df.iloc[:,3], bw_alpha_df[ratio])
+        ax.plot(bw_alpha_df.iloc[:, 3], bw_alpha_df[ratio], linewidth=LW)
 
         if max(bw_alpha_df[ratio]) - min(bw_alpha_df[ratio]) < .3:
 
             maxx = np.max(bw_alpha_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
+        # high cf
         ax = fig.add_subplot(337)
         ax.set_xlabel("CF")
         ax.set_ylabel(ratio)
-        ax.plot(cf_beta_df.iloc[:,3], cf_beta_df[ratio])
+        ax.plot(cf_beta_df.iloc[:, 3], cf_beta_df[ratio], linewidth=LW)
 
+        # high pw
         ax = fig.add_subplot(338)
         ax.set_xlabel("PW")
         ax.set_ylabel(ratio)
-        ax.plot(pw_beta_df.iloc[:,3], pw_beta_df[ratio])
+        ax.plot(pw_beta_df.iloc[:, 3], pw_beta_df[ratio], linewidth=LW)
 
         if max(pw_beta_df[ratio]) - min(pw_beta_df[ratio]) < .3:
 
             maxx = np.max(pw_beta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
+        # high bw
         ax = fig.add_subplot(339)
         ax.set_xlabel("BW")
         ax.set_ylabel(ratio)
-        ax.plot(bw_beta_df.iloc[:,3], bw_beta_df[ratio])
+        ax.plot(bw_beta_df.iloc[:, 3], bw_beta_df[ratio], linewidth=LW)
+
         if max(bw_beta_df[ratio]) - min(bw_beta_df[ratio]) < .3:
 
             maxx = np.max(bw_beta_df[ratio])
@@ -137,44 +149,33 @@ def main():
 
 
         plt.tight_layout()
-        plt.savefig(fp.make_file_path(sims_single, 'periodic_' + ratio, 'pdf'))
+        plt.savefig(fp.make_file_path(fp.sims_single, 'periodic_' + ratio, SAVE_FORMAT))
         plt.clf()
 
-    ################################################
+        ################################################
 
-    f_df = prep_single_sims(f_data, "EXP", periodic_param=0)
-    offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
-    exp_df = prep_single_sims(exp, "EXP", periodic_param=0)
-    a_shift_df = prep_single_sims(a_shift, "Alpha CF")
+        f_df = prep_single_sims(f_data, "EXP", periodic_param=0)
+        offset_df = prep_single_sims(offset, "OFF", periodic_param=0)
+        exp_df = prep_single_sims(exp, "EXP", periodic_param=0)
+        a_shift_df = prep_single_sims(a_shift, "Alpha CF")
 
+        fig = plt.figure(figsize=AP_FIG_SIZE)
 
-    fig = plt.figure(figsize=(8,12))
+        # offset
+        ax = fig.add_subplot(211)
+        ax.set_xlabel("Off")
+        ax.set_ylabel(ratio)
+        ax.plot(offset_df.iloc[:, 3], offset_df[ratio], linewidth=LW)
 
-    #offset
-    ax = fig.add_subplot(211)
-    ax.set_xlabel("Off")
-    ax.set_ylabel(ratio)
-    ax.plot(offset_df.iloc[:,3], offset_df[ratio])
+        # exponent
+        ax = fig.add_subplot(212)
+        ax.set_xlabel("Exp")
+        ax.set_ylabel(ratio)
+        ax.plot(exp_df.iloc[:, 3], exp_df[ratio], linewidth=LW)
 
-    #exponent
-    ax = fig.add_subplot(212)
-    ax.set_xlabel("Exp")
-    ax.set_ylabel(ratio)
-    ax.plot(exp_df.iloc[:,3], exp_df[ratio])
-    plt.tight_layout()
-    plt.savefig(fp.make_file_path(fp.sims_single, 'aperiodic_' + ratio, 'pdf'))
+        plt.tight_layout()
+        plt.savefig(fp.make_file_path(fp.sims_single, 'aperiodic_' + ratio, SAVE_FORMAT))
 
-    # Plot
-    # plot_single_param_sims(cf_low_df, filename="cf_low")
-    # plot_single_param_sims(cf_high_df, filename="cf_high")
-    # plot_single_param_sims(pw_low_df, filename="pw_low")
-    # plot_single_param_sims(pw_high_df, filename="pw_high")
-    # plot_single_param_sims(bw_low_df, filename="bw_low")
-    # plot_single_param_sims(bw_high_df, filename="bw_high")
-    # plot_single_param_sims(exp_df, filename="exp")
-    # plot_single_param_sims(offset_df, filename="offset")
-    # plot_single_param_sims(f_df, filename="1f")
-    # plot_single_param_sims(a_shift_df, filename="shifting_alpha")
 
 if __name__ == "__main__":
     main()

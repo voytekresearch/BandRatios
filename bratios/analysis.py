@@ -1,15 +1,12 @@
-"""Tools to analyze band ratio data"""
+"""Tools to analyze band ratio data."""
 
 import numpy as np
 from numpy.linalg import LinAlgError
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-from fooof import FOOOF, FOOOFGroup
+from fooof import FOOOF
 from fooof.analysis import get_band_peak_fm
-from fooof.funcs import average_fg
 
 from settings import *
 from ratios import *
@@ -32,8 +29,8 @@ def nan_corr_pearson(vec1, vec2):
     -------
     Correlation : float
         r-value correlation.
-
     """
+
     vec1 = np.asarray(vec1)
     vec2 = np.asarray(vec2)
 
@@ -71,7 +68,7 @@ def nan_corr_spearman(vec1, vec2):
 
 
 def get_wave_params(band_label):
-    """Obtain labels of slow and fast wave spectral parameters
+    """Obtain labels of slow and fast wave spectral parameters.
 
     Parameters
     ----------
@@ -82,31 +79,33 @@ def get_wave_params(band_label):
     ------
     list of strings containing spectral labels.
         ex) [Theta_CF, Theta_PW, Theta_BW]
-
     """
+
     curr_band = BAND_LABELS[band_label]
 
     return [curr_band + "_" + feat for feat in FEATURE_LABELS]
 
 
-def print_aperiodic_correlation(ratio_type, corr):
-    """Prints out the correlation between ratio and aperiodic parameters
+def print_aperiodic_correlation(ratio_type, corr, show=True):
+    """Prints out the correlation between ratio and aperiodic parameters.
 
     Parameters
     ----------
-    ratio_type : String
-        Which specific ratio measure to use.
-            ex) TBR
+    ratio_type : string
+        Which specific ratio measure to report (ex. "TBR").
     corr : list of floats
         Correlation r-values for aperiodic params.
+    show : boolean
+        Whether to display the print out.
 
     Outputs
     -------
     Prints formatted sentences of correlations between ratio and aperiodic parameters.
     """
 
-    for ind, param in enumerate(["Exp","Off","Age"]):
-        print("The corr of {} to {} is {:1.2f}".format(ratio_type, param,  corr[ind]))
+    if show:
+        for ind, param in enumerate(["Exp", "Off", "Age"]):
+            print("The corr of {} to {} is {:1.2f}".format(ratio_type, param, corr[ind]))
 
 
 def get_non_ratio_band(ratio_type):
@@ -120,15 +119,16 @@ def get_non_ratio_band(ratio_type):
     Return
     ------
     list of non ratio band spectral features.
-
     """
+
     if ratio_type == "TBR":
         nrb = "Alpha"
     elif ratio_type == "ABR":
         nrb = "Theta"
     elif ratio_type == "TAR":
         nrb = "Beta"
-    return [nrb+"_" + feat for feat in FEATURE_LABELS]
+
+    return [nrb + "_" + feat for feat in FEATURE_LABELS]
 
 
 def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
@@ -144,7 +144,6 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     ch_inds : list of ints
         Channels to run correlations over.
     func : Correlation function
-
 
     Return
     ------
@@ -167,9 +166,9 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
 
     # Ratio vs spectral params correlation
     for ind in range(3):
-        theta_corrs[ind] = func(rel_df[theta[ind]],rel_df[ratio_type])[0]
-        alpha_corrs[ind] = func(rel_df[alpha[ind]],rel_df[ratio_type])[0]
-        beta_corrs[ind] = func(rel_df[beta[ind]],rel_df[ratio_type])[0]
+        theta_corrs[ind] = func(rel_df[theta[ind]], rel_df[ratio_type])[0]
+        alpha_corrs[ind] = func(rel_df[alpha[ind]], rel_df[ratio_type])[0]
+        beta_corrs[ind] = func(rel_df[beta[ind]], rel_df[ratio_type])[0]
 
     # Ratio vs aperiodic params correlation
     ap_corrs[0] = func(rel_df["Exp"], rel_df[ratio_type])[0]
@@ -198,9 +197,8 @@ def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):
     Returns
     -------
     dict populated with fooof params.
-
-
     """
+
     curr_row["Theta_CF"] = theta_params[0]
     curr_row["Theta_PW"] = theta_params[1]
     curr_row["Theta_BW"] = theta_params[2]
@@ -219,7 +217,7 @@ def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):
     return curr_row
 
 
-def get_all_data(df, chs ,block=0):
+def get_all_data(df, chs, block=0):
     """This function will return a DataFrame populated with all subjects, channels,
     spectral parameters, band ratios, and age - all from the ChildMind dataset.
 
@@ -244,16 +242,18 @@ def get_all_data(df, chs ,block=0):
 
             curr_data = np.load(dp.make_file_path(dp.eeg_psds, filename + '_ec_psds', 'npz'))
             freqs = curr_data['arr_0']
+
             for ch in chs:
+
                 curr_row = dict()
                 curr_row["Subj_ID"] = filename
                 curr_row["Chan_ID"] = ch
                 ps = curr_data['arr_1'][block][ch]
-                if isinstance(ps, float):
 
+                if isinstance(ps, float):
                     continue
 
-                fm = FOOOF(verbose=False, peak_width_limits=(1,8))
+                fm = FOOOF(verbose=False, peak_width_limits=(1, 8))
                 fm.add_data(freqs, ps)
                 fm.fit()
 
@@ -263,7 +263,6 @@ def get_all_data(df, chs ,block=0):
                 ap = fm.aperiodic_params_
 
                 curr_row = _add_params(curr_row, theta_params, beta_params, alpha_params, ap)
-
 
                 tbr = calc_band_ratio(freqs, ps, BANDS['theta'], BANDS['beta'])
                 tar = calc_band_ratio(freqs, ps, BANDS['theta'], BANDS['alpha'])
@@ -277,37 +276,16 @@ def get_all_data(df, chs ,block=0):
 
                 curr_row = pd.Series(curr_row)
 
-                res = res.append(curr_row,ignore_index=True)
+                res = res.append(curr_row, ignore_index=True)
 
         except FileNotFoundError or ValueError:
-            print("FileNotFound or ValueError: ",filename)
+            print("FileNotFound or ValueError: ", filename)
         except LinAlgError:
-            print("LinAlgError: ",filename)
+            print("LinAlgError: ", filename)
         except IndexError:
-            print("IndexError: ",filename)
+            print("IndexError: ", filename)
 
     return res
-
-
-def get_len_ratio_subjects():
-    """Calculates number of subjects for tbr, tar, and abr measures.
-
-    Returns
-    -------
-    tuple : length of tbr, tar, abr
-
-    """
-    df_tbr = df[np.isnan(df.Theta_CF)==False]
-    df_tbr = df_tbr[np.isnan(df_tbr.Beta_CF)==False]
-
-    df_tar = df[np.isnan(df.Theta_CF)==False]
-    df_tar = df_tar[np.isnan(df_tar.Alpha_CF)==False]
-
-    df_abr = df[np.isnan(df.Alpha_CF)==False]
-    df_abr = df_abr[np.isnan(df_abr.Beta_CF)==False]
-
-    print("len_tbr:", len(df_tbr),"len_tar",len(df_tar), len("abr"),len(abr) )
-    return len(df_tbr), len(df_tar), len(abr)
 
 
 def prep_single_sims(data, varied_param, periodic_param=1):
@@ -343,12 +321,9 @@ def prep_single_sims(data, varied_param, periodic_param=1):
         tar.append(calc_theta_alpha_ratio(freqs, param))
         abr.append(calc_alpha_beta_ratio(freqs, param))
 
-    if varied_param=="PW":
-        print(tar)
-
     # Make DataFrame of Center Frequencies and coresponding ratio values
-    cols = np.array([tbr, tar, abr,param_values]).T.tolist()
+    cols = np.array([tbr, tar, abr, param_values]).T.tolist()
 
-    df = pd.DataFrame(cols, columns=["TBR","TAR","ABR", varied_param])
+    df = pd.DataFrame(cols, columns=["TBR", "TAR", "ABR", varied_param])
 
     return df
