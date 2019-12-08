@@ -8,7 +8,7 @@ from fooof.analysis import get_band_peak
 from fooof.utils import trim_spectrum
 from fooof.sim import gen_freqs
 
-from settings import BANDS
+from settings import BANDS, FREQ_RANGE, FREQ_RES
 
 ###################################################################################################
 ###################################################################################################

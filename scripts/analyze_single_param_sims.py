@@ -19,7 +19,7 @@ from paths import FIGS_PATHS as fp
 
 # PLOT SETTINGS
 PE_FIG_SIZE = (20, 18)
-AP_FIG_SIZE = (8, 12)
+AP_FIG_SIZE = (7, 12)
 SAVE_FORMAT = 'pdf'
 LW = 4
 
@@ -147,7 +147,6 @@ def main():
             maxx = np.max(bw_beta_df[ratio])
             ax.set_ylim([maxx-.3, maxx+.1])
 
-
         plt.tight_layout()
         plt.savefig(fp.make_file_path(fp.sims_single, 'periodic_' + ratio, SAVE_FORMAT))
         plt.clf()
@@ -163,17 +162,19 @@ def main():
 
         # offset
         ax = fig.add_subplot(211)
-        ax.set_xlabel("Off")
+        ax.set_xlabel("Offset")
         ax.set_ylabel(ratio)
         ax.plot(offset_df.iloc[:, 3], offset_df[ratio], linewidth=LW)
+        ax.locator_params(axis='y', nbins=4)
 
         # exponent
         ax = fig.add_subplot(212)
-        ax.set_xlabel("Exp")
+        ax.set_xlabel("Exponent")
         ax.set_ylabel(ratio)
         ax.plot(exp_df.iloc[:, 3], exp_df[ratio], linewidth=LW)
 
-        plt.tight_layout()
+        fig.subplots_adjust(left=0.2, hspace=0.6)
+
         plt.savefig(fp.make_file_path(fp.sims_single, 'aperiodic_' + ratio, SAVE_FORMAT))
 
 

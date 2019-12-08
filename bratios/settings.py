@@ -12,7 +12,7 @@ from fooof.bands import Bands
 #####################################
 
 # Define spectra definitions
-FREQ_RANGE = [1, 50]
+FREQ_RANGE = [1, 35]
 FREQ_RES = .5
 
 # Define band definitions
@@ -40,16 +40,16 @@ SINGLE_SIM_PARAM_IND = {"CF" : (0, 0), "PW" : (0, 1), "BW" : (0, 2),
                         "EXP" : (1), "OFF" : (0), "Alpha CF" : (1, 0)}
 
 FEATURE_LABELS = ["CF", "PW", "BW"]
-PERIODIC = ["Low_CF", "High_CF", "Low_PW", "High_PW", "Low_BW", "High_BW"]
+PERIODIC = ["lowCF", "highCF", "lowPW", "highPW", "lowBW", "highBW"]
 APERIODIC = ["EXP", "OFF"]
 
 PERIODIC_INDICES = {
-    "Low_CF" : 0,
-    "High_CF" : 3,
-    "Low_PW" : 1,
-    "High_PW" : 4,
-    "Low_BW" : 2,
-    "High_BW" : 5,
+    "lowCF" : 0,
+    "highCF" : 3,
+    "lowPW" : 1,
+    "highPW" : 4,
+    "lowBW" : 2,
+    "highBW" : 5,
     }
 
 #################################
@@ -112,24 +112,24 @@ DEF_PARAMITER = [CF_LOW_DEF, PW_DEF, BW_DEF, CF_HIGH_DEF, PW_DEF, BW_DEF]
 
 # Collect all parameter ranges together
 PARAMS = {
-    "Low_CF" : CFS_LOW,
-    "High_CF": CFS_HIGH,
-    "Low_PW" : PWS,
-    "High_PW" : PWS,
-    "Low_BW" : BWS,
-    "High_BW" : BWS,
+    "lowCF" : CFS_LOW,
+    "highCF": CFS_HIGH,
+    "lowPW" : PWS,
+    "highPW" : PWS,
+    "lowBW" : BWS,
+    "highBW" : BWS,
     "EXP" : EXPS,
     "OFF" : OFFS
     }
 
 # Collect together stepper parameters
 STEPPERS = {
-    "Low_CF" : (LOW_BAND[0], LOW_BAND[1], CF_INC),
-    "High_CF" : (HIGH_BAND[0], HIGH_BAND[1], CF_INC),
-    "Low_PW" : (PW_START, PW_END, PW_INC),
-    "High_PW" : (PW_START, PW_END, PW_INC),
-    "Low_BW" : (BW_START, BW_END, BW_INC),
-    "High_BW" : (BW_START, BW_END, BW_INC),
+    "lowCF" : (LOW_BAND[0], LOW_BAND[1], CF_INC),
+    "highCF" : (HIGH_BAND[0], HIGH_BAND[1], CF_INC),
+    "lowPW" : (PW_START, PW_END, PW_INC),
+    "highPW" : (PW_START, PW_END, PW_INC),
+    "lowBW" : (BW_START, BW_END, BW_INC),
+    "highBW" : (BW_START, BW_END, BW_INC),
     "EXP" : (EXP_START, EXP_END, EXP_INC),
     "OFF" : (OFF_START, OFF_END, OFF_INC)
     }

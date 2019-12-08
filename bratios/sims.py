@@ -55,9 +55,9 @@ def check_per_params(param1, param2):
     Parameters
     ----------
     param1 : String
-        Potential param from periodic or periodic set.
+        Potential param from periodic or aperiodic set.
     param2 : String
-        Potential param from periodic or periodic set.
+        Potential param from periodic or aperiodic set.
 
     Raises
     ------

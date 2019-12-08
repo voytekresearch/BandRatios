@@ -17,33 +17,33 @@ from sims import *
 def main():
 
     # Aperiodic Periodic
-    gen_interacting_aper_per("EXP", "Low_CF", dp.make_file_path(dp.sims_interacting, 'exp_lowcf_data'))
-    gen_interacting_aper_per("EXP", "High_CF", dp.make_file_path(dp.sims_interacting, 'exp_highcf_data'))
-    gen_interacting_aper_per("EXP", "Low_PW", dp.make_file_path(dp.sims_interacting, 'exp_lowpw_data'))
-    gen_interacting_aper_per("EXP", "High_PW", dp.make_file_path(dp.sims_interacting, 'exp_highpw_data'))
-    gen_interacting_aper_per("EXP", "Low_BW", dp.make_file_path(dp.sims_interacting, 'exp_lowbw_data'))
-    gen_interacting_aper_per("EXP", "High_BW", dp.make_file_path(dp.sims_interacting, 'exp_highbw_data'))
+    gen_interacting_aper_per("EXP", "lowCF", dp.make_file_path(dp.sims_interacting, 'EXP_lowCF'))
+    gen_interacting_aper_per("EXP", "highCF", dp.make_file_path(dp.sims_interacting, 'EXP_highCF'))
+    gen_interacting_aper_per("EXP", "lowPW", dp.make_file_path(dp.sims_interacting, 'EXP_lowPW'))
+    gen_interacting_aper_per("EXP", "highPW", dp.make_file_path(dp.sims_interacting, 'EXP_highPW'))
+    gen_interacting_aper_per("EXP", "lowBW", dp.make_file_path(dp.sims_interacting, 'EXP_lowBW'))
+    gen_interacting_aper_per("EXP", "highBW", dp.make_file_path(dp.sims_interacting, 'EXP_highBW'))
 
     # Periodic Periodic
-    gen_interacting_per_per("Low_CF", "High_CF", dp.make_file_path(dp.sims_interacting, 'lowcf_highcf_data'))
-    gen_interacting_per_per("Low_CF", "Low_PW", dp.make_file_path(dp.sims_interacting, 'lowcf_lowpw_data'))
-    gen_interacting_per_per("Low_CF", "High_PW", dp.make_file_path(dp.sims_interacting, 'lowcf_highpw_data'))
-    gen_interacting_per_per("Low_CF", "Low_BW", dp.make_file_path(dp.sims_interacting, 'lowcf_lowbw_data'))
-    gen_interacting_per_per("Low_CF", "High_BW", dp.make_file_path(dp.sims_interacting, 'lowcf_highbw_data'))
+    gen_interacting_per_per("lowCF", "highCF", dp.make_file_path(dp.sims_interacting, 'lowCF_highCF'))
+    gen_interacting_per_per("lowCF", "lowPW", dp.make_file_path(dp.sims_interacting, 'lowCF_lowPW'))
+    gen_interacting_per_per("lowCF", "highPW", dp.make_file_path(dp.sims_interacting, 'lowCF_highPW'))
+    gen_interacting_per_per("lowCF", "lowBW", dp.make_file_path(dp.sims_interacting, 'lowCF_lowBW'))
+    gen_interacting_per_per("lowCF", "highBW", dp.make_file_path(dp.sims_interacting, 'lowCF_highBW'))
 
-    gen_interacting_per_per("High_CF", "Low_PW", dp.make_file_path(dp.sims_interacting, 'highcf_lowpw_data'))
-    gen_interacting_per_per("High_CF", "High_PW", dp.make_file_path(dp.sims_interacting, 'highcf_highpw_data'))
-    gen_interacting_per_per("High_CF", "Low_BW", dp.make_file_path(dp.sims_interacting, 'highcf_lowbw_data'))
-    gen_interacting_per_per("High_CF", "High_BW", dp.make_file_path(dp.sims_interacting, 'highcf_highbw_data'))
+    gen_interacting_per_per("highCF", "lowPW", dp.make_file_path(dp.sims_interacting, 'highCF_lowPW'))
+    gen_interacting_per_per("highCF", "highPW", dp.make_file_path(dp.sims_interacting, 'highCF_highPW'))
+    gen_interacting_per_per("highCF", "lowBW", dp.make_file_path(dp.sims_interacting, 'highCF_lowBW'))
+    gen_interacting_per_per("highCF", "highBW", dp.make_file_path(dp.sims_interacting, 'highCF_highBW'))
 
-    gen_interacting_per_per("Low_PW", "High_PW", dp.make_file_path(dp.sims_interacting, 'lowpw_highpw_data'))
-    gen_interacting_per_per("Low_PW", "Low_BW", dp.make_file_path(dp.sims_interacting, 'lowpw_lowbw_data'))
-    gen_interacting_per_per("Low_PW", "High_BW", dp.make_file_path(dp.sims_interacting, 'lowpw_highbw_data'))
+    gen_interacting_per_per("lowPW", "highPW", dp.make_file_path(dp.sims_interacting, 'lowPW_highPW'))
+    gen_interacting_per_per("lowPW", "lowBW", dp.make_file_path(dp.sims_interacting, 'lowPW_lowBW'))
+    gen_interacting_per_per("lowPW", "highBW", dp.make_file_path(dp.sims_interacting, 'lowPW_highBW'))
 
-    gen_interacting_per_per("High_PW", "Low_BW", dp.make_file_path(dp.sims_interacting, 'highpw_lowbw_data'))
-    gen_interacting_per_per("High_PW", "High_BW", dp.make_file_path(dp.sims_interacting, 'highpw_highbw_data'))
+    gen_interacting_per_per("highPW", "lowBW", dp.make_file_path(dp.sims_interacting, 'highPW_lowBW'))
+    gen_interacting_per_per("highPW", "highBW", dp.make_file_path(dp.sims_interacting, 'highPW_highBW'))
 
-    gen_interacting_per_per("Low_BW", "High_BW", dp.make_file_path(dp.sims_interacting, 'lowbw_highbw_data'))
+    gen_interacting_per_per("lowBW", "highBW", dp.make_file_path(dp.sims_interacting, 'lowBW_highBW'))
 
 
 if __name__ == "__main__":

@@ -7,79 +7,42 @@ sys.path.append('../bratios')
 from ratios import *
 from settings import *
 from paths import DATA_PATHS as dp
-from paths import FIGS_PATHS as fp
 from plot import plot_interacting_sims
+
+###################################################################################################
+###################################################################################################
+
+# Settings
+PLOT_LOG = True
+SAVE_FIG = True
+
+COMBOS = ['EXP_lowCF', 'EXP_highCF',
+          'EXP_lowPW', 'EXP_highPW',
+          'EXP_lowBW', 'EXP_highBW',
+          'lowCF_highCF',
+          'lowCF_lowPW', 'lowCF_highPW',
+          'lowCF_lowBW', 'lowCF_highBW',
+          'highCF_lowPW', 'highCF_highPW',
+          'highCF_lowBW', 'highCF_highBW',
+          'lowPW_lowBW',
+          'lowPW_highPW',
+          'highPW_lowBW', 'lowPW_highBW',
+          'highPW_highBW',
+          'lowBW_highBW']
 
 ###################################################################################################
 ###################################################################################################
 
 def main():
 
-    exp_lowcf_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_lowcf_data', 'npy'))
-    exp_highcf_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_highcf_data', 'npy'))
-    exp_lowpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_lowpw_data', 'npy'))
-    exp_highpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_highpw_data', 'npy'))
-    exp_lowbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_lowbw_data', 'npy'))
-    exp_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'exp_highbw_data', 'npy'))
-    lowcf_highcf_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowcf_highcf_data', 'npy'))
-    lowcf_lowpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowcf_lowpw_data', 'npy'))
-    lowcf_highpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowcf_highpw_data', 'npy'))
-    lowcf_lowbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowcf_lowbw_data', 'npy'))
-    lowcf_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowcf_highbw_data', 'npy'))
-    highcf_lowpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highcf_lowpw_data', 'npy'))
-    highcf_highpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highcf_highpw_data', 'npy'))
-    highcf_lowbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highcf_lowbw_data', 'npy'))
-    highcf_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highcf_highbw_data', 'npy'))
-    lowpw_highpw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowpw_highpw_data', 'npy'))
-    lowpw_lowbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowpw_lowbw_data', 'npy'))
-    lowpw_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowpw_highbw_data', 'npy'))
-    highpw_lowbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highpw_lowbw_data', 'npy'))
-    highpw_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'highpw_highbw_data', 'npy'))
-    lowbw_highbw_data = np.load(dp.make_file_path(dp.sims_interacting, 'lowbw_highbw_data', 'npy'))
+    for data_label in COMBOS:
 
+        # Load the data
+        data = np.load(dp.make_file_path(dp.sims_interacting, data_label, 'npy'))
 
-    plot_interacting_sims(exp_lowcf_data, "EXP", "Low_CF",
-        fp.make_file_path(fp.sims_interacting, 'exp_lowcf_data'))
-    plot_interacting_sims(exp_highcf_data, "EXP", "High_CF",
-        fp.make_file_path(fp.sims_interacting, 'exp_highcf_data'))
-    plot_interacting_sims(exp_lowpw_data, "EXP", "Low_PW",
-        fp.make_file_path(fp.sims_interacting, 'exp_lowpw_data'))
-    plot_interacting_sims(exp_highpw_data, "EXP", "High_PW",
-        fp.make_file_path(fp.sims_interacting, 'exp_highpw_data'))
-    plot_interacting_sims(exp_lowbw_data, "EXP", "Low_BW",
-        fp.make_file_path(fp.sims_interacting, 'exp_lowbw_data'))
-    plot_interacting_sims(exp_highbw_data, "EXP", "High_BW",
-        fp.make_file_path(fp.sims_interacting, 'exp_highbw_data'))
-    plot_interacting_sims(lowcf_highcf_data, "Low_CF", "High_CF",
-        fp.make_file_path(fp.sims_interacting, 'lowcf_highcf_data'))
-    plot_interacting_sims(lowcf_lowpw_data, "Low_CF", "Low_PW",
-        fp.make_file_path(fp.sims_interacting, 'lowcf_lowpw_data'))
-    plot_interacting_sims(lowcf_highpw_data, "Low_CF", "High_PW",
-        fp.make_file_path(fp.sims_interacting, 'lowcf_highpw_data'))
-    plot_interacting_sims(lowcf_lowbw_data, "Low_CF", "Low_BW",
-        fp.make_file_path(fp.sims_interacting, 'lowcf_lowbw_data'))
-    plot_interacting_sims(lowcf_highbw_data, "Low_CF", "High_BW",
-        fp.make_file_path(fp.sims_interacting, 'lowcf_highbw_data'))
-    plot_interacting_sims(highcf_lowpw_data, "High_CF", "Low_PW",
-        fp.make_file_path(fp.sims_interacting, 'highcf_lowpw_data'))
-    plot_interacting_sims(highcf_highpw_data, "High_CF", "High_PW",
-        fp.make_file_path(fp.sims_interacting, 'highcf_highpw_data'))
-    plot_interacting_sims(highcf_lowbw_data, "High_CF", "Low_BW",
-        fp.make_file_path(fp.sims_interacting, 'highcf_lowbw_data'))
-    plot_interacting_sims(highcf_highbw_data, "High_CF", "High_BW",
-        fp.make_file_path(fp.sims_interacting, 'highcf_highbw_data'))
-    plot_interacting_sims(lowpw_highpw_data, "Low_PW", "High_PW",
-        fp.make_file_path(fp.sims_interacting, 'lowpw_highpw_data'))
-    plot_interacting_sims(lowpw_lowbw_data, "Low_PW", "Low_BW",
-        fp.make_file_path(fp.sims_interacting, 'lowpw_lowbw_data'))
-    plot_interacting_sims(lowpw_highbw_data, "Low_PW", "High_BW",
-        fp.make_file_path(fp.sims_interacting, 'lowpw_highbw_data'))
-    plot_interacting_sims(highpw_lowbw_data, "High_PW", "Low_BW",
-        fp.make_file_path(fp.sims_interacting, 'highpw_lowbw_data'))
-    plot_interacting_sims(highpw_highbw_data, "High_PW", "High_BW",
-        fp.make_file_path(fp.sims_interacting, 'highpw_highbw_data'))
-    plot_interacting_sims(lowbw_highbw_data, "Low_BW", "High_BW",
-        fp.make_file_path(fp.sims_interacting, 'lowbw_highbw_data'))
+        # Calculate ratios and create the plots
+        plot_interacting_sims(data, *data_label.split('_'), plot_log=PLOT_LOG,
+                              save_fig=SAVE_FIG, file_name=data_label)
 
 
 if __name__ == "__main__":
