@@ -153,6 +153,9 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
 
     # Select relevant rows from df
     rel_df = df.loc[df['Chan_ID'].isin(ch_inds)]
+    
+    # Average across selected channels per subject
+    rel_df = rel_df.groupby("Subj_ID").mean()
 
     # Get columns to correlate with
     theta = get_wave_params("T")
@@ -327,3 +330,35 @@ def prep_single_sims(data, varied_param, periodic_param=1):
     df = pd.DataFrame(cols, columns=["TBR", "TAR", "ABR", varied_param])
 
     return df
+
+
+def param_corr(df, corr_label_1, corr_label_2, chan_inds, func):
+    """Calculates correlation between two entries in dataframe.
+    
+    Parameters
+    ----------
+    df : DataFrame
+        Pandas DataFrame from get_all_data().
+    corr_label_1 : String
+        Label from dataframe to correlate.
+    corr_label_2 : String
+        Label from dataframe to correlate.
+    chan_inds : list of ints
+        Channels to correlate features from.
+    func : function
+        Correlation function.
+        
+    Returns
+    -------
+    
+    float describing results from correlation function.
+    """
+    
+    # Select relevant rows from df
+    rel_df = df.loc[df['Chan_ID'].isin(chan_inds)]
+    
+    # Average across selected channels per subject
+    rel_df = rel_df.groupby("Subj_ID").mean()
+        
+    return func(rel_df[corr_label_1], rel_df[corr_label_2])[0]
+    
