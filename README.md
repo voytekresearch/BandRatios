@@ -1,31 +1,62 @@
 # BandRatios
 
-Project repository for exploring frequency band ratio measures.
+Project repository for the `BandRatios` project, exploring frequency band ratio measures in electrophysiological data.
 
 ## Overview
 
-Band ratios are a common measure in neuroscientific investigations, in which the the ratio of average power between two bands is examined as a feature of interest and potential biomarker in M/EEG, ECoG and LFP data analyses. Band ratios are a common measure in cognitive neuroscience, including in some clinical work. This repository contains a project examining the properties of band ratios, and what they reflect.
+Band ratios are a common measure in neuroscientific investigations, in which the the ratio of average power between two frequency bands are examined as a feature of interest and potential biomarker in M/EEG, ECoG and LFP data analyses. These ratio measures are commonly applied in investigations within cognitive and clincal neuroscience. In this project, we explore the properties of band ratio measures, and how they relate to other spectral features.
+
+## Project Guide
+
+You can follow along with this project by stepping through the whole thing, as outlined in the `notebooks`.
+
+If you want to re-run the whole project, keep in mind that some parts are done by stand-alone scripts, available in the `scripts` folder. These scripts are descriped by the analysis outline in the notebooks.
+
+## Reference
+
+Coming soon!
 
 ## Requirements
 
-This repository requires Python >= 3.7 to run and uses the following dependencies:
+This project was written in Python 3 and requires Python >= 3.7 to run.
 
- - [numpy](https://github.com/numpy/numpy) >= 1.16.2
- - [scipy](https://github.com/scipy/scipy) >= 1.2.1
- - [MNE](https://github.com/mne-tools/mne-python) >= 0.18.2
- - [FOOOF](https://github.com/fooof-tools/fooof) >= 1.0.0rc1
+If you want to re-run this project, you will need some external dependencies.
 
-Optionally, if you want to re-run the literature search, you will need:
+Dependencies include 3rd party scientific Python packages:
+- [numpy](https://github.com/numpy/numpy)
+- [pandas](https://github.com/pandas-dev/pandas)
+- [scipy](https://github.com/scipy/scipy)
+- [matplotlib](https://github.com/matplotlib/matplotlib)
+- [seaborn](https://github.com/mwaskom/seaborn)
 
+You can get and manage these dependencies using the [Anaconda](https://www.anaconda.com/distribution/) distribution, which we recommend.
+
+In addition, this project requires the following dependencies:
+
+ - [mne](https://github.com/mne-tools/mne-python) >= 0.18.2
+ - [fooof](https://github.com/fooof-tools/fooof) >= 1.0.0
  - [lisc](https://github.com/lisc-tools/lisc) >= 1.0.0
 
-Installing the [Anaconda](https://www.anaconda.com/distribution/) distribution and then running `pip install mne` and `pip install fooof` will get you set up to re-run the code for this project.
+You can install the extra required dependencies by running:
+
+```
+pip install mne, fooof, lisc
+```
 
 ## Repository Layout
 
 This project repository is set up in the following way:
 
-- `notebooks/` is a collection of jupyter notebooks that step through the project, and create all the figures in the paper.
-- `scripts/` is a set of stand alone scripts that runs parts of the project
+- `bratios/` is a custom module containing the code for analyses and visualizations of this project
+- `data/` is a collection of the project data, include simulation data, EEG data, and outputs
 - `figures/` holds all figures produced from `notebooks/` and `scripts/`
-- `bratios` is a custom module with code to analyze and plot data for this project
+- `notebooks/` is a collection of Jupyter notebooks that step through the project and create the figures
+- `scripts/` contains stand alone scripts that run parts of the project
+
+## Data
+
+This project uses simulated data and electroencephalography (EEG) data from an open-access repository.
+
+The simulations are all done using the [FOOOF](https://github.com/fooof-tools/fooof) tool and associated simulation framework. All simulated data reported upon in this project is available in the `data/` folder.
+
+The EEG data is taken from the 'Mulimodal Resource for Studying Information Processing in the Developing Brain' or [MIPDB](http://fcon_1000.projects.nitrc.org/indi/cmi_eeg/) dataset. This dataset was collected and released by the [ChildMind Institute](https://childmind.org/). Raw data can be downloaded through their data portal. The processed power spectra, upon which we operate, and the calculated output measures for this project are collected and available in the `data/` folder.
