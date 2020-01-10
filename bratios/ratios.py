@@ -130,8 +130,8 @@ def compare_ratio(fm1, fm2, low_band, high_band, mode):
 
     Parameters
     ----------
-    fm1 : fooof object used to find ratio
-    fm2 : fooof object used to find ratio
+    fm1, fm2 : FOOOF
+        fooof objects used to find ratio
     low_band : list of [float, float]
         Band definition for the lower band.
     high_band : list of [float, float]
@@ -222,7 +222,7 @@ def calc_group_cf_power_ratio(fg, low_band, high_band):
 
 
 def get_group_ratios(fg, low_band, high_band):
-    """ Calculates group band ratios cannonically, central frequency ratio, and density
+    """ Calculates group band ratios canonically, central frequency ratio, and density
 
     Parameters
     ----------

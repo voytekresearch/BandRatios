@@ -73,7 +73,7 @@ def get_wave_params(band_label):
     Parameters
     ----------
     band_label: character
-        Character corrsponding to frequency band.
+        Character corresponding to frequency band.
 
     Return
     ------
@@ -143,17 +143,18 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
         ex) "TBR"
     ch_inds : list of ints
         Channels to run correlations over.
-    func : Correlation function
+    func : callable
+        Correlation function to use.
 
     Return
     ------
     2x3 ndarray of periodic param correlations
-    2x1 ndarray of aperiodic param correltations
+    2x1 ndarray of aperiodic param correlations
     """
 
     # Select relevant rows from df
     rel_df = df.loc[df['Chan_ID'].isin(ch_inds)]
-    
+
     # Average across selected channels per subject
     rel_df = rel_df.groupby("Subj_ID").mean()
 
@@ -220,7 +221,7 @@ def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):
     return curr_row
 
 
-def get_all_data(df, chs, block=0):
+def get_all_data(df, chs, block=0, state='ec', verbose=False):
     """This function will return a DataFrame populated with all subjects, channels,
     spectral parameters, band ratios, and age - all from the ChildMind dataset.
 
@@ -228,10 +229,14 @@ def get_all_data(df, chs, block=0):
     ----------
     df : Dataframe
         Container holding subjects' psds.
-    chs : list of ints
+    chs : list of int
         Channels corresponding to each psd.
     block : int
         Which block to populate data for.
+    state : {'ec', 'eo'}
+        Whether to run for eyes closed or eyes open data.
+    verbose : bool
+        Whether to print out updates.
 
     Outputs
     -------
@@ -243,23 +248,24 @@ def get_all_data(df, chs, block=0):
     for filename in df.ID.values:
         try:
 
-            curr_data = np.load(dp.make_file_path(dp.eeg_psds, filename + '_ec_psds', 'npz'))
+            # Load current subjects data
+            curr_data = np.load(dp.make_file_path(dp.eeg_psds, filename + '_' + state + '_psds', 'npz'))
             freqs = curr_data['arr_0']
 
             for ch in chs:
 
+                # Initialize collection of subject info
                 curr_row = dict()
                 curr_row["Subj_ID"] = filename
                 curr_row["Chan_ID"] = ch
+
                 ps = curr_data['arr_1'][block][ch]
 
-                if isinstance(ps, float):
-                    continue
+                # Initialize and fit FOOOF model
+                fm = FOOOF(*FOOOF_SETTINGS, verbose=False)
+                fm.fit(freqs, ps)
 
-                fm = FOOOF(verbose=False, peak_width_limits=(1, 8))
-                fm.add_data(freqs, ps)
-                fm.fit()
-
+                # Extract and add periodic and aperiodic metrics from FOOOF
                 theta_params = get_band_peak_fm(fm, BANDS['theta'])
                 beta_params = get_band_peak_fm(fm, BANDS['beta'])
                 alpha_params = get_band_peak_fm(fm, BANDS['alpha'])
@@ -267,26 +273,31 @@ def get_all_data(df, chs, block=0):
 
                 curr_row = _add_params(curr_row, theta_params, beta_params, alpha_params, ap)
 
+                # Extract and add FOOOF model fit metrics
+                curr_row["fit_error"] = fm.error_
+                curr_row["fit_r2"] = fm.r_squared_
+                curr_row["fit_n_peaks"] = fm.peak_params_.shape[0]
+
+                # Calculate and add band ratio measures
                 tbr = calc_band_ratio(freqs, ps, BANDS['theta'], BANDS['beta'])
                 tar = calc_band_ratio(freqs, ps, BANDS['theta'], BANDS['alpha'])
                 abr = calc_band_ratio(freqs, ps, BANDS['alpha'], BANDS['beta'])
-                ages = df[df['ID'] == filename].Age.values[0]
 
                 curr_row["TBR"] = tbr
                 curr_row["TAR"] = tar
                 curr_row["ABR"] = abr
+
+                # Extract and add age of the subject
+                ages = df[df['ID'] == filename].Age.values[0]
                 curr_row["Age"] = ages
 
+                # Collect subject data into group dataframe
                 curr_row = pd.Series(curr_row)
-
                 res = res.append(curr_row, ignore_index=True)
 
-        except FileNotFoundError or ValueError:
-            print("FileNotFound or ValueError: ", filename)
-        except LinAlgError:
-            print("LinAlgError: ", filename)
-        except IndexError:
-            print("IndexError: ", filename)
+        except FileNotFoundError:
+            if verbose:
+                print("FileNotFound: ", filename)
 
     return res
 
@@ -334,7 +345,7 @@ def prep_single_sims(data, varied_param, periodic_param=1):
 
 def param_corr(df, corr_label_1, corr_label_2, chan_inds, func):
     """Calculates correlation between two entries in dataframe.
-    
+
     Parameters
     ----------
     df : DataFrame
@@ -347,18 +358,17 @@ def param_corr(df, corr_label_1, corr_label_2, chan_inds, func):
         Channels to correlate features from.
     func : function
         Correlation function.
-        
+
     Returns
     -------
-    
+
     float describing results from correlation function.
     """
-    
+
     # Select relevant rows from df
     rel_df = df.loc[df['Chan_ID'].isin(chan_inds)]
-    
+
     # Average across selected channels per subject
     rel_df = rel_df.groupby("Subj_ID").mean()
-        
+
     return func(rel_df[corr_label_1], rel_df[corr_label_2])[0]
-    

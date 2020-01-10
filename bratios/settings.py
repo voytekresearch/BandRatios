@@ -3,6 +3,7 @@
 import numpy as np
 
 from fooof.bands import Bands
+from fooof.data import FOOOFSettings
 
 ###################################################################################################
 ###################################################################################################
@@ -51,6 +52,22 @@ PERIODIC_INDICES = {
     "lowBW" : 2,
     "highBW" : 5,
     }
+
+#################################
+##### DEFINE FOOOF SETTINGS #####
+#################################
+
+PEAK_WIDTH_LIMITS = (1, 8)
+MAX_N_PEAKS = 8
+MIN_PEAK_HEIGHT = 0.1
+PEAK_THRESHOLD = 2.
+APERIODIC_MODE = 'fixed'
+
+FOOOF_SETTINGS = FOOOFSettings(peak_width_limits=PEAK_WIDTH_LIMITS,
+                               max_n_peaks=MAX_N_PEAKS,
+                               min_peak_height=MIN_PEAK_HEIGHT,
+                               peak_threshold=PEAK_THRESHOLD,
+                               aperiodic_mode=APERIODIC_MODE)
 
 #################################
 #### DEFINE PARAMETER RANGES ####
