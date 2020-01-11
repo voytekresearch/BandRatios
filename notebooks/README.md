@@ -8,7 +8,7 @@ This set of notebooks step through the project, including introducing band ratio
 
 This notebook introduces band ratios and how to calculate them, as well as introducing the FOOOF model.
 
-### 0-LiteratureSearch
+### 1-LiteratureSearch
 
 This notebook does an automated literature search of band ratio terms and associations, to map out how band ratio measures are used in the literature.
 
@@ -36,6 +36,6 @@ This notebook creates topographies for spectral features and ratio measures.
 
 This notebook we explore the effects on band ratios when we rotate power spectra.
 
-### A2-EEG-DataDetails
+### A2-EEGDataChecks
 
 This notebook steps through the details of the EEG dataset that is used, noting dataset descriptions and subject inclusion properties.
