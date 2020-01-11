@@ -2,6 +2,8 @@
 
 Project repository for the `BandRatios` project, exploring frequency band ratio measures in electrophysiological data.
 
+[![Preprint](https://img.shields.io/badge/preprint-10.1101/299859-informational.svg)](https://doi.org/10.1101/2020.01.11.900977)
+
 ## Overview
 
 Band ratios are a common measure in neuroscientific investigations, in which the the ratio of average power between two frequency bands are examined as a feature of interest and potential biomarker in M/EEG, ECoG and LFP data analyses. These ratio measures are commonly applied in investigations within cognitive and clinical neuroscience. In this project, we explore the properties of band ratio measures, and how they relate to other spectral features.
@@ -14,7 +16,12 @@ If you want to re-run the whole project, keep in mind that some parts are done b
 
 ## Reference
 
-Coming soon!
+This project is described in the preprint:
+
+    Donoghue T, Dominguez J & Voytek B. Electrophysiological Band-Ratio Measures Conflate
+    Changes in Periodic and Aperiodic Activity. bioRxiv. DOI: 10.1101/2020.01.11.900977
+
+Direct Link: https://doi.org/10.1101/2020.01.11.900977
 
 ## Requirements
 
