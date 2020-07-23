@@ -62,7 +62,7 @@ def plot_interacting_sims(data, param1, param2, plot_log=False, show=False, save
         plt.close()
 
 
-def plot_param_ratio_corr(data, x_labels=FEATURE_LABELS, y_labels=BAND_LABELS.values(),
+def plot_param_ratio_corr(data, x_labels=FEATURE_LABELS, y_labels=BAND_NAMES,
                           yrotation=45, show=True, save_fig=False,
                           file_path=fp.eeg_corrs, file_name="corrplot"):
     """Plot correlations between BandRatio measures and spectral features.
