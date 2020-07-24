@@ -32,9 +32,11 @@ AP_DEF = [0, 1]
 # Define bands
 BANDS = Bands({"theta" : THETA_BAND, "beta" : BETA_BAND, "alpha" : ALPHA_BAND})
 BAND_LABELS = {"T" : "Theta", "A" : "Alpha", "B" : "Beta"}
+BAND_NAMES = list(BAND_LABELS.values())
 
 # Define ratio
 RATIOS = {"TBR": ["theta", "beta"], "TAR" : ["theta", "alpha"] , "ABR" : ["alpha", "beta"]}
+RATIO_NAMES = list(RATIOS.keys())
 
 # Define labels & indices
 SINGLE_SIM_PARAM_IND = {"CF" : (0, 0), "PW" : (0, 1), "BW" : (0, 2),

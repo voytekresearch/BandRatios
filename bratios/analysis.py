@@ -10,6 +10,7 @@ from fooof.analysis import get_band_peak_fm
 
 from settings import *
 from ratios import *
+from bootstrap import bootstrap_corr
 from paths import DATA_PATHS as dp
 
 ###################################################################################################
@@ -86,29 +87,14 @@ def get_wave_params(band_label):
     return [curr_band + "_" + feat for feat in FEATURE_LABELS]
 
 
-def print_aperiodic_correlation(ratio_type, corr, ps=None, show=True):
-    """Prints out the correlation between ratio and aperiodic parameters.
+def get_band_labels():
+    """Get band labels for the dataframe."""
 
-    Parameters
-    ----------
-    ratio_type : string
-        Which specific ratio measure to report (ex. "TBR").
-    corr : list of float
-        Correlation r-values for aperiodic params.
-    ps : list of float
-        P-values for the correlations.
-    show : boolean
-        Whether to display the print out.
+    theta = get_wave_params("T")
+    alpha = get_wave_params("A")
+    beta = get_wave_params("B")
 
-    Outputs
-    -------
-    Prints formatted sentences of correlations between ratio and aperiodic parameters.
-    """
-
-    if show:
-        for ind, param in enumerate(["Exp", "Off", "Age"]):
-            p_txt = "\t with a p-value of {:1.4f}".format(ps[ind]) if isinstance(ps, np.ndarray) else ""
-            print(("The corr of {} to {} is {:1.2f}" + p_txt).format(ratio_type, param, corr[ind]))
+    return theta, alpha, beta
 
 
 def get_non_ratio_band(ratio_type):
@@ -134,8 +120,66 @@ def get_non_ratio_band(ratio_type):
     return [nrb + "_" + feat for feat in FEATURE_LABELS]
 
 
+def average_df(df, ch_inds):
+    """Average dataframe across requested channel inds.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Container which holds ratio, channels, and peak values.
+    ch_inds : list of ints
+        Channels to run correlations over.
+
+    Returns
+    -------
+    avg_df : pandas.DataFrame
+        Dataframe, with data averaged across channels.
+    """
+
+    # Select relevant rows from df
+    avg_df = df.loc[df['Chan_ID'].isin(ch_inds)]
+
+    # Average across selected channels per subject
+    avg_df = avg_df.groupby("Subj_ID").mean()
+
+    return avg_df
+
+
+def param_ratio_boot_corr(df, ratio_type, ch_inds, boot_func=bootstrap_corr, corr_func=nan_corr_pearson):
+    """Calculate correlations between spectral params & ratios, applying a bootstrap."""
+
+    theta, alpha, beta = get_band_labels()
+    rel_df = average_df(df, ch_inds)
+
+    # Initialize variables to store periodic correlation results
+    pe_rs = np.zeros([3, 3])
+    pe_cis = np.zeros([3, 3, 2])
+    pe_ps = np.zeros([3, 3])
+
+    # Ratio vs spectral params correlation
+    for ind in range(3):
+        pe_rs[0, ind], pe_cis[0, ind, :], pe_ps[0, ind] = \
+            boot_func(rel_df[theta[ind]], rel_df[ratio_type], func=corr_func)
+        pe_rs[1, ind], pe_cis[1, ind, :], pe_ps[1, ind] = \
+            boot_func(rel_df[alpha[ind]], rel_df[ratio_type], func=corr_func)
+        pe_rs[2, ind], pe_cis[2, ind, :], pe_ps[2, ind] = \
+            boot_func(rel_df[beta[ind]], rel_df[ratio_type], func=corr_func)
+
+    # Initialize variable to store aperiodic correlation results
+    ap_rs = np.zeros(3)
+    ap_ps = np.zeros(3)
+    ap_cis = np.zeros([3, 2])
+
+    # Ratio vs aperiodic params correlation
+    ap_rs[0], ap_cis[0, :], ap_ps[0] = boot_func(rel_df["Exp"], rel_df[ratio_type], func=corr_func)
+    ap_rs[1], ap_cis[1, :], ap_ps[1] = boot_func(rel_df["Off"], rel_df[ratio_type], func=corr_func)
+    ap_rs[2], ap_cis[2, :], ap_ps[2] = boot_func(rel_df["Age"], rel_df[ratio_type], func=corr_func)
+
+    return pe_rs, ap_rs, pe_cis, ap_cis, pe_ps, ap_ps
+
+
 def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
-    """Finds correlation between spectral params & ratios.
+    """Calculate correlations between spectral params & ratios.
 
     Parameters
     ----------
@@ -154,38 +198,29 @@ def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
     2x1 ndarray of aperiodic param correlations
     """
 
-    # Select relevant rows from df
-    rel_df = df.loc[df['Chan_ID'].isin(ch_inds)]
+    theta, alpha, beta = get_band_labels()
+    rel_df = average_df(df, ch_inds)
 
-    # Average across selected channels per subject
-    rel_df = rel_df.groupby("Subj_ID").mean()
-
-    # Get columns to correlate with
-    theta = get_wave_params("T")
-    alpha = get_wave_params("A")
-    beta = get_wave_params("B")
-
-    # Initialize variables to store periodic & aperiodic correlation results
-    per_corrs = np.zeros([3, 3])
-    per_ps = np.zeros([3, 3])
-    ap_corrs = np.zeros(3)
-    ap_ps = np.zeros(3)
+    # Initialize variables to store periodic correlation results
+    pe_rs = np.zeros([3, 3])
+    pe_ps = np.zeros([3, 3])
 
     # Ratio vs spectral params correlation
     for ind in range(3):
-        per_corrs[0, ind], per_ps[0, ind] = \
-            func(rel_df[theta[ind]], rel_df[ratio_type])
-        per_corrs[1, ind], per_ps[1, ind] = \
-            func(rel_df[alpha[ind]], rel_df[ratio_type])
-        per_corrs[2, ind], per_ps[2, ind] = \
-            func(rel_df[beta[ind]], rel_df[ratio_type])
+        pe_rs[0, ind], pe_ps[0, ind] = func(rel_df[theta[ind]], rel_df[ratio_type])
+        pe_rs[1, ind], pe_ps[1, ind] = func(rel_df[alpha[ind]], rel_df[ratio_type])
+        pe_rs[2, ind], pe_ps[2, ind] = func(rel_df[beta[ind]], rel_df[ratio_type])
+
+    # Initialize variable to store aperiodic correlation results
+    ap_rs = np.zeros(3)
+    ap_ps = np.zeros(3)
 
     # Ratio vs aperiodic params correlation
-    ap_corrs[0], ap_ps[0] = func(rel_df["Exp"], rel_df[ratio_type])
-    ap_corrs[1], ap_ps[1] = func(rel_df["Off"], rel_df[ratio_type])
-    ap_corrs[2], ap_ps[2] = func(rel_df["Age"], rel_df[ratio_type])
+    ap_rs[0], ap_ps[0] = func(rel_df["Exp"], rel_df[ratio_type])
+    ap_rs[1], ap_ps[1] = func(rel_df["Off"], rel_df[ratio_type])
+    ap_rs[2], ap_ps[2] = func(rel_df["Age"], rel_df[ratio_type])
 
-    return per_corrs, ap_corrs, per_ps, ap_ps
+    return pe_rs, ap_rs, pe_ps, ap_ps
 
 
 def _add_params(curr_row, theta_params, beta_params, alpha_params, ap):
@@ -363,11 +398,12 @@ def param_corr(df, corr_label_1, corr_label_2, chan_inds, func):
     chan_inds : list of ints
         Channels to correlate features from.
     func : function
-        Correlation function.
+        Correlation function to use
 
     Returns
     -------
-    R-value and p-value from the correlation function.
+    r_val, p_val, *
+        Outputs from the correlation function.
     """
 
     # Select relevant rows from df

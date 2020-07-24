@@ -62,18 +62,15 @@ def plot_interacting_sims(data, param1, param2, plot_log=False, show=False, save
         plt.close()
 
 
-def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",
-                          y_labels=["Theta", "Alpha", "Beta"], show=True,
-                          save_fig=False, file_path=fp.eeg_corrs,
-                          file_name="Spectral_Features_Ratio_corr"):
+def plot_param_ratio_corr(data, x_labels=FEATURE_LABELS, y_labels=BAND_NAMES,
+                          yrotation=45, show=True, save_fig=False,
+                          file_path=fp.eeg_corrs, file_name="corrplot"):
     """Plot correlations between BandRatio measures and spectral features.
 
     Parameters
     ----------
     data: 2x3 ndarray
         Correlations of BandRatios to Spectral Features.
-    title: string
-        Title of plot.
     y_labels: list of strings
         Labels of slow and fast wave to use on y-axis.
     show : boolean
@@ -90,9 +87,9 @@ def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",
         raise RuntimeError("No data - cannot proceed.")
 
     fig, ax2 = plt.subplots()
-    ax2 = sns.heatmap(data, cmap="bwr", yticklabels=y_labels, xticklabels=FEATURE_LABELS,
-                      annot=True, ax=ax2, vmin=-1, vmax=1, annot_kws={"size": 20});
-    plt.yticks(rotation=45, verticalalignment='center');
+    ax2 = sns.heatmap(data, cmap="bwr", yticklabels=y_labels, xticklabels=x_labels,
+                      annot=True, fmt='1.2f', vmin=-1, vmax=1, annot_kws={"size": 20}, ax=ax2);
+    plt.yticks(rotation=yrotation, verticalalignment='center');
 
     plt.tight_layout()
 
@@ -103,14 +100,13 @@ def plot_param_ratio_corr(data, title="Ratio vs. Spectral Features",
         plt.close()
 
 
-def plot_param_ratio_corr_exp(exp, title="Ratio vs. Spectral Features",
-                              cbar=False, show=False, save_fig=False,
-                              file_path=fp.eeg_corrs, file_name="Spectral_Features_Ratio_corr",):
+def plot_param_ratio_corr_exp(exp, cbar=False, show=False, save_fig=False,
+                              file_path=fp.eeg_corrs, file_name="exp_corrplot"):
     """Same as `plot_param_ratio_corr`, but for the exponent."""
 
     fig, ax1 = plt.subplots(figsize=(2.5, 1.75));
-    ax1 = sns.heatmap(exp[0].reshape((1,1)), cmap="bwr", annot=True, cbar=cbar,
-                      ax=ax1, vmin=-1, vmax=1, annot_kws={"size": 30});
+    ax1 = sns.heatmap(exp[0].reshape((1, 1)), cmap="bwr", annot=True, fmt='1.2f',
+                      cbar=cbar, vmin=-1, vmax=1, annot_kws={"size": 30}, ax=ax1);
 
     plt.tick_params(axis='both', which='both', bottom=False, top=False,
                     labelbottom=False, left=False, labelleft=False);
