@@ -33,7 +33,7 @@ def print_ap_corrs(ratio_type, corr, cis=None, ps=None, show=True):
             p_txt = "    {:1.4f}"
             p_txt = p_txt.format(ps[ind]) if isinstance(ps, np.ndarray) else ""
 
-            template = "Corr of {} to {}:    {:+1.2f}    " + ci_txt + p_txt
+            template = "Corr of {} to {}:    {:+1.4f}    " + ci_txt + p_txt
             print(template.format(ratio_type, param, corr[ind]))
 
 

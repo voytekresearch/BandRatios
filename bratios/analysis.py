@@ -292,6 +292,7 @@ def get_all_data(df, chs, block=0, state='ec', verbose=False):
             # Load current subjects data
             curr_data = np.load(dp.make_file_path(dp.eeg_psds, filename + '_' + state + '_psds', 'npz'))
             freqs = curr_data['arr_0']
+            psds = curr_data['arr_1']
 
             for ch in chs:
 
@@ -300,7 +301,7 @@ def get_all_data(df, chs, block=0, state='ec', verbose=False):
                 curr_row["Subj_ID"] = filename
                 curr_row["Chan_ID"] = ch
 
-                ps = curr_data['arr_1'][block][ch]
+                ps = psds[block][ch]
 
                 # Initialize and fit FOOOF model
                 fm = FOOOF(*FOOOF_SETTINGS, verbose=False)
@@ -338,7 +339,10 @@ def get_all_data(df, chs, block=0, state='ec', verbose=False):
 
         except FileNotFoundError:
             if verbose:
-                print("FileNotFound: ", filename)
+                print("File Not Found: \t", filename)
+        except IndexError:
+            if verbose:
+                print("No block: \t", filename)
 
     return res
 
