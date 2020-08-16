@@ -10,7 +10,7 @@ from fooof.analysis import get_band_peak_fm
 
 from settings import *
 from ratios import *
-from bootstrap import bootstrap_corr
+from bootstrap import bootstrap_corr, bootstrap_diff
 from paths import DATA_PATHS as dp
 
 ###################################################################################################
@@ -176,6 +176,20 @@ def param_ratio_boot_corr(df, ratio_type, ch_inds, boot_func=bootstrap_corr, cor
     ap_rs[2], ap_cis[2, :], ap_ps[2] = boot_func(rel_df["Age"], rel_df[ratio_type], func=corr_func)
 
     return pe_rs, ap_rs, pe_cis, ap_cis, pe_ps, ap_ps
+
+
+def param_ratio_diff_corr(df, label_a, label_b, label_c, ch_inds,
+                          corr_func=nan_corr_pearson, absolute=False):
+    """Calculate the difference of correlation magnitude, using a bootstrap."""
+
+    rel_df = average_df(df, ch_inds)
+
+    r_diff, cis, p_val = bootstrap_diff(rel_df[label_a].values,
+                                        rel_df[label_b].values,
+                                        rel_df[label_c].values,
+                                        func=corr_func, absolute=absolute)
+
+    return r_diff, cis, p_val
 
 
 def param_ratio_corr(df, ratio_type, ch_inds, func=nan_corr_pearson):
