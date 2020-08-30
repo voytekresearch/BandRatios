@@ -2,8 +2,11 @@
 
 import numpy as np
 import seaborn as sns
+from scipy.stats import spearmanr
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from matplotlib.ticker import FormatStrFormatter
+
 import mne
 
 from ratios import calc_interacting_param_ratios
@@ -128,3 +131,21 @@ def plot_param_topo(data, raw, label='', save=False):
 
     if save:
         fig.savefig(fp.make_file_path(fp.eeg_topos, label + '-topo', 'pdf'));
+
+
+def plot_scatter(x_data, y_data, xlabel=None, ylabel=None, annotate=True, ax=None):
+    """Plot a scatterplot, with annotated correlation value."""
+
+    ax = plt.subplots()[1] if not ax else ax
+
+    ax.scatter(x_data, y_data, alpha=0.2)
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+    if annotate:
+        r_val = spearmanr(x_data, y_data, nan_policy='omit')[0]
+        plt.text(0.65, 0.11, 'r={:1.2f}'.format(r_val),
+                 size=20, transform=ax.transAxes);
+
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))

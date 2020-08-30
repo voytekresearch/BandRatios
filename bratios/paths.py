@@ -68,6 +68,7 @@ class FigurePaths(BasePaths):
         # Set custom second level paths
         self.eeg_corrs = pjoin(self.eeg, 'correlations')
         self.eeg_topos = pjoin(self.eeg, 'topographies')
+        self.eeg_blocks = pjoin(self.eeg, 'blocks')
 
 
 # Create path objects to import

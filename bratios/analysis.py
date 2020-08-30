@@ -431,3 +431,30 @@ def param_corr(df, corr_label_1, corr_label_2, chan_inds, func):
     rel_df = rel_df.groupby("Subj_ID").mean()
 
     return func(rel_df[corr_label_1], rel_df[corr_label_2])
+
+
+def calculate_diffs(dfs, ch_inds):
+    """Calculate the differences of measures across blocks.
+
+    dfs - should be a list of dfs, across blocks.
+    """
+
+    avg_dfs = []
+    for df in dfs:
+        avg_dfs.append(average_df(df, ch_inds))
+
+    subjs = list(avg_dfs[-1].index)
+    measures = list(avg_dfs[0].columns)
+
+    diffs = {}
+    for measure in measures:
+
+        vals = []
+        for subj in subjs:
+            for block in range(1, len(avg_dfs)):
+                vals.append(avg_dfs[block].loc[subj][measure] - \
+                            avg_dfs[block-1].loc[subj][measure])
+
+        diffs[measure] = np.array(vals)
+
+    return diffs
