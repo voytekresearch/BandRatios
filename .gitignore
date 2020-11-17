@@ -4,3 +4,6 @@
 # Ignore cache
 */__pycache__/*
 *.cache*
+
+# Ignore mac directory files
+.DS_Store
