@@ -1,27 +1,34 @@
 # BandRatios
 
-Project repository for the `BandRatios` project, exploring frequency band ratio measures in electrophysiological data.
+`BandRatios` project repository: exploring frequency band ratio measures in electrophysiological data.
 
-[![Preprint](https://img.shields.io/badge/preprint-10.1101/299859-informational.svg)](https://doi.org/10.1101/2020.01.11.900977)
+[![Paper](https://img.shields.io/badge/DOI-10.1523/ENEURO.0192--20.2020-informational.svg)](https://doi.org/10.1523/ENEURO.0192-20.2020 )
 
 ## Overview
 
-Band ratios are a common measure in neuroscientific investigations, in which the the ratio of average power between two frequency bands are examined as a feature of interest and potential biomarker in M/EEG, ECoG and LFP data analyses. These ratio measures are commonly applied in investigations within cognitive and clinical neuroscience. In this project, we explore the properties of band ratio measures, and how they relate to other spectral features.
+Band ratios are a common measure in neuroscience, and are commonly used across cognitive and clinical investigations. In band ratio measures, the ratio of power between two frequency bands are examined as a feature of interest and potential biomarker in M/EEG, ECoG, and LFP data analyses. 
+
+In this project, we explore the properties of band ratio measures, and how they relate to other spectral features. Specifically, we examine if band ratio measures are specific to periodic power, and to what degree they reflect other periodic and aperiodic spectral features.
+
+This project was completed in the [VoytekLab](https://voyteklab.com/) at UC San Diego, by 
+[Thomas Donoghue](https://github.com/TomDonoghue), 
+[Julio Dominguez](https://github.com/ArcadeShrimp), and 
+[Bradley Voytek](https://github.com/voytek).
 
 ## Project Guide
 
-You can follow along with this project by stepping through the whole thing, as outlined in the `notebooks`.
+You can step through all the analyses and results in this project by stepping through the `notebooks`.
 
-If you want to re-run the whole project, keep in mind that some parts are done by stand-alone scripts, available in the `scripts` folder. These scripts are also described in the notebooks.
+If you want to re-run the project, there are some parts that are done by stand-alone scripts, which are available in the `scripts` folder. These scripts are also described in the notebooks.
 
 ## Reference
 
-This project is described in the preprint:
+This project is described in the following paper:
 
-    Donoghue T, Dominguez J & Voytek B. Electrophysiological Band-Ratio Measures Conflate
-    Changes in Periodic and Aperiodic Activity. bioRxiv. DOI: 10.1101/2020.01.11.900977
+    Donoghue T, Dominguez J & Voytek B. Electrophysiological Frequency Band Ratio Measures 
+    Conflate Periodic and Aperiodic Neural Activity. eNeuro, 7(6) DOI: 10.1523/ENEURO.0192-20.2020
 
-Direct Link: https://doi.org/10.1101/2020.01.11.900977
+Direct Link: https://doi.org/10.1523/ENEURO.0192-20.2020 
 
 ## Requirements
 
@@ -54,18 +61,18 @@ pip install mne, fooof, lisc
 
 This project repository is set up in the following way:
 
-- `bratios/` is a custom module containing the code for analyses and visualizations of this project
-- `data/` is a collection of the project data, include simulation data, EEG data, and outputs
-- `figures/` holds all figures produced from `notebooks/` and `scripts/`
+- `bratios/` is a custom module containing code used for analyses and visualizations
+- `data/` includes data for the project, include simulated data, processed EEG data, and output files
+- `figures/` contains figures for the project, which are created in `notebooks/` and `scripts/`
 - `notebooks/` is a collection of Jupyter notebooks that step through the project and create the figures
 - `scripts/` contains stand alone scripts that run parts of the project
 
 ## Data
 
-This project uses simulated data, literature data, and electroencephalography (EEG) data from an open-access repository.
+This project uses simulated data, literature data, and electroencephalography (EEG) data.
 
-The simulations are all done using the [FOOOF](https://github.com/fooof-tools/fooof) tool and associated simulation framework. All simulated data reported upon in this project is available in the `data/` folder.
+The simulations are all done using the [FOOOF](https://github.com/fooof-tools/fooof) tool and associated simulation framework. Code for generating these simulations is included in this repositry, and all simulated data reported upon is available in the `data/` folder.
 
-The literature data was collected with [LISC](https://github.com/lisc-tools/lisc), a tool for collecting and analyzing literature data. All collected literature data used in this project is available in the `data/` folder, and code to re-run the literature data collection is available in the `notebooks/`.
+The literature data was collected with [LISC](https://github.com/lisc-tools/lisc), a tool for collecting and analyzing literature data. Code to re-run the literature data collection is available in the `notebooks/`. All collected literature data used in this project is available in the `data/` folder.
 
-The EEG data is taken from the 'Multimodal Resource for Studying Information Processing in the Developing Brain' or [MIPDB](http://fcon_1000.projects.nitrc.org/indi/cmi_eeg/) dataset. This dataset was collected and released by the [ChildMind Institute](https://childmind.org/). Raw data can be downloaded through their data portal. The processed power spectra, upon which we operate, and the calculated output measures for this project are collected and available in the `data/` folder.
+The EEG data is open-access data from the 'Multimodal Resource for Studying Information Processing in the Developing Brain' or [MIPDB](http://fcon_1000.projects.nitrc.org/indi/cmi_eeg/) dataset. This dataset was collected and released by the [ChildMind Institute](https://childmind.org/). Raw data can be downloaded through their data portal. The processed power spectra, upon which we operate, and the calculated output measures for this project are collected and available in the `data/` folder.
