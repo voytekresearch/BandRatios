@@ -25,7 +25,7 @@ If you want to re-run the project, there are some parts that are done by stand-a
 
 This project is described in the following paper:
 
-    Donoghue T, Dominguez J & Voytek B. Electrophysiological Frequency Band Ratio Measures 
+    Donoghue T, Dominguez J & Voytek B (2020). Electrophysiological Frequency Band Ratio Measures 
     Conflate Periodic and Aperiodic Neural Activity. eNeuro, 7(6) DOI: 10.1523/ENEURO.0192-20.2020
 
 Direct Link: https://doi.org/10.1523/ENEURO.0192-20.2020 
