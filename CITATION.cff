@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Donoghue"
+    given-names: "Thomas"
+    orcid: "https://orcid.org/0000-0001-5911-0472"
+  - family-names: "Dominguez"
+    given-names: "Julio"
+    orcid: "https://orcid.org/0000-0003-1889-632X"
+  - family-names: "Voytek"
+    given-names: "Bradley"
+    orcid: "https://orcid.org/0000-0003-1640-2525"
+  doi: "10.1523/ENEURO.0192-20.2020"
+  journal: "eNeuro"
+  title: "Electrophysiological Frequency Band Ratio Measures Conflate Periodic and Aperiodic Neural Activity"
+  year: 2021
+  issue: 6
+  volume: 7
+  start: ENEURO.0192
+  end: 20.2020
